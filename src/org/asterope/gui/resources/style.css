@@ -1,0 +1,46 @@
+
+
+body {
+
+    max-width: 700px;
+    clear: both;
+    width: 700px;
+    margin: 0 auto; 
+    background-color: #070d34;
+    color: #ffffff;
+    font:13px sans-serif;
+}
+
+a {
+    text-decoration: none;
+    color: #ccffcc;
+}
+
+a:visited {
+    color: #ff00ff;
+}
+
+a:hover {
+    color: #ffffff;
+    text-decoration: underline;
+}
+
+p {
+    margin: 0.4em 0 0.6em 0;
+}
+
+h1 {
+    font-weight: bold;
+}
+
+h2, h3, h4, h5 {
+    margin: 0.8em 0 0.5em 0;
+    border-bottom-color: #999;
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
+}
+
+a.b {
+  font:14px;
+  font-weight: bold;
+}

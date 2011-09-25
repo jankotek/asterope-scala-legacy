@@ -1,0 +1,119 @@
+package org.asterope.chart
+
+import java.awt.Color
+import edu.umd.cs.piccolo.PNode
+import java.awt.BasicStroke
+import java.awt.geom.Ellipse2D
+import edu.umd.cs.piccolo.nodes.PPath
+import org.asterope.data._
+import org.asterope.util._
+import java.awt.RadialGradientPaint
+import edu.umd.cs.piccolo.util.PPaintContext
+
+case class ChartMilkyWayConfig()
+
+class ChartMilkyWay(dao:MilkyWayDao)
+	extends ChartFeature[ChartMilkyWayConfig] with ChartPainter[ChartMilkyWayConfig, MilkyWayPixel]{
+	
+	def paintObject(chart:ChartBase, config:ChartMilkyWayConfig, pixel:MilkyWayPixel,addToLayer:Boolean):Option[PNode] = {
+		val pos = chart.wcs.project(pixel.pos)
+		if(pos.isEmpty) return None
+		//calculate diameter size, 
+		//NOTE: 1 degree is too much, but part of disc is transparent 
+		val diameter = chart.angleSizeOnChart(pixel.pos, 1.0 degree)
+		if(diameter.isEmpty) return None
+		
+		val n= new PPath(new Ellipse2D.Double(-diameter.get/2,-diameter.get/2,diameter.get,diameter.get)){
+      override protected def paint(paintContext:PPaintContext) {
+        //paint only when non interactive
+        if(paintContext.getRenderQuality >= PPaintContext.HIGH_QUALITY_RENDERING)
+          super.paint(paintContext)
+      }
+    };
+    n.setGlobalTranslation(pos.get);
+
+    val gray = 1.0* pixel.gray/255.0;
+    val c1 = ChartColors.between(chart.colors.bg, chart.colors.milkyWay,gray );
+    val c2 = ChartColors.setAlpha(c1, 0);
+    n.setPaint(new RadialGradientPaint(0F,0F,diameter.get.toFloat/2F,Array[Float](0,1F),Array[Color](c1,c2)));
+    n.setStroke(new BasicStroke(0));
+    n.setStrokePaint(c2);
+    if(addToLayer)
+      	chart.addNode(ChartLayers.milkyway, n, None, gray);
+    Some(n)
+	}
+
+	def updateChart(chart: ChartBase, config:ChartMilkyWayConfig){
+		val pixels = dao.milkyWayPixelsByArea(chart.area);
+		paintAll(chart,config,pixels)
+	}
+	
+	def defaultConfig = new ChartMilkyWayConfig()
+	
+	def clearChart(chart:ChartBase) {
+		chart.getLayer(ChartLayers.milkyway).removeAllChildren()  
+	}
+}
+
+case class ChartConstelLineConfig
+
+class ChartConstelLine(dao:ConstelLineDao)
+	extends ChartFeature[ChartConstelLineConfig] with ChartPainter[ChartConstelLineConfig, ConstelLine]{
+
+	def paintObject(chart:ChartBase, config:ChartConstelLineConfig, line:ConstelLine,addToLayer:Boolean):Option[PNode] = {
+		
+		val p1 = chart.wcs.project(line.v1);
+		val p2 = chart.wcs.project(line.v2);
+		if(p1.isEmpty || p2.isEmpty) return None
+		val projected = chart.projectLine(line.line)
+		if(projected.isEmpty) return None
+		val node = new PPath(projected.get)
+	  node.setStroke(new BasicStroke( line.lineWidth));
+	  node.setStrokePaint(chart.colors.constelLine);
+	  if(addToLayer)
+	    	chart.addNode(ChartLayers.constelLine, node)
+		Some(node)
+	}
+	
+	def updateChart(chart: ChartBase, config:ChartConstelLineConfig){
+		val lines = dao.constellationLineByArea(chart.area);
+		paintAll(chart,config,lines)
+	}
+	
+	def defaultConfig = new ChartConstelLineConfig()
+ 
+	
+	def clearChart(chart:ChartBase) {
+		chart.getLayer(ChartLayers.constelLine).removeAllChildren()
+	}
+
+}
+
+case class ChartConstelBoundaryConfig(stroke: BasicStrokeConfig = BasicStrokeConfig(width = 3,  dash = List(3,5)) )
+
+		
+class ChartConstelBoundary(dao: ConstelBoundaryDao)
+	extends ChartFeature[ChartConstelBoundaryConfig] {
+	
+
+	def defaultConfig = new ChartConstelBoundaryConfig
+	
+	def clearChart(chart:ChartBase) {
+		chart.getLayer(ChartLayers.constelBoundary).removeAllChildren()
+	}
+
+	def updateChart(chart: ChartBase, config:ChartConstelBoundaryConfig){
+		for{
+      line <-dao.constelBoundsByArea(chart.area);
+			projected <- chart.projectLine(line);
+			node =  new PPath(projected)			
+		}{
+      checkInterrupted()
+			node.setStroke(config.stroke.getStroke);
+			node.setStrokePaint(chart.colors.constelBoundary);
+	    	chart.addNode(ChartLayers.constelBoundary, node)
+		}		
+	}
+
+			
+}

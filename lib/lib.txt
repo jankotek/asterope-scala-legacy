@@ -1,0 +1,80 @@
+asterope.jar
+	Program itself
+	Licence: GPL 3.0 
+
+ballontip-*.jar 
+	Shows ballon tool tip in Swing
+	Licence: BSD	
+	http://balloontip.java.net/
+
+batik-all-stripped-1.7.jar
+	Batik SVG Toolkit from Apache Foundation. In here is stripped down, so it only provides Java2d => SVG conversion
+	Licence: Apache 2.0
+	http://xmlgraphics.apache.org/batik/
+
+bzip2.jar 
+	Provides Input/Output streams for BZ2 archive. Stripped down version of jakarta-commons-compress
+	Licence: Apache 2.0
+	http://commons.apache.org/compress/
+	
+docking-idw-gpl.jar
+	Window Docking library for Swing. 
+	Version: 2.6.1
+	Licence: GPL 2.0 (author also sells commercial)
+	http://www.infonode.net/index.html?idw
+
+fits.jar
+   	An FITS reading library distributed with Skyview
+	Version: 1.06
+	Licence: not sure, authors provide source with each release
+	http://heasarc.gsfc.nasa.gov/docs/heasarc/fits/	
+
+flyingsourcer-html-renderer.jar
+	Renders HTML in Swing components. Used to display web pages in Asterope. 
+	To be replaced by Webkit in Java8
+	Licence : LGPL 2.1
+	http://xhtmlrenderer.java.net/
+
+imagej.jar
+	Image manipulation toolkit for Java. 
+	Licence: BSD like
+	http://rsbweb.nih.gov/ij/index.html
+
+jama-1.0.2-matrix-library.jar
+	Java Matrix library
+	Licence: public domain
+	http://math.nist.gov/javanumerics/jama/
+
+jdbm-*.jar
+	Embedded Key-Value database.
+	Licence: Apache 2.0
+	http://code.google.com/p/jdbm2/
+
+jxlayer.jar
+	Transparent layer for Swing components. Bundled with Java 7, to be replaced
+	Licence: BSD
+	http://java.net/projects/jxlayer
+
+miglayout15-swing.jar	
+	An advanced layout manager for Swing. An outdated version is used, as I found newest version broken.
+	Licence: BSD 
+	http://www.miglayout.com/
+
+
+piccolo*.jar
+	Java2d framework which powers up maps.
+	http://code.google.com/p/piccolo2d/
+	Licence: New BSD Licence: http://www.opensource.org/licenses/bsd-license.php
+		
+
+scala*.jar
+	Scala library.
+	Licence: BSD like
+	http://www.scala-lang.org
+
+swingx-*.jar
+	Swing X extra components
+	Licence: LGPL
+	http://swingx.java.net/	
+	
+

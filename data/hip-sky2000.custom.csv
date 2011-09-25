@@ -1,0 +1,23 @@
+#
+# Hand written ID assigments. 
+# Some stars did not make it throught filters for big movement or magnitude differences. 
+# For example some binary stars or variables (Mira)
+#
+# mira
+J021920.79-025839.5,10826
+# Alula Australis
+J111810.94+313145.6,55203
+# Acrux, TODO there is unresolved binary there
+J122635.89-630556.7,60718
+# Porrima, TODO unresolved binary
+J124139.64-012657.7,61941
+# Tegmine, TODO unresolved binary
+J081212.72+173851.9,40167
+# Alrakis, TODO unresolved binary
+J170520.11+542812.1,83608
+# Rasalgethi, TODO unresolved binary
+J171438.85+142325.1,84345
+#Alnasl
+J180548.48-302526.7,88635
+#epsilon lyrae, TODO unresolved binary
+J184422.78+393645.7,91926
