@@ -15,9 +15,9 @@ is actually used by 'big guys'.
 Build
 -----------------------
 
-You need an Linux, Windows or MacOSX machine with JRE 7 to build Asterope from sources.
-Source distribution already contains everything needed for build 
-(including compiler, Ant build system, IDE project files and data).
+You need an Linux, Windows or MacOSX machine with **JRE 7** (JRE6 wont work) to build Asterope from sources.
+Source distribution already contains everything you need for build 
+(including compiler, Ant build system, IDE project files and data). There is no reason to install JDK or Ant.
 
 To invoke Ant use batch file 'ant.bat' on Windows or './ant.sh' on Unix like systems.
 Asterope uses embedded Ant, so you should not use one installed on your system.
