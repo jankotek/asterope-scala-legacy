@@ -77,7 +77,10 @@ class ChartEditor(
    * Notify when chart refresh finishes 
    */
   lazy val onChartRefreshFinish = new Publisher[ChartBase]()
-  
+
+  /** indicates if refresh is currently in progress */
+  def isRefreshInProgress:Boolean = _isRefreshInProgress
+  private var _isRefreshInProgress = false;
 
   private var chartBase = new ChartBase();
   private var coordGridConfig = beans.coordinateGrid.defaultConfig
@@ -96,6 +99,7 @@ class ChartEditor(
   }
 
   refreshWorker.preprocess{chartBase2 =>
+    _isRefreshInProgress = true;
     if (getInteracting){
       //if user used mouse to move chart, center on new position and update FOV
       val bounds = chartBase.camera.getViewBounds;
@@ -158,7 +162,7 @@ class ChartEditor(
   }
 
   refreshWorker.onFinished.listenInEDT{chartBase=>
-
+      _isRefreshInProgress = false;
       //labels must be last,
       // placement alghorihm depends on graphic created by other features
       beans.labels.updateChart(chartBase)
@@ -174,7 +178,10 @@ class ChartEditor(
 
   }
 
-  refreshWorker.onFailed(_.printStackTrace())
+  refreshWorker.onFailed{
+    _isRefreshInProgress = false;
+    _.printStackTrace()
+  }
 
 
   def centerOnPosition(pos:Vector3d){
@@ -276,6 +283,7 @@ class ChartEditor(
     chartBase = chartBase.copy(rotation = 0.degree, xscale = 1, yscale = 1)
     refresh()
   }
+
 
 
   /*

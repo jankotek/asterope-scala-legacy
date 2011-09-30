@@ -19,11 +19,11 @@ class ChartEditorTest extends ScalaTestCase
   def chartEditor = getFocusedEditor.asInstanceOf[ChartEditor]
 
   def waitForRefresh(){
-    var refreshFinished = false
-    chartEditor.onChartRefreshFinish{m=>
-      refreshFinished = true
-    }
-    waitUntil(refreshFinished)
+    //wait max 1 second for refresh to start
+    val maxTime = System.currentTimeMillis()+1000;
+    waitUntil(chartEditor.isRefreshInProgress == true || System.currentTimeMillis() >maxTime)
+    //now wait until refresh finishes
+    waitUntil(chartEditor.isRefreshInProgress == false)
   }
 
   def open(){
