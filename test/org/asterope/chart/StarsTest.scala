@@ -3,10 +3,10 @@ package org.asterope.chart
 import org.asterope.data._
 import org.asterope.util._
 
-class ChartStarsTest extends ScalaTestCase {
+class StarsTest extends ScalaTestCase {
 
 	lazy val chart = new ChartBase()
-	lazy val chartStars = new ChartStars(null)
+	lazy val chartStars = new Stars(null)
 	
 	lazy val star = new LiteStar(mag = Magnitude(1.0),
 				ra= chart.position.getRaRadian.radian, de= chart.position.getDeRadian.radian)

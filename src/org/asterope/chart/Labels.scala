@@ -9,9 +9,9 @@ import org.asterope.util._
 import java.awt.image.BufferedImage
 
 /**
- * Configuration object `ChartLabels`
+ * Configuration object `Labels`
  */
-case class ChartLabelsConfig(
+case class LabelsConfig(
 			showStarLabels:Boolean = true,
 			showDeepSkyLabels:Boolean = true,
 	        numberOfStarLabels:Int = 20,
@@ -20,15 +20,15 @@ case class ChartLabelsConfig(
 	);
 
 
-object ChartLabels
-		extends ChartFeature[ChartLabelsConfig] {
+object Labels
+		extends ChartFeature[LabelsConfig] {
 
-	def defaultConfig = new ChartLabelsConfig
+	def defaultConfig = new LabelsConfig
 	def clearChart(chart: ChartBase){
 		chart.getLayer(Layer.label).removeAllChildren()
 	}
 	
-	def updateChart(chart: ChartBase, config:ChartLabelsConfig){
+	def updateChart(chart: ChartBase, config:LabelsConfig){
 		val objs:List[(HasNomenclature,PNode)] = findStarsToLabel(chart,config ) ::: findDeepSkyToLabel(chart,config)
 
 
@@ -58,7 +58,7 @@ object ChartLabels
 	/**
 	 * Find brightest stars on chart, for which label is added. 
 	 */
-	def findStarsToLabel(chart: ChartBase, config:ChartLabelsConfig):List[(LiteStar,PNode)] = {
+	def findStarsToLabel(chart: ChartBase, config:LabelsConfig):List[(LiteStar,PNode)] = {
 			if(!config.showStarLabels) return Nil
 			val liteStars = chart.objects
 					.filter(_.isInstanceOf[LiteStar])
@@ -77,7 +77,7 @@ object ChartLabels
 	/**
 	 * Find brightest deepsky object on chart 
 	 */
-	def findDeepSkyToLabel(chart: ChartBase, config:ChartLabelsConfig):List[(DeepSky,PNode)] = {
+	def findDeepSkyToLabel(chart: ChartBase, config:LabelsConfig):List[(DeepSky,PNode)] = {
 			if(!config.showDeepSkyLabels) return Nil
 			val ds = chart.objects
 					.filter(_.isInstanceOf[DeepSky])

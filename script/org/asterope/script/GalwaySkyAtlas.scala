@@ -523,12 +523,12 @@ Page(473, Vector3d(-0.0012517145698816533,-0.06692896202416283,-0.99775695800781
       }
       b.deepSky.updateChart(chart)
       b.milkyWay.updateChart(chart)
-      ChartCoordinateGrid.updateChart(chart)
+      CoordinateGrid.updateChart(chart)
       val legendConfig = b.legendBorder.defaultConfig.copy(pageName = page.id.toString,starConfig = starsConfig)
       b.legendBorder.updateChart(chart,legendConfig)
       b.constelLine.updateChart(chart)
       b.constelBoundary.updateChart(chart)
-      ChartLabels.updateChart(chart)
+      Labels.updateChart(chart)
       
       //add labels which points to surrounding maps
       for{

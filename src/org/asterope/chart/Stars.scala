@@ -10,7 +10,7 @@ import org.asterope.data._
 import org.asterope.util._
 import scala.math._
 
-case class ChartStarsConfig(
+case class StarsConfig(
 	limitStarMagDelta: Double = -3,
 	limitStarMagPower: Double = 1.3,
 	limitStarMagForce:Option[Magnitude] = None, //if set, this magnitude is used instead of calculated one
@@ -25,14 +25,14 @@ case class ChartStarsConfig(
  * 
  * @author Jan Kotek
  */
-class ChartStars(
+class Stars(
 		dao: LiteStarDao)
-					   extends ChartFeature[ChartStarsConfig] 
-	                   with ChartPainter[ChartStarsConfig, LiteStar]{
+					   extends ChartFeature[StarsConfig]
+	                   with ChartPainter[StarsConfig, LiteStar]{
 	
-	def defaultConfig = new ChartStarsConfig()
+	def defaultConfig = new StarsConfig()
 	
-	def calculateLimitStarMag(chart:ChartBase, config:ChartStarsConfig):Magnitude = {
+	def calculateLimitStarMag(chart:ChartBase, config:StarsConfig):Magnitude = {
 		config.limitStarMagForce.getOrElse{
 			val pogson = chart.pixelAngularSize.toRadian;
 			//convert pogson magnitude into real one
@@ -53,7 +53,7 @@ class ChartStars(
 	 * @param star
 	 * @return node which represents star, or `None` if star disk can not be projected to map
 	 */
-	def paintObject(chart:ChartBase, config:ChartStarsConfig, star:LiteStar,addToLayer:Boolean):Option[PNode] = {
+	def paintObject(chart:ChartBase, config:StarsConfig, star:LiteStar,addToLayer:Boolean):Option[PNode] = {
 		val limitStarMag = calculateLimitStarMag(chart,config)
 		val diameter = (limitStarMag.mag  - star.mag.mag) * config.starDiscMultiply
 		val pos = chart.wcs.project(star.ra, star.de)
@@ -139,7 +139,7 @@ class ChartStars(
 	}
 	
 	
-	def updateChart(chart: ChartBase, config:ChartStarsConfig){
+	def updateChart(chart: ChartBase, config:StarsConfig){
 		val limitStarMag = calculateLimitStarMag(chart,config)
 		Log.info("Refresh with limit star mag: "+limitStarMag)
 		val stars = dao.starsByAreaMag(chart.area, limitStarMag)

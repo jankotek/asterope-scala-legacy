@@ -12,21 +12,21 @@ import org.asterope.util._
 import edu.umd.cs.piccolo.nodes.PText
 
 
-case class ChartLegendBorderConfig(
-	starConfig : ChartStarsConfig = new ChartStarsConfig,
-	deepSkyConfig:ChartDeepSkyConfig = new ChartDeepSkyConfig,
+case class LegendBorderConfig(
+	starConfig : StarsConfig = new StarsConfig,
+	deepSkyConfig:DeepSkyPainterConfig = new DeepSkyPainterConfig,
 	pageName:String = null
 )
 
 /**
  * Paints border around chart with legend. 
  */
-class ChartLegendBorder (stars:ChartStars, deepSky:ChartDeepSky) 
-	extends ChartFeature[ChartLegendBorderConfig]{
+class LegendBorder (stars:Stars, deepSky:DeepSkyPainter)
+	extends ChartFeature[LegendBorderConfig]{
 
   val height = 80
   
-	def defaultConfig = new ChartLegendBorderConfig
+	def defaultConfig = new LegendBorderConfig
 	
 	def clearChart(chart: ChartBase) {
 		chart.getLayer(Layer.legend).removeAllChildren
@@ -41,7 +41,7 @@ class ChartLegendBorder (stars:ChartStars, deepSky:ChartDeepSky)
 	 * @param chart to paint on
 	 * @param config stores configuration for this action
 	 */
-	def updateChart(chart: ChartBase, config:ChartLegendBorderConfig){
+	def updateChart(chart: ChartBase, config:LegendBorderConfig){
 		//paint line around canvas
 		val line = new PLine();
     val ps = 1.0

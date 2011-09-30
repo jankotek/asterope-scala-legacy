@@ -3,7 +3,7 @@ package org.asterope.chart
 import org.asterope.data._
 import org.asterope.util._
 
-class ChartLabelsTest extends ScalaTestCase{
+class LabelsTest extends ScalaTestCase{
 	
 	
 	def testSelectNgcM13Name{
@@ -19,19 +19,19 @@ class ChartLabelsTest extends ScalaTestCase{
 			override def names = ids
 		}
 		
-		assert(ChartLabels.selectName(so) === "7000 M13")
+		assert(Labels.selectName(so) === "7000 M13")
 		
 		ids = List(m)
-		assert(ChartLabels.selectName(so) === "M13")
+		assert(Labels.selectName(so) === "M13")
 
 		ids = List(ic,m)
-		assert(ChartLabels.selectName(so) === "M13")
+		assert(Labels.selectName(so) === "M13")
 
 		ids = List(ic,ngc)
-		assert(ChartLabels.selectName(so) === "7000")
+		assert(Labels.selectName(so) === "7000")
 
 		ids = List(ngc)
-		assert(ChartLabels.selectName(so) === "7000")
+		assert(Labels.selectName(so) === "7000")
 		
 	}
 	
@@ -49,18 +49,18 @@ class ChartLabelsTest extends ScalaTestCase{
 		}
 		
 		ids = List(greek)
-		println("'"+ChartLabels.selectName(so)+"'")
-		assert(ChartLabels.selectName(so) === alpha)
+		println("'"+Labels.selectName(so)+"'")
+		assert(Labels.selectName(so) === alpha)
 
 		ids = List(num)
-		assert(ChartLabels.selectName(so) === "1")
+		assert(Labels.selectName(so) === "1")
 
 
 		ids = List(hip)
-		assert(ChartLabels.selectName(so) === "H2")
+		assert(Labels.selectName(so) === "H2")
 
 		ids = List(hip,num)
-		assert(ChartLabels.selectName(so) === "1")
+		assert(Labels.selectName(so) === "1")
 
 
 		

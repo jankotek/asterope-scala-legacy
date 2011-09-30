@@ -5,14 +5,14 @@ import org.asterope.gui._
 
 class FormTest  extends GuiTestCase{
 
-  case class Memento(s1:String = "aa")
+  case class Config(s1:String = "aa")
 
-  object form extends JTextArea with Form[Memento]{
+  object form extends JTextArea with Form[Config]{
 
     setName("s1TextArea")
 
-    def reset(m:Memento) = setText(m.s1)
-    def commit = new Memento(s1 = getText)
+    def reset(m:Config) = setText(m.s1)
+    def commit = new Config(s1 = getText)
   }
 
   def ok = findButton(form.getParent.getParent,"okButton")
@@ -23,7 +23,7 @@ class FormTest  extends GuiTestCase{
     //test there is Ok and Cancel button on dialog form
     onEDT{
       Thread.sleep(100)
-      Form.showDialog(new Memento,form)
+      Form.showDialog(new Config,form)
     }
     waitForWindow()
 
@@ -40,8 +40,8 @@ class FormTest  extends GuiTestCase{
   }
 
   def testShowDialogCommit(){
-    val mem  = new Memento("CDR")
-    var mem2:Memento = null
+    val mem  = new Config("CDR")
+    var mem2:Config = null
     onEDT{
       Thread.sleep(100)
       mem2 = Form.showDialog(mem,form).get
@@ -55,8 +55,8 @@ class FormTest  extends GuiTestCase{
   }
 
   def testShowDialogCancel(){
-    val mem  = new Memento("CDR")
-    var mem2:Option[Memento] = null
+    val mem  = new Config("CDR")
+    var mem2:Option[Config] = null
     onEDT{
       Thread.sleep(100)
       mem2 = Form.showDialog(mem,form)

@@ -10,20 +10,20 @@ import java.net.URL
  * Draws skyview object into chart
  */
 
-object ChartSkyview extends ChartFeature[ChartSkyviewMemento]{
+object Skyview extends ChartFeature[SkyviewConfig]{
 
-  def defaultConfig = new ChartSkyviewMemento
+  def defaultConfig = new SkyviewConfig
 
-    def updateChart(chart: ChartBase, m:ChartSkyviewMemento){
+    def updateChart(chart: ChartBase, m:SkyviewConfig){
     if(m.useInternalEngine)
       updateChartInternalEngine(chart,m)
     else
       updateChartOnline(chart,m)
   }
 
-  def updateChartInternalEngine(chart: ChartBase, m:ChartSkyviewMemento){
+  def updateChartInternalEngine(chart: ChartBase, m:SkyviewConfig){
     
-    ChartSkyview.lock.synchronized{
+    Skyview.lock.synchronized{
       try{
       /**
        * initialize skyview properties
@@ -76,7 +76,7 @@ object ChartSkyview extends ChartFeature[ChartSkyviewMemento]{
   }
   
   
-  protected def updateChartOnline(chart:ChartBase, m:ChartSkyviewMemento) {
+  protected def updateChartOnline(chart:ChartBase, m:SkyviewConfig) {
       var url = "http://skyview.gsfc.nasa.gov/cgi-bin/runquery.pl?"
       url += "&position=" + chart.position.getRa.toDegree + "," + chart.position.getDe.toDegree
       url += "&pixels=" + chart.width.toInt + "," + chart.height.toInt
@@ -154,10 +154,10 @@ object ChartSkyview extends ChartFeature[ChartSkyviewMemento]{
 
 }
 
-case class ChartSkyviewMemento(
+case class SkyviewConfig(
   survey:String ="dss2b",
-  scale:ChartSkyview.ScaleEnum.Value = ChartSkyview.ScaleEnum.Sqrt,
-  resample:ChartSkyview.ResampleEnum.Value = ChartSkyview.ResampleEnum.Lanczos,
+  scale:Skyview.ScaleEnum.Value = Skyview.ScaleEnum.Sqrt,
+  resample:Skyview.ResampleEnum.Value = Skyview.ResampleEnum.Lanczos,
   lut:String = "colortables/b-w-linear.bin",
   invert:Boolean = false,
   useInternalEngine:Boolean = true

@@ -1,8 +1,8 @@
 package org.asterope.gui
 
 import org.asterope.util._
-import org.asterope.chart.ChartSkyview._
-import org.asterope.chart.ChartSkyviewMemento
+import org.asterope.chart.Skyview._
+import org.asterope.chart.SkyviewConfig
 
 class SkyviewFormTest extends GuiTestCase{
 
@@ -10,8 +10,8 @@ class SkyviewFormTest extends GuiTestCase{
   def parent = form.getParent.getParent
 
   def testFields{
-    val m1 = new ChartSkyviewMemento
-    var m2:ChartSkyviewMemento = m1;
+    val m1 = new SkyviewConfig
+    var m2:SkyviewConfig = m1;
     fork("test"){
       m2=Form.showDialog(m1,form).get
     }

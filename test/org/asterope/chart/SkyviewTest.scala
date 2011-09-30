@@ -4,14 +4,14 @@ import edu.umd.cs.piccolo.nodes.{PText, PImage}
 import collection.JavaConversions._
 import org.asterope.util._
 
-class ChartSkyviewTest extends ScalaTestCase{
+class SkyviewTest extends ScalaTestCase{
 
   def testPaint{
 
     val chart = new ChartBase(fieldOfView = 0.1 degree)
-    val mem = new ChartSkyviewMemento();
+    val mem = new SkyviewConfig();
 
-    ChartSkyview.updateChart(chart,mem);
+    Skyview.updateChart(chart,mem);
 
     val layer = chart.getLayer(Layer.skyview)
     val children = layer.getAllNodes.toList

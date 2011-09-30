@@ -4,7 +4,7 @@ import javax.swing._
 import java.awt.{Dimension, Component}
 
 /**
- * An abstract form which can edit an memento (case class)
+ * An abstract form which can edit an config (case class)
  */
 
 trait Form[E] extends JComponent{

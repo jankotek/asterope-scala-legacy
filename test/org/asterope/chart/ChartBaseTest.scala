@@ -83,7 +83,7 @@ class ChartBaseTest extends ScalaTestCase{
   def testLimitMag{
 	  def testFovMag(fov:Angle, min:Double, max:Double){
 	 	  val chart = new ChartBase(fieldOfView = fov, width = 800, height = 600);
-	 	  val stars = new ChartStars(null)
+	 	  val stars = new Stars(null)
 	 	  val m =  stars.calculateLimitStarMag(chart,stars.defaultConfig).mag
 	 	  assert(m?>= min)
 	 	  assert(m?<= max)
@@ -100,10 +100,10 @@ class ChartBaseTest extends ScalaTestCase{
   }
   
   def testStarDiscSize{
-	  val stars = new ChartStars(null);
+	  val stars = new Stars(null);
 	  val chart = new ChartBase();
-	  val config1 = new ChartStarsConfig(starDiscMultiply = 1)
-	  val config2 = new ChartStarsConfig(starDiscMultiply = 2)
+	  val config1 = new StarsConfig(starDiscMultiply = 1)
+	  val config2 = new StarsConfig(starDiscMultiply = 2)
 	  val ra = chart.position.getRaRadian.radian
 	  val de = chart.position.getDeRadian.radian
 	  val star1 = new LiteStar(ra,de, Magnitude(1))

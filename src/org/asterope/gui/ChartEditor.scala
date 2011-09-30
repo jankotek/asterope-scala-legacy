@@ -84,7 +84,7 @@ class ChartEditor(
   private var _isRefreshInProgress = false;
 
   private var chartBase = new ChartBase();
-  private var coordGridConfig = ChartCoordinateGrid.defaultConfig
+  private var coordGridConfig = CoordinateGrid.defaultConfig
   private var starsConfig = beans.stars.defaultConfig
   private var showLegend = true
   private var showConstelBounds = true
@@ -154,7 +154,7 @@ class ChartEditor(
   }
 
   refreshWorker.addTask{chartBase =>
-      ChartCoordinateGrid.updateChart(chartBase,coordGridConfig)
+      CoordinateGrid.updateChart(chartBase,coordGridConfig)
   }
 
   refreshWorker.addTask{chartBase =>
@@ -166,7 +166,7 @@ class ChartEditor(
       _isRefreshInProgress = false;
       //labels must be last,
       // placement alghorihm depends on graphic created by other features
-      ChartLabels.updateChart(chartBase)
+      Labels.updateChart(chartBase)
 
       chartBase.executor.asInstanceOf[EDTChartExecutor].plugIntoSwing()
       getCamera.removeAllChildren();
@@ -400,7 +400,7 @@ class ChartEditor(
   }
 
   val actStarReset = chartAct{
-    val orig = new ChartStarsConfig();
+    val orig = new StarsConfig();
     starsConfig = starsConfig.copy(starDiscMultiply = orig.starDiscMultiply,
         limitStarMagDelta = orig.limitStarMagDelta,
         limitStarMagForce = None

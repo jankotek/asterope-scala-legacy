@@ -2,7 +2,7 @@ package org.asterope.gui
 
 import org.asterope.chart._
 import skyview.executive.Settings
-import org.asterope.chart.ChartSkyview._
+import org.asterope.chart.Skyview._
 import org.asterope.util._
 import collection.JavaConversions._
 import javax.swing._
@@ -15,10 +15,10 @@ import org.jdesktop.swingx.renderer.{StringValue, DefaultListRenderer}
  * Form which drives Skyview on map
  */
 
-class SkyviewForm extends Form[ChartSkyviewMemento] {
+class SkyviewForm extends Form[SkyviewConfig] {
 
     protected val surveyModel:JListModel[String] =  {
-    val vals = for(s<-ChartSkyview.surveys;s2<-s._2) yield s2._1
+    val vals = for(s<-Skyview.surveys;s2<-s._2) yield s2._1
     new JListModel[String](vals.toList)
   }
 
@@ -77,7 +77,7 @@ class SkyviewForm extends Form[ChartSkyviewMemento] {
   add(internalEngineCheck, "growx,wrap")
     
 
-  def reset(e:ChartSkyviewMemento){
+  def reset(e:SkyviewConfig){
     survey.getEditor.setItem(e.survey)
     scaleModel.setSelectedItem(e.scale)
     resampleModel.setSelectedItem(e.resample)
@@ -85,7 +85,7 @@ class SkyviewForm extends Form[ChartSkyviewMemento] {
     internalEngineCheck.setSelected(e.useInternalEngine)    
   }
 
-  def commit() = new ChartSkyviewMemento(
+  def commit() = new SkyviewConfig(
     survey = surveyModel.getSelectedItem2,
     scale = scaleModel.getSelectedItem2,
     resample = resampleModel.getSelectedItem2,
@@ -170,25 +170,25 @@ object SkyviewProgressDialog extends JDialog{
 
 trait ChartWindowSkyviewActions{ self:ChartEditor =>
 
-  private var lastSkyviewMemento = new ChartSkyviewMemento;
+  private var lastSkyviewConfig = new SkyviewConfig;
 
   /*************************************************************
 
    *  skyview stuff
    *************************************************************/
   val actChartSkyview = act{
-    showSkyviewSurveyDialog(lastSkyviewMemento.survey)
+    showSkyviewSurveyDialog(lastSkyviewConfig.survey)
 
   }
 
   def showSkyviewSurveyDialog(survey:String){
-    val m = lastSkyviewMemento.copy(survey = survey)
+    val m = lastSkyviewConfig.copy(survey = survey)
     val form = new SkyviewForm
     Main.resourceMap.injectActionFields(form)
     Main.resourceMap.injectComponents(form)
      val m2 = Form.showDialog(m, form, width= 600)
      if(m2.isDefined){
-      lastSkyviewMemento = m2.get
+      lastSkyviewConfig = m2.get
       onEDT{
         //show modal dialog in separate EDT event, so it does not block us
         SkyviewProgressDialog.show()
@@ -196,7 +196,7 @@ trait ChartWindowSkyviewActions{ self:ChartEditor =>
 
       fork("skyview imager"){
         try{
-          ChartSkyview.updateChart(getChartBase,lastSkyviewMemento)
+          Skyview.updateChart(getChartBase,lastSkyviewConfig)
           onEDT{
             //hide modal dialog after we are done
             SkyviewProgressDialog.setVisible(false)

@@ -5,12 +5,12 @@ import java.awt.BasicStroke
 import edu.umd.cs.piccolo.nodes.PPath
 import java.awt.geom.Ellipse2D
 import edu.umd.cs.piccolo.PNode
-import org.asterope.data._
 import org.asterope.util._
-import java.awt.{Shape, Color}
+import java.awt.Shape
 import java.awt.geom.Path2D
+import org.asterope.data._
 
-case class ChartDeepSkyConfig(
+case class DeepSkyPainterConfig(
     	bigObjectsTransparent:Boolean = true,
     	showGlobularCluster:Boolean = true,
     	showOpenCluster:Boolean = true,
@@ -22,11 +22,11 @@ case class ChartDeepSkyConfig(
 )
 
 
-class ChartDeepSky(dao: DeepSkyDao)
-	extends ChartFeature[ChartDeepSkyConfig]
-  with ChartPainter[ChartDeepSkyConfig, DeepSky]{
+class DeepSkyPainter(dao: DeepSkyDao)
+	extends ChartFeature[DeepSkyPainterConfig]
+  with ChartPainter[DeepSkyPainterConfig, DeepSky]{
   
-  def paintObject(chart:ChartBase, config:ChartDeepSkyConfig,
+  def paintObject(chart:ChartBase, config:DeepSkyPainterConfig,
                   ds:DeepSky,addToLayer:Boolean):Option[PNode] = {
 	
 
@@ -70,7 +70,7 @@ class ChartDeepSky(dao: DeepSkyDao)
     n
   }
 
-  def paintBrightNebula(chart: ChartBase, config:ChartDeepSkyConfig,ds: DeepSky): Option[PNode] = {
+  def paintBrightNebula(chart: ChartBase, config:DeepSkyPainterConfig,ds: DeepSky): Option[PNode] = {
 	if(!config.showBrightNebula) return None
     val dia = ds.sizeMax.get.toRadian /chart.pixelAngularSize.toRadian
     val shape = orOutline(ds, chart, new Ellipse2D.Double(-dia / 2, -dia / 2, dia, dia))
@@ -82,7 +82,7 @@ class ChartDeepSky(dao: DeepSkyDao)
   }
 
 
-  def paintDarkNebula(chart: ChartBase, config:ChartDeepSkyConfig,ds: DeepSky): Option[PNode] = {
+  def paintDarkNebula(chart: ChartBase, config:DeepSkyPainterConfig,ds: DeepSky): Option[PNode] = {
 	if(!config.showDarkNebula) return None
     val dia = ds.sizeMax.get.toRadian /chart.pixelAngularSize.toRadian
     val shape = orOutline(ds, chart, new Ellipse2D.Double(-dia / 2, -dia / 2, dia, dia))
@@ -94,7 +94,7 @@ class ChartDeepSky(dao: DeepSkyDao)
     return Some(n);
   }
 
-  def paintOpenCluster(chart: ChartBase, config:ChartDeepSkyConfig,ds: DeepSky): Option[PNode] = {
+  def paintOpenCluster(chart: ChartBase, config:DeepSkyPainterConfig,ds: DeepSky): Option[PNode] = {
     if(!config.showOpenCluster) return None
     val dia = ds.sizeMax.get.toRadian /chart.pixelAngularSize.toRadian
     val shape = orOutline(ds, chart, new Ellipse2D.Double(-dia / 2, -dia / 2, dia, dia))
@@ -106,7 +106,7 @@ class ChartDeepSky(dao: DeepSkyDao)
     return Some(n);
   }
 
-  def paintGlobularCluster(chart: ChartBase, config:ChartDeepSkyConfig, ds: DeepSky): Option[PNode] = {
+  def paintGlobularCluster(chart: ChartBase, config:DeepSkyPainterConfig, ds: DeepSky): Option[PNode] = {
     if(!config.showGlobularCluster) return None
     val dia = ds.sizeMax.get.toRadian /chart.pixelAngularSize.toRadian
     val shape = orOutline(ds, chart, new Ellipse2D.Double(-dia / 2, -dia / 2, dia, dia))
@@ -130,7 +130,7 @@ class ChartDeepSky(dao: DeepSkyDao)
   }
 
   //paints PlanetaryNebula and SupernovaRemnant
-  def paintPlanetaryNebula(chart: ChartBase, config:ChartDeepSkyConfig, ds: DeepSky): Option[PNode] = {
+  def paintPlanetaryNebula(chart: ChartBase, config:DeepSkyPainterConfig, ds: DeepSky): Option[PNode] = {
     if(!config.showPlanetaryNebula && !config.showSupernovaRemnant) return None
 
     val dia = ds.sizeMax.get.toRadian /chart.pixelAngularSize.toRadian
@@ -157,7 +157,7 @@ class ChartDeepSky(dao: DeepSkyDao)
     return Some(n);
   }
 
-  def paintGalaxy(chart: ChartBase, config:ChartDeepSkyConfig, ds: DeepSky): Option[PNode] = { 
+  def paintGalaxy(chart: ChartBase, config:DeepSkyPainterConfig, ds: DeepSky): Option[PNode] = {
 	  if(!config.showGalaxy) return None
     val dia1 = ds.sizeMax.get.toRadian /chart.pixelAngularSize.toRadian
     val dia2 =
@@ -175,9 +175,9 @@ class ChartDeepSky(dao: DeepSkyDao)
     return Some(n);
   }
   
-  def defaultConfig = new ChartDeepSkyConfig()
+  def defaultConfig = new DeepSkyPainterConfig()
   
-  def updateChart(chart:ChartBase, config:ChartDeepSkyConfig){
+  def updateChart(chart:ChartBase, config:DeepSkyPainterConfig){
 	  val deepSkys = dao.deepSkyByArea(chart.area)
 	  paintAll(chart,config,deepSkys)
   }

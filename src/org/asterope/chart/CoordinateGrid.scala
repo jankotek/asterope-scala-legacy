@@ -8,10 +8,10 @@ import org.asterope.data.{TwoPointSkyLine, RotatingSkyLine}
 import edu.umd.cs.piccolo.nodes.PPath
 
 /**
- * Provides configuration for ChartCoordinateGrid. 
+ * Provides configuration for CoordinateGrid.
  * This class is used in 'BaseChart', each system have its own class
  */
-case class ChartCoordinateGridConfig2(
+case class CoordinateGridConfig2(
 	showLines:Boolean,
 	numberOfLines:Int = 3,
 	showPoles:Boolean = true,
@@ -20,15 +20,15 @@ case class ChartCoordinateGridConfig2(
 	
 )
 
-case class ChartCoordinateGridConfig(
-	coordinateGridJ2000:ChartCoordinateGridConfig2 = ChartCoordinateGridConfig2(
+case class CoordinateGridConfig(
+	coordinateGridJ2000:CoordinateGridConfig2 = CoordinateGridConfig2(
     showLines = true, showPoles = true, showEquator = false),
-	coordinateGridJ1950:ChartCoordinateGridConfig2 = ChartCoordinateGridConfig2(
+	coordinateGridJ1950:CoordinateGridConfig2 = CoordinateGridConfig2(
     showLines = false, showPoles = false, showEquator = false),
-	coordinateGridGalactic:ChartCoordinateGridConfig2 = ChartCoordinateGridConfig2(
+	coordinateGridGalactic:CoordinateGridConfig2 = CoordinateGridConfig2(
     showLines = false, showPoles = true, showEquator = true,
     equatorStroke = new BasicStrokeConfig(dash = List(5,5))),
-	coordinateGridEcliptic:ChartCoordinateGridConfig2 = ChartCoordinateGridConfig2(
+	coordinateGridEcliptic:CoordinateGridConfig2 = CoordinateGridConfig2(
     showLines = false, showPoles = true, showEquator = true,
     equatorStroke = new BasicStrokeConfig(dash = List(5,5)))
 )
@@ -39,7 +39,7 @@ case class ChartCoordinateGridConfig(
  *
  * @author Jan Kotek
  */
-object ChartCoordinateGrid extends ChartFeature[ChartCoordinateGridConfig]{
+object CoordinateGrid extends ChartFeature[CoordinateGridConfig]{
 	
 	/**coordinate steps*/
 	protected val deSteps = List[Angle](90.degree, 45.degree, 30.degree, 15.degree, 10.degree, 5.degree, 2.degree, 1.degree, 
@@ -62,9 +62,9 @@ object ChartCoordinateGrid extends ChartFeature[ChartCoordinateGridConfig]{
 	protected val eclipticRotater = CoordinateSystem.factory("Ecliptic").getRotater
 	protected val eclipticDerotater = eclipticRotater.inverse
 	
-	def defaultConfig = new ChartCoordinateGridConfig()
+	def defaultConfig = new CoordinateGridConfig()
 	
-	def updateChart(chart: ChartBase, config:ChartCoordinateGridConfig){
+	def updateChart(chart: ChartBase, config:CoordinateGridConfig){
 
 	   paintLines(chart,Layer.coordinateGridJ2000,config.coordinateGridJ2000,None,None,"j2000")
 	   paintLines(chart,Layer.coordinateGridJ1950,config.coordinateGridJ1950,Some(j1950Rotater),Some(j1950Derotater),"j1950")
@@ -107,7 +107,7 @@ object ChartCoordinateGrid extends ChartFeature[ChartCoordinateGridConfig]{
 
   }
 
-	protected def paintLines(chart:ChartBase, layer:Layer.Value, config:ChartCoordinateGridConfig2,
+	protected def paintLines(chart:ChartBase, layer:Layer.Value, config:CoordinateGridConfig2,
                            rotater:Option[Rotater],derotater:Option[Rotater],
                            labelPrefix:String){
 
@@ -214,7 +214,7 @@ object ChartCoordinateGrid extends ChartFeature[ChartCoordinateGridConfig]{
 
 	}
 	
-	protected def paintPoles(chart:ChartBase, layer:Layer.Value, config:ChartCoordinateGridConfig2, rotater:Option[Rotater],derotater:Option[Rotater]){
+	protected def paintPoles(chart:ChartBase, layer:Layer.Value, config:CoordinateGridConfig2, rotater:Option[Rotater],derotater:Option[Rotater]){
 		def node = {
 				val n= new PPath(new java.awt.geom.Ellipse2D.Double(-1,-1,1,1));
 				n.setStroke(new BasicStroke(1));
