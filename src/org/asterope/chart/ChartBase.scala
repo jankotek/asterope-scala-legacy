@@ -63,7 +63,7 @@ case class ChartBase(
     c.addLayer(l)		
 		
     //create default layers
-    ChartLayers.values.foreach{l=>
+    Layer.values.foreach{l=>
       val layer = new ChartLayer(l);
       c.addLayer(layer)
       layers.put(l,layer)
@@ -160,7 +160,7 @@ case class ChartBase(
   /**
    * Map of layer names and layers 
    */
-  protected val layers = MMap[ChartLayers.Value, ChartLayer]();
+  protected val layers = MMap[Layer.Value, ChartLayer]();
 
   /**
    * Return layer by name. New layer is created if 
@@ -168,7 +168,7 @@ case class ChartBase(
    * 
    *  @return layer with given name, existing or newly created
    */
-  def getOrCreateLayer(layerName:ChartLayers.Value):ChartLayer = {
+  def getOrCreateLayer(layerName:Layer.Value):ChartLayer = {
     //make sure default layers are initialized
     camera
 
@@ -184,7 +184,7 @@ case class ChartBase(
   /**
    * Get layer with given name. If layer does not exist, exception is thrown
    */
-  def getLayer(layerName:ChartLayers.Value):ChartLayer = {
+  def getLayer(layerName:Layer.Value):ChartLayer = {
     //make sure default layers are initialized
     camera
     layers(layerName)
@@ -244,7 +244,7 @@ case class ChartBase(
    * @param obj object represented by node, may be `None`
    * @param zorder in which node should be added to layer
    */
-  def addNode(layer: ChartLayers.Value, node: PNode, obj: Any = None, zorder: Double = 0, async:Boolean = true) {
+  def addNode(layer: Layer.Value, node: PNode, obj: Any = None, zorder: Double = 0, async:Boolean = true) {
 	  def add2{
   	 	 	if(!isInsideCanvas(node)) return
 	 	  	object2Node.put(obj,node)

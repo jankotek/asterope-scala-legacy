@@ -29,7 +29,7 @@ class ChartLegendBorder (stars:ChartStars, deepSky:ChartDeepSky)
 	def defaultConfig = new ChartLegendBorderConfig
 	
 	def clearChart(chart: ChartBase) {
-		chart.getLayer(ChartLayers.legend).removeAllChildren
+		chart.getLayer(Layer.legend).removeAllChildren
 	}
 	
 	/**
@@ -153,7 +153,7 @@ class ChartLegendBorder (stars:ChartStars, deepSky:ChartDeepSky)
 
 
 		chart.executor.async{ //can not use `addNode`, legend is outside of canvas
-      val l = chart.getLayer(ChartLayers.legend);
+      val l = chart.getLayer(Layer.legend);
       l.addChild(legendNode)
       l.addChild(line)
     }

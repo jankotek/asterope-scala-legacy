@@ -64,7 +64,7 @@ class ChartDeepSky(dao: DeepSkyDao)
       }
       if(addToLayer){
         val mag = ds.mag.getOrElse(new Magnitude(100)).mag
-        chart.addNode(ChartLayers.deepsky, node, ds, -ds.sizeMax.get.toDegree)
+        chart.addNode(Layer.deepsky, node, ds, -ds.sizeMax.get.toDegree)
       }
     }
     n
@@ -183,7 +183,7 @@ class ChartDeepSky(dao: DeepSkyDao)
   }
   
   def clearChart(chart:ChartBase) = {
-	  chart.getLayer(ChartLayers.deepsky).removeAllChildren
+	  chart.getLayer(Layer.deepsky).removeAllChildren
   }
 
 

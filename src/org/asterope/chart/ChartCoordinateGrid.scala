@@ -66,19 +66,19 @@ class ChartCoordinateGrid extends ChartFeature[ChartCoordinateGridConfig]{
 	
 	def updateChart(chart: ChartBase, config:ChartCoordinateGridConfig){
 
-	   paintLines(chart,ChartLayers.coordinateGridJ2000,config.coordinateGridJ2000,None,None,"j2000")
-	   paintLines(chart,ChartLayers.coordinateGridJ1950,config.coordinateGridJ1950,Some(j1950Rotater),Some(j1950Derotater),"j1950")
-	   paintLines(chart,ChartLayers.coordinateGridGalactic,config.coordinateGridGalactic,Some(galacticRotater),Some(galacticDerotater),"galactic")
-	   paintLines(chart,ChartLayers.coordinateGridEcliptic,config.coordinateGridEcliptic,Some(eclipticRotater),Some(eclipticDerotater),"ecliptic")
+	   paintLines(chart,Layer.coordinateGridJ2000,config.coordinateGridJ2000,None,None,"j2000")
+	   paintLines(chart,Layer.coordinateGridJ1950,config.coordinateGridJ1950,Some(j1950Rotater),Some(j1950Derotater),"j1950")
+	   paintLines(chart,Layer.coordinateGridGalactic,config.coordinateGridGalactic,Some(galacticRotater),Some(galacticDerotater),"galactic")
+	   paintLines(chart,Layer.coordinateGridEcliptic,config.coordinateGridEcliptic,Some(eclipticRotater),Some(eclipticDerotater),"ecliptic")
 	   
 	   if(config.coordinateGridJ2000.showPoles)
-	  	   paintPoles(chart,ChartLayers.coordinateGridJ2000,config.coordinateGridJ2000,None,None);
+	  	   paintPoles(chart,Layer.coordinateGridJ2000,config.coordinateGridJ2000,None,None);
 	   if(config.coordinateGridJ1950.showPoles)
-	  	   paintPoles(chart,ChartLayers.coordinateGridJ1950,config.coordinateGridJ1950,Some(j1950Rotater),Some(j1950Derotater))
+	  	   paintPoles(chart,Layer.coordinateGridJ1950,config.coordinateGridJ1950,Some(j1950Rotater),Some(j1950Derotater))
 	   if(config.coordinateGridGalactic.showPoles)
-	  	   paintPoles(chart, ChartLayers.coordinateGridGalactic,config.coordinateGridGalactic,Some(galacticRotater),Some(galacticDerotater))
+	  	   paintPoles(chart, Layer.coordinateGridGalactic,config.coordinateGridGalactic,Some(galacticRotater),Some(galacticDerotater))
 	   if(config.coordinateGridEcliptic.showPoles)
-	  	   paintPoles(chart,ChartLayers.coordinateGridEcliptic,config.coordinateGridEcliptic,Some(eclipticRotater),Some(eclipticDerotater))
+	  	   paintPoles(chart,Layer.coordinateGridEcliptic,config.coordinateGridEcliptic,Some(eclipticRotater),Some(eclipticDerotater))
 	}
 	
 	/**
@@ -107,7 +107,7 @@ class ChartCoordinateGrid extends ChartFeature[ChartCoordinateGridConfig]{
 
   }
 
-	protected def paintLines(chart:ChartBase, layer:ChartLayers.Value, config:ChartCoordinateGridConfig2,
+	protected def paintLines(chart:ChartBase, layer:Layer.Value, config:ChartCoordinateGridConfig2,
                            rotater:Option[Rotater],derotater:Option[Rotater],
                            labelPrefix:String){
 
@@ -214,7 +214,7 @@ class ChartCoordinateGrid extends ChartFeature[ChartCoordinateGridConfig]{
 
 	}
 	
-	protected def paintPoles(chart:ChartBase, layer:ChartLayers.Value, config:ChartCoordinateGridConfig2, rotater:Option[Rotater],derotater:Option[Rotater]){
+	protected def paintPoles(chart:ChartBase, layer:Layer.Value, config:ChartCoordinateGridConfig2, rotater:Option[Rotater],derotater:Option[Rotater]){
 		def node = {
 				val n= new PPath(new java.awt.geom.Ellipse2D.Double(-1,-1,1,1));
 				n.setStroke(new BasicStroke(1));
@@ -241,8 +241,8 @@ class ChartCoordinateGrid extends ChartFeature[ChartCoordinateGridConfig]{
 	}
 	
 	def clearChart(chart: ChartBase){
-		List(ChartLayers.coordinateGridJ2000,ChartLayers.coordinateGridJ1950,
-				ChartLayers.coordinateGridEcliptic,ChartLayers.coordinateGridGalactic).foreach{
+		List(Layer.coordinateGridJ2000,Layer.coordinateGridJ1950,
+				Layer.coordinateGridEcliptic,Layer.coordinateGridGalactic).foreach{
 			chart.getLayer(_).removeAllChildren
 		}
 	}

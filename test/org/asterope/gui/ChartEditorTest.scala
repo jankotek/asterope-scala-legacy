@@ -3,7 +3,7 @@ package org.asterope.gui
 import org.asterope.util._
 import javax.swing.JMenuBar
 import edu.umd.cs.piccolo.PNode
-import org.asterope.chart.{ChartLayers, ChartBeans}
+import org.asterope.chart.{Layer, ChartBeans}
 import collection.JavaConversions._
 import org.asterope.data._
 
@@ -97,7 +97,7 @@ class ChartEditorTest extends ScalaTestCase
 
 
   def findBiggestStarNode:PNode = {
-    chart.getLayer(ChartLayers.star).getChildrenIterator
+    chart.getLayer(Layer.star).getChildrenIterator
       .map(_.asInstanceOf[PNode])
       .toList
       .sortWith(_.getWidth > _.getWidth)
@@ -125,8 +125,8 @@ class ChartEditorTest extends ScalaTestCase
   def testLegend(){
     open()
     waitForRefresh()
-    def labelCount = chart.getLayer(ChartLayers.label).getChildrenCount
-    def legendCount = chart.getLayer(ChartLayers.legend).getChildrenCount
+    def labelCount = chart.getLayer(Layer.label).getChildrenCount
+    def legendCount = chart.getLayer(Layer.legend).getChildrenCount
     assert(chartEditor.actShowLegend.selected === Some(true))
     assert(labelCount?>0)
     assert(legendCount?>0)

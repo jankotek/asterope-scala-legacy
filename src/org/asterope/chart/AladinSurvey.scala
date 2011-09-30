@@ -74,7 +74,7 @@ class AladinSurvey extends ChartFeature[AladinSurvey.Mem] {
           }
         }
         chart.executor.async{
-          chart.addNode(layer=ChartLayers.skyview, node=node)
+          chart.addNode(layer=Layer.skyview, node=node)
         }
         checkInterrupted()
       }
@@ -87,13 +87,13 @@ class AladinSurvey extends ChartFeature[AladinSurvey.Mem] {
     val text = new PText(config.survey.copyright)
     text.setTextPaint(chart.colors.fg)
     text.centerBoundsOnPoint(chart.width - text.getWidth/2 - 10, chart.height - text.getHeight/2 - 10)
-    chart.addNode(ChartLayers.skyview,text,zorder = 1);
+    chart.addNode(Layer.skyview,text,zorder = 1);
 
   }
 
   def clearChart(chart: ChartBase){
     chart.executor.sync{
-      chart.getLayer(ChartLayers.skyview).removeAllChildren()
+      chart.getLayer(Layer.skyview).removeAllChildren()
     }
   }
 

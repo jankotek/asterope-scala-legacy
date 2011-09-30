@@ -15,7 +15,7 @@ class ChartSkyviewTest extends ScalaTestCase{
 
     skyview.updateChart(chart,mem);
 
-    val layer = chart.getLayer(ChartLayers.skyview)
+    val layer = chart.getLayer(Layer.skyview)
     val children = layer.getAllNodes.toList
 
     assert(children.size === 3)

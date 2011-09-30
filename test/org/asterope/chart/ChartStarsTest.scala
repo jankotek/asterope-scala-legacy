@@ -26,7 +26,7 @@ class ChartStarsTest extends ScalaTestCase {
 		val config = chartStars.defaultConfig
 		//test if there is white pixel at position of star
 		val node = chartStars.paintObject(chart, config, star).get
-		chart.addNode(ChartLayers.star, node, star, 0)
+		chart.addNode(Layer.star, node, star, 0)
 		val img = chart.toBufferedImage
 	
 		assert(chart.colors.star.getRGB() ===
@@ -43,7 +43,7 @@ class ChartStarsTest extends ScalaTestCase {
 				ra= starPos.getRaRadian.radian, de= starPos.getDeRadian.radian)
 		val config = chartStars.defaultConfig
 		val node = chartStars.paintObject(chart, config, star2).get
-		chart.addNode(ChartLayers.star, node, star2, 0)
+		chart.addNode(Layer.star, node, star2, 0)
 		val img = chart.toBufferedImage
 	
 		assert(chart.colors.star.getRGB() ===

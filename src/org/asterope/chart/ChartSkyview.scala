@@ -57,7 +57,7 @@ class ChartSkyview extends ChartFeature[ChartSkyview.Memento]{
         val imgp = IJProcessor.getSavedImages().get(0);
         imgp.getProcessor().scale(1d,-1d); //for some reasons it is upside down, turn it back
         val img = new PImage(imgp.getImage());
-        val layer = chart.getLayer(ChartLayers.skyview)
+        val layer = chart.getLayer(Layer.skyview)
         val text = new PText(m.survey)
         text.setTextPaint(chart.colors.fg)
         text.setGlobalTranslation(Point2d(chart.width - text.getWidth+3,chart.height - text.getHeight+3))
@@ -112,7 +112,7 @@ class ChartSkyview extends ChartFeature[ChartSkyview.Memento]{
       chart.executor.sync{
         //TODO code duplication
         val img = new PImage(imgp);
-        val layer = chart.getLayer(ChartLayers.skyview)
+        val layer = chart.getLayer(Layer.skyview)
         val text = new PText(m.survey)
         text.setTextPaint(chart.colors.fg)
         text.setGlobalTranslation(Point2d(chart.width - text.getWidth+3,chart.height - text.getHeight+3))
@@ -126,7 +126,7 @@ class ChartSkyview extends ChartFeature[ChartSkyview.Memento]{
   
 
   def clearChart(chart: ChartBase){
-    chart.getLayer(ChartLayers.skyview).removeAllChildren
+    chart.getLayer(Layer.skyview).removeAllChildren
   }
 
 }

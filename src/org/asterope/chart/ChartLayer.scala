@@ -16,7 +16,7 @@ import collection.mutable.WeakHashMap;
 /**
  * Piccolo layer with thread assertions. It can also arrange nodes by Z-Order parameter 
  */
-case class ChartLayer(layerName:ChartLayers.Value) 
+case class ChartLayer(layerName:Layer.Value)
 	extends PLayer {
 
 

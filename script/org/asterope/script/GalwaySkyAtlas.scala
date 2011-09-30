@@ -545,7 +545,7 @@ Page(473, Vector3d(-0.0012517145698816533,-0.06692896202416283,-0.99775695800781
            //center with some additional offset, so label is not placed outside of map
            text.centerBoundsOnPoint(x - xi *text.getWidth * 0.7,y - yi*text.getHeight*0.7)
            text.setTransparency(0.3f)
-           chart.getLayer(ChartLayers.fg).addChild(text)
+           chart.getLayer(Layer.fg).addChild(text)
       }
      
       

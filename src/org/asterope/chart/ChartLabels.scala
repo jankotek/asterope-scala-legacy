@@ -25,7 +25,7 @@ class ChartLabels(
 
 	def defaultConfig = new ChartLabelsConfig
 	def clearChart(chart: ChartBase){
-		chart.getLayer(ChartLayers.label).removeAllChildren()
+		chart.getLayer(Layer.label).removeAllChildren()
 	}
 	
 	def updateChart(chart: ChartBase, config:ChartLabelsConfig){
@@ -49,7 +49,7 @@ class ChartLabels(
 				pos.foreach{p=>
 					label.setGlobalTranslation(p);
 					//add label and wait until done				
-					chart.addNode(ChartLayers.label,label, async=false)       	  		
+					chart.addNode(Layer.label,label, async=false)
 				}
 			}
 		}

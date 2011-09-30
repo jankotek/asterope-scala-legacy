@@ -11,7 +11,7 @@ class ChartConstelBoundaryTest extends ScalaTestCase
     val chart = new ChartBase(position = Vector3d.northPole, fieldOfView = 5.degree)
 
     constelBoundary.updateChart(chart)
-    assert(chart.getLayer(ChartLayers.constelBoundary).getChildrenCount ?>= 3)
+    assert(chart.getLayer(Layer.constelBoundary).getChildrenCount ?>= 3)
   }
 
 }

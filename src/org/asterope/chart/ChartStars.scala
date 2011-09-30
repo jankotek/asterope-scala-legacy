@@ -133,7 +133,7 @@ class ChartStars(
 	    }
 
 	    if(addToLayer)
-	    	chart.addNode(ChartLayers.star,n,star,star.mag.mag)
+	    	chart.addNode(Layer.star,n,star,star.mag.mag)
 	    	   
 	    Some(n)
 	}
@@ -147,7 +147,7 @@ class ChartStars(
 	}
 	
 	def clearChart(chart: ChartBase){
-		chart.getLayer(ChartLayers.star).removeAllChildren()
+		chart.getLayer(Layer.star).removeAllChildren()
 	}
 	
 

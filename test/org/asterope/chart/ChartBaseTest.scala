@@ -53,13 +53,13 @@ class ChartBaseTest extends ScalaTestCase{
 //	}
 
   def testZorderLayer(){    
-    val layer = chart.getOrCreateLayer(ChartLayers.star);
+    val layer = chart.getOrCreateLayer(Layer.star);
 
     //fill with random data
     for(iii <- 1 to 100){
       val rand = math.random;
       val node = new PText(rand.toString);
-      chart.addNode(ChartLayers.star, node, rand.toString, rand)
+      chart.addNode(Layer.star, node, rand.toString, rand)
     }
 
     var last:Double = -1000;

@@ -39,7 +39,7 @@ class ChartMilkyWay(dao:MilkyWayDao)
     n.setStroke(new BasicStroke(0));
     n.setStrokePaint(c2);
     if(addToLayer)
-      	chart.addNode(ChartLayers.milkyway, n, None, gray);
+      	chart.addNode(Layer.milkyway, n, None, gray);
     Some(n)
 	}
 
@@ -51,7 +51,7 @@ class ChartMilkyWay(dao:MilkyWayDao)
 	def defaultConfig = new ChartMilkyWayConfig()
 	
 	def clearChart(chart:ChartBase) {
-		chart.getLayer(ChartLayers.milkyway).removeAllChildren()  
+		chart.getLayer(Layer.milkyway).removeAllChildren()
 	}
 }
 
@@ -71,7 +71,7 @@ class ChartConstelLine(dao:ConstelLineDao)
 	  node.setStroke(new BasicStroke( line.lineWidth));
 	  node.setStrokePaint(chart.colors.constelLine);
 	  if(addToLayer)
-	    	chart.addNode(ChartLayers.constelLine, node)
+	    	chart.addNode(Layer.constelLine, node)
 		Some(node)
 	}
 	
@@ -84,7 +84,7 @@ class ChartConstelLine(dao:ConstelLineDao)
  
 	
 	def clearChart(chart:ChartBase) {
-		chart.getLayer(ChartLayers.constelLine).removeAllChildren()
+		chart.getLayer(Layer.constelLine).removeAllChildren()
 	}
 
 }
@@ -99,7 +99,7 @@ class ChartConstelBoundary(dao: ConstelBoundaryDao)
 	def defaultConfig = new ChartConstelBoundaryConfig
 	
 	def clearChart(chart:ChartBase) {
-		chart.getLayer(ChartLayers.constelBoundary).removeAllChildren()
+		chart.getLayer(Layer.constelBoundary).removeAllChildren()
 	}
 
 	def updateChart(chart: ChartBase, config:ChartConstelBoundaryConfig){
@@ -111,7 +111,7 @@ class ChartConstelBoundary(dao: ConstelBoundaryDao)
       checkInterrupted()
 			node.setStroke(config.stroke.getStroke);
 			node.setStrokePaint(chart.colors.constelBoundary);
-	    	chart.addNode(ChartLayers.constelBoundary, node)
+	    	chart.addNode(Layer.constelBoundary, node)
 		}		
 	}
 
