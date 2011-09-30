@@ -10,8 +10,4 @@ trait ChartBeans extends DataBeans{
   lazy val constelLine = new ChartConstelLine(constelLineDao)
   lazy val constelBoundary = new ChartConstelBoundary(constelBoundaryDao)
   lazy val legendBorder = new ChartLegendBorder(stars,deepSky)
-  lazy val coordinateGrid = new ChartCoordinateGrid
-  lazy val labels = new ChartLabels()
-  lazy val skyview = new ChartSkyview()
-  lazy val aladinSurvey = new AladinSurvey();
 }

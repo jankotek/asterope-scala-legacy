@@ -84,13 +84,13 @@ class ChartEditor(
   private var _isRefreshInProgress = false;
 
   private var chartBase = new ChartBase();
-  private var coordGridConfig = beans.coordinateGrid.defaultConfig
+  private var coordGridConfig = ChartCoordinateGrid.defaultConfig
   private var starsConfig = beans.stars.defaultConfig
   private var showLegend = true
   private var showConstelBounds = true
   private var showConstelLines = true;
   private var deepSkyConfig = beans.deepSky.defaultConfig
-  private var aladinConfig:Option[AladinSurvey.Mem] = None
+  private var aladinConfig:Option[AladinSurveyMem] = None
 
 
   def getChartBase = chartBase
@@ -144,7 +144,7 @@ class ChartEditor(
 
   refreshWorker.addTask{chartBase =>
     aladinConfig.foreach{mem=>
-      beans.aladinSurvey.updateChart(chartBase,mem)
+      AladinSurvey.updateChart(chartBase,mem)
     }
   }
 
@@ -154,7 +154,7 @@ class ChartEditor(
   }
 
   refreshWorker.addTask{chartBase =>
-      beans.coordinateGrid.updateChart(chartBase,coordGridConfig)
+      ChartCoordinateGrid.updateChart(chartBase,coordGridConfig)
   }
 
   refreshWorker.addTask{chartBase =>
@@ -166,7 +166,7 @@ class ChartEditor(
       _isRefreshInProgress = false;
       //labels must be last,
       // placement alghorihm depends on graphic created by other features
-      beans.labels.updateChart(chartBase)
+      ChartLabels.updateChart(chartBase)
 
       chartBase.executor.asInstanceOf[EDTChartExecutor].plugIntoSwing()
       getCamera.removeAllChildren();
@@ -488,12 +488,12 @@ class ChartEditor(
   }
 
   val actDSSAladinSurvey = chartAct{
-    aladinConfig = Some(new AladinSurvey.Mem(survey = AladinSurvey.dssColorSurvey))
+    aladinConfig = Some(new AladinSurveyMem(survey = AladinSurvey.dssColorSurvey))
     refresh()
   }
 
   val actMellingerAladinSurvey = chartAct{
-    aladinConfig = Some(new AladinSurvey.Mem(survey = AladinSurvey.mellingerSurvey))
+    aladinConfig = Some(new AladinSurveyMem(survey = AladinSurvey.mellingerSurvey))
     refresh()
   }
 

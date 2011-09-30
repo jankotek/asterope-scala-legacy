@@ -20,8 +20,8 @@ case class ChartLabelsConfig(
 	);
 
 
-class ChartLabels(
-		)extends ChartFeature[ChartLabelsConfig] {
+object ChartLabels
+		extends ChartFeature[ChartLabelsConfig] {
 
 	def defaultConfig = new ChartLabelsConfig
 	def clearChart(chart: ChartBase){

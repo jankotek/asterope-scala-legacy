@@ -12,13 +12,13 @@ import java.awt.{Image, Graphics2D, Shape}
 import org.asterope.geometry.CoordinateSystem.Galactic
 import edu.umd.cs.piccolo.nodes.PText
 
-class AladinSurvey extends ChartFeature[AladinSurvey.Mem] {
+object AladinSurvey extends ChartFeature[AladinSurveyMem] {
 
 
 
-  val defaultConfig = new AladinSurvey.Mem()
+  val defaultConfig = new AladinSurveyMem()
 
-  def updateChart(chart: ChartBase, config:AladinSurvey.Mem=defaultConfig){
+  def updateChart(chart: ChartBase, config:AladinSurveyMem=defaultConfig){
 
     def translate(pos:Vector3d):Vector3d = {
       config.survey.coordSys match{
@@ -97,7 +97,7 @@ class AladinSurvey extends ChartFeature[AladinSurvey.Mem] {
     }
   }
 
-  def getNorder(pixelSize:Angle, mem:AladinSurvey.Mem):Int = {
+  def getNorder(pixelSize:Angle, mem:AladinSurveyMem):Int = {
     val ang = pixelSize.toArcSec * mem.survey.imgWidth
     val nside = PixTools.GetNSide(ang)
     val norder = PixTools.nside2norder(nside)
@@ -167,9 +167,6 @@ class AladinSurvey extends ChartFeature[AladinSurvey.Mem] {
   }
 
 
-}
-
-object AladinSurvey{
   case class Survey(url:String, name:String, description:String,
                             copyright:String, copyrightUrl:String,
                             imgWidth:Int = 512,maxNorder:Int = 8, suffix:String = ".jpg",
@@ -190,7 +187,8 @@ object AladinSurvey{
     copyrightUrl = "http://home.arcor.de/axel.mellinger/",
     maxNorder = 4, coordSys = "G")
 
-  case class Mem( survey:Survey = dssColorSurvey)
+
 }
 
+case class AladinSurveyMem( survey:AladinSurvey.Survey = AladinSurvey.dssColorSurvey)
 

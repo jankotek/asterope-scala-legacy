@@ -39,7 +39,7 @@ case class ChartCoordinateGridConfig(
  *
  * @author Jan Kotek
  */
-class ChartCoordinateGrid extends ChartFeature[ChartCoordinateGridConfig]{
+object ChartCoordinateGrid extends ChartFeature[ChartCoordinateGridConfig]{
 	
 	/**coordinate steps*/
 	protected val deSteps = List[Angle](90.degree, 45.degree, 30.degree, 15.degree, 10.degree, 5.degree, 2.degree, 1.degree, 

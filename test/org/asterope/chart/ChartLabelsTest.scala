@@ -5,7 +5,6 @@ import org.asterope.util._
 
 class ChartLabelsTest extends ScalaTestCase{
 	
-	lazy val labels = new ChartLabels()
 	
 	def testSelectNgcM13Name{
 		
@@ -20,19 +19,19 @@ class ChartLabelsTest extends ScalaTestCase{
 			override def names = ids
 		}
 		
-		assert(labels.selectName(so) === "7000 M13")
+		assert(ChartLabels.selectName(so) === "7000 M13")
 		
 		ids = List(m)
-		assert(labels.selectName(so) === "M13")
+		assert(ChartLabels.selectName(so) === "M13")
 
 		ids = List(ic,m)
-		assert(labels.selectName(so) === "M13")
+		assert(ChartLabels.selectName(so) === "M13")
 
 		ids = List(ic,ngc)
-		assert(labels.selectName(so) === "7000")
+		assert(ChartLabels.selectName(so) === "7000")
 
 		ids = List(ngc)
-		assert(labels.selectName(so) === "7000")
+		assert(ChartLabels.selectName(so) === "7000")
 		
 	}
 	
@@ -50,18 +49,18 @@ class ChartLabelsTest extends ScalaTestCase{
 		}
 		
 		ids = List(greek)
-		println("'"+labels.selectName(so)+"'")
-		assert(labels.selectName(so) === alpha)
+		println("'"+ChartLabels.selectName(so)+"'")
+		assert(ChartLabels.selectName(so) === alpha)
 
 		ids = List(num)
-		assert(labels.selectName(so) === "1")
+		assert(ChartLabels.selectName(so) === "1")
 
 
 		ids = List(hip)
-		assert(labels.selectName(so) === "H2")
+		assert(ChartLabels.selectName(so) === "H2")
 
 		ids = List(hip,num)
-		assert(labels.selectName(so) === "1")
+		assert(ChartLabels.selectName(so) === "1")
 
 
 		

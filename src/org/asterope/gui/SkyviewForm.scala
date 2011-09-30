@@ -15,7 +15,7 @@ import org.jdesktop.swingx.renderer.{StringValue, DefaultListRenderer}
  * Form which drives Skyview on map
  */
 
-class SkyviewForm extends Form[Memento] {
+class SkyviewForm extends Form[ChartSkyviewMemento] {
 
     protected val surveyModel:JListModel[String] =  {
     val vals = for(s<-ChartSkyview.surveys;s2<-s._2) yield s2._1
@@ -77,7 +77,7 @@ class SkyviewForm extends Form[Memento] {
   add(internalEngineCheck, "growx,wrap")
     
 
-  def reset(e:Memento){
+  def reset(e:ChartSkyviewMemento){
     survey.getEditor.setItem(e.survey)
     scaleModel.setSelectedItem(e.scale)
     resampleModel.setSelectedItem(e.resample)
@@ -85,7 +85,7 @@ class SkyviewForm extends Form[Memento] {
     internalEngineCheck.setSelected(e.useInternalEngine)    
   }
 
-  def commit() = new Memento(
+  def commit() = new ChartSkyviewMemento(
     survey = surveyModel.getSelectedItem2,
     scale = scaleModel.getSelectedItem2,
     resample = resampleModel.getSelectedItem2,
@@ -170,7 +170,7 @@ object SkyviewProgressDialog extends JDialog{
 
 trait ChartWindowSkyviewActions{ self:ChartEditor =>
 
-  private var lastSkyviewMemento = new ChartSkyview.Memento;
+  private var lastSkyviewMemento = new ChartSkyviewMemento;
 
   /*************************************************************
 
@@ -196,7 +196,7 @@ trait ChartWindowSkyviewActions{ self:ChartEditor =>
 
       fork("skyview imager"){
         try{
-          beans.skyview.updateChart(getChartBase,lastSkyviewMemento)
+          ChartSkyview.updateChart(getChartBase,lastSkyviewMemento)
           onEDT{
             //hide modal dialog after we are done
             SkyviewProgressDialog.setVisible(false)
