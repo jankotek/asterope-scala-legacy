@@ -1,7 +1,6 @@
 package org.asterope.chart
 
 import java.io.File
-import org.asterope.cli.CliChart
 import org.asterope.util.ScalaTestCase
 import org.asterope.data.TestRecordManager
 
@@ -10,8 +9,13 @@ import org.asterope.data.TestRecordManager
  * 
  * @author Jan Kotek
  */
+//TODO one test case left behind after CLI was removed
+/*
 class FullPaintTest extends ScalaTestCase {
-	
+
+
+
+
 	lazy val cli = new CliChart with TestRecordManager
 
 	lazy val folder = {
@@ -68,6 +72,5 @@ class FullPaintTest extends ScalaTestCase {
 	}
 
 
-
-
 }
+ */

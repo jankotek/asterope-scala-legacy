@@ -6,7 +6,6 @@ import org.asterope.data._
 import catalog.Ucac3Catalog
 import org.asterope.chart._
 import org.asterope.util._
-import org.asterope.cli.CliChart
 
 object GalwaySkyAtlas {
   def main(args:Array[String]){
@@ -498,7 +497,6 @@ Page(473, Vector3d(-0.0012517145698816533,-0.06692896202416283,-0.99775695800781
    val outputDir = new java.io.File("build/galwaySkyAtlas")
    outputDir.mkdirs;
 
-   val c = new CliChart();
    val ucac3 = new Ucac3Catalog()
 
    pages
