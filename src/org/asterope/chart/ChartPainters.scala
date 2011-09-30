@@ -33,8 +33,8 @@ class ChartMilkyWay(dao:MilkyWayDao)
     n.setGlobalTranslation(pos.get);
 
     val gray = 1.0* pixel.gray/255.0;
-    val c1 = ChartColors.between(chart.colors.bg, chart.colors.milkyWay,gray );
-    val c2 = ChartColors.setAlpha(c1, 0);
+    val c1 = Colors.between(chart.colors.bg, chart.colors.milkyWay,gray );
+    val c2 = Colors.setAlpha(c1, 0);
     n.setPaint(new RadialGradientPaint(0F,0F,diameter.get.toFloat/2F,Array[Float](0,1F),Array[Color](c1,c2)));
     n.setStroke(new BasicStroke(0));
     n.setStrokePaint(c2);

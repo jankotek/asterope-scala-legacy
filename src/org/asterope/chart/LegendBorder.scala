@@ -71,7 +71,7 @@ class LegendBorder (stars:Stars, deepSky:DeepSkyPainter)
 		//add 'created by' note
 		val createdBy = new PText(" Generated with Asterope, http://github.com/jankotek/asterope")
 		createdBy.setFont(new Font("SansSerif", Font.PLAIN, 9))
-		createdBy.setTextPaint(ChartColors.setAlpha(chart.colors.fg,96))
+		createdBy.setTextPaint(Colors.setAlpha(chart.colors.fg,96))
     createdBy.setOffset(3, chart.legendHeight-3 - createdBy.getHeight)
 		legendNode.addChild(createdBy)
 

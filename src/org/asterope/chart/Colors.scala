@@ -3,7 +3,7 @@ package org.asterope.chart
 import java.awt.Color
 import scala.math._
 
-object ChartColors {
+object Colors {
 
 	val WHITE = new Color(255, 255, 255);
 	val BLACK = new Color(0,0,0)
@@ -33,7 +33,7 @@ object ChartColors {
 }
 
 
-trait ChartColors{
+trait Colors{
   def fg:Color
   def bg:Color
 	def gridColor:Color
@@ -62,9 +62,9 @@ trait ChartColors{
   def star:Color
 }
 
-object DarkBlueColors extends ChartColors{
-  val fg = ChartColors.WHITE
-  val bg = ChartColors.DARK_BLUE
+object DarkBlueColors extends Colors{
+  val fg = Colors.WHITE
+  val bg = Colors.DARK_BLUE
   val gridColor = new Color(32,32,127)
   val gridLabel = new Color(96,96,150)
 
@@ -92,9 +92,9 @@ object DarkBlueColors extends ChartColors{
 }
 
 
-object LightColors extends ChartColors{
-  val fg = ChartColors.BLACK
-  val bg = ChartColors.WHITE
+object LightColors extends Colors{
+  val fg = Colors.BLACK
+  val bg = Colors.WHITE
   val gridColor = new Color(70,70,150)
   val gridLabel = new Color(127,127,255)
 

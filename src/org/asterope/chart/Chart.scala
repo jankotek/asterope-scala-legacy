@@ -31,7 +31,7 @@ case class Chart(
 	xscale:Double = 1, yscale:Double = 1,
 	width:Int = 800, height:Int = 600,
 	legendHeight:Int = 0,
-	colors:ChartColors = DarkBlueColors,
+	colors:Colors = DarkBlueColors,
 
 	/** 
 	 * Executor is responsible for executing any code which may modify chart.
