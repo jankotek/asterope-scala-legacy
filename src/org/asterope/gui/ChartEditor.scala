@@ -19,7 +19,8 @@ class ChartEditor(
   with ChartWindowSkyviewActions
   {
 
-
+  setPanEventHandler(null)
+  setZoomEventHandler(null)
   setBackground(java.awt.Color.black)
 
 
