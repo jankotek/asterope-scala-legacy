@@ -60,7 +60,7 @@ class ChartEditor(
 
 
   /** repaints map with delay, multiple events are merged, so map repaints only once */
-  private val refreshWorker = new Worker[ChartBase](delay = 200)
+  private val refreshWorker = new Worker[Chart](delay = 200)
 
   //refresh when canvas size changes
   addComponentListener(new ComponentAdapter{
@@ -72,18 +72,18 @@ class ChartEditor(
   /**
    * Notify when chart refresh starts 
    */
-  lazy val onChartRefreshStart = new Publisher[ChartBase]()
+  lazy val onChartRefreshStart = new Publisher[Chart]()
 
   /**
    * Notify when chart refresh finishes 
    */
-  lazy val onChartRefreshFinish = new Publisher[ChartBase]()
+  lazy val onChartRefreshFinish = new Publisher[Chart]()
 
   /** indicates if refresh is currently in progress */
   def isRefreshInProgress:Boolean = _isRefreshInProgress
   private var _isRefreshInProgress = false;
 
-  private var chartBase = new ChartBase();
+  private var chartBase = new Chart();
   private var coordGridConfig = CoordinateGrid.defaultConfig
   private var starsConfig = beans.stars.defaultConfig
   private var showLegend = true

@@ -10,7 +10,7 @@ class CoordinateGridTest extends ScalaTestCase{
 	val equator = CoordinateGridConfig2(showLines = false,showPoles = false, showEquator =true);
 	
 	def testLayerNoGridJ2000{
-		val c = new ChartBase()
+		val c = new Chart()
 		val config = CoordinateGridConfig(coordinateGridJ2000 = empty)
 		assert(c.getLayer(Layer.coordinateGridJ2000).getChildrenCount === 0)
 		CoordinateGrid.updateChart(c,config)
@@ -18,7 +18,7 @@ class CoordinateGridTest extends ScalaTestCase{
 	}
 	
 	def testLayerGridLinesJ2000{
-		val c = new ChartBase()
+		val c = new Chart()
 		val config = CoordinateGridConfig(coordinateGridJ2000 = lines)
 		assert(c.getLayer(Layer.coordinateGridJ2000).getChildrenCount === 0)
 		CoordinateGrid.updateChart(c,config)
@@ -26,7 +26,7 @@ class CoordinateGridTest extends ScalaTestCase{
 	}
 
 	def testLayerGridPolesJ2000{
-		val c = new ChartBase(position = Vector3d.northPole)
+		val c = new Chart(position = Vector3d.northPole)
 		val config = CoordinateGridConfig(coordinateGridJ2000 = poles)
 		assert(c.getLayer(Layer.coordinateGridJ2000).getChildrenCount === 0)
 		CoordinateGrid.updateChart(c,config)
@@ -34,7 +34,7 @@ class CoordinateGridTest extends ScalaTestCase{
 	}
 
 	def testLayerGridPolesEquatorJ2000{
-		val c = new ChartBase(position = Vector3d.zeroPoint)
+		val c = new Chart(position = Vector3d.zeroPoint)
 		val config = CoordinateGridConfig(coordinateGridJ2000 = equator)
 		assert(c.getLayer(Layer.coordinateGridJ2000).getChildrenCount === 0)
 		CoordinateGrid.updateChart(c,config)
@@ -43,7 +43,7 @@ class CoordinateGridTest extends ScalaTestCase{
 	
 	
 	def testLayerNoGridJ1950{
-		val c = new ChartBase()
+		val c = new Chart()
 		val config = CoordinateGridConfig(coordinateGridJ1950 = empty)
 		assert(c.getLayer(Layer.coordinateGridJ1950).getChildrenCount === 0)
 		CoordinateGrid.updateChart(c,config)
@@ -51,7 +51,7 @@ class CoordinateGridTest extends ScalaTestCase{
 	}
 	
 	def testLayerGridLinesJ1950{
-		val c = new ChartBase()
+		val c = new Chart()
 		val config = CoordinateGridConfig(coordinateGridJ1950 = lines)
 		assert(c.getLayer(Layer.coordinateGridJ1950).getChildrenCount === 0)
 		CoordinateGrid.updateChart(c,config)
@@ -59,7 +59,7 @@ class CoordinateGridTest extends ScalaTestCase{
 	}
 
 	def testLayerGridPolesJ1950{
-		val c = new ChartBase(position = Vector3d.northPole)
+		val c = new Chart(position = Vector3d.northPole)
 		val config = CoordinateGridConfig(coordinateGridJ1950 = poles)
 		assert(c.getLayer(Layer.coordinateGridJ1950).getChildrenCount === 0)
 		CoordinateGrid.updateChart(c,config)
@@ -67,7 +67,7 @@ class CoordinateGridTest extends ScalaTestCase{
 	}
 
 	def testLayerGridPolesEquatorJ1950{
-		val c = new ChartBase(position = Vector3d.zeroPoint)
+		val c = new Chart(position = Vector3d.zeroPoint)
 		val config = CoordinateGridConfig(coordinateGridJ1950 = equator)
 		assert(c.getLayer(Layer.coordinateGridJ1950).getChildrenCount === 0)
 		CoordinateGrid.updateChart(c,config)
@@ -75,7 +75,7 @@ class CoordinateGridTest extends ScalaTestCase{
 	}
 
 	def testLayerNoGridGalactic{
-		val c = new ChartBase()
+		val c = new Chart()
 		val config = CoordinateGridConfig(coordinateGridGalactic = empty)
 		assert(c.getLayer(Layer.coordinateGridGalactic).getChildrenCount === 0)
 		CoordinateGrid.updateChart(c,config)
@@ -83,7 +83,7 @@ class CoordinateGridTest extends ScalaTestCase{
 	}
 	
 	def testLayerGridLinesGalactic{
-		val c = new ChartBase()
+		val c = new Chart()
 		val config = CoordinateGridConfig(coordinateGridGalactic = lines)
 		assert(c.getLayer(Layer.coordinateGridGalactic).getChildrenCount === 0)
 		CoordinateGrid.updateChart(c,config)
@@ -91,7 +91,7 @@ class CoordinateGridTest extends ScalaTestCase{
 	}
 
 	def testLayerGridPolesGalactic{
-		val c = new ChartBase(position = Vector3d.galaxyNorthPole)
+		val c = new Chart(position = Vector3d.galaxyNorthPole)
 		val config = CoordinateGridConfig(coordinateGridGalactic = poles)
 		assert(c.getLayer(Layer.coordinateGridGalactic).getChildrenCount === 0)
 		CoordinateGrid.updateChart(c,config)
@@ -99,7 +99,7 @@ class CoordinateGridTest extends ScalaTestCase{
 	}
 
 	def testLayerGridPolesEquatorGalactic{
-		val c = new ChartBase(position = Vector3d.galaxyCentre)
+		val c = new Chart(position = Vector3d.galaxyCentre)
 		val config = CoordinateGridConfig(coordinateGridGalactic = equator)
 		assert(c.getLayer(Layer.coordinateGridGalactic).getChildrenCount === 0)
 		CoordinateGrid.updateChart(c,config)
@@ -108,7 +108,7 @@ class CoordinateGridTest extends ScalaTestCase{
 
 
 	def testLayerNoGridEcliptic{
-		val c = new ChartBase()
+		val c = new Chart()
 		val config = CoordinateGridConfig(coordinateGridEcliptic = empty)
 		assert(c.getLayer(Layer.coordinateGridEcliptic).getChildrenCount === 0)
 		CoordinateGrid.updateChart(c,config)
@@ -116,7 +116,7 @@ class CoordinateGridTest extends ScalaTestCase{
 	}
 	
 	def testLayerGridLinesEcliptic{
-		val c = new ChartBase()
+		val c = new Chart()
 		val config = CoordinateGridConfig(coordinateGridEcliptic = lines)
 		assert(c.getLayer(Layer.coordinateGridEcliptic).getChildrenCount === 0)
 		CoordinateGrid.updateChart(c,config)
@@ -124,7 +124,7 @@ class CoordinateGridTest extends ScalaTestCase{
 	}
 
 	def testLayerGridPolesEcliptic{
-		val c = new ChartBase(position = Vector3d.eclipticNorthPole)
+		val c = new Chart(position = Vector3d.eclipticNorthPole)
 		val config = CoordinateGridConfig(coordinateGridEcliptic = poles)
 		assert(c.getLayer(Layer.coordinateGridEcliptic).getChildrenCount === 0)
 		CoordinateGrid.updateChart(c,config)
@@ -135,7 +135,7 @@ class CoordinateGridTest extends ScalaTestCase{
 		val sunPosition = Vector3d.rade2Vector(Angle.parseRa("12","55","41"), Angle.parseDe("-","5","57","38.6"));
 		
 		
-		val c = new ChartBase(position = sunPosition)
+		val c = new Chart(position = sunPosition)
 		val config = CoordinateGridConfig(coordinateGridEcliptic = equator)
 		assert(c.getLayer(Layer.coordinateGridEcliptic).getChildrenCount === 0)
 		CoordinateGrid.updateChart(c,config)

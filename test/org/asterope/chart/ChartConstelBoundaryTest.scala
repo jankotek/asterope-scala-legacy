@@ -8,7 +8,7 @@ class ChartConstelBoundaryTest extends ScalaTestCase
 
 
   def testPaintNorthPole{
-    val chart = new ChartBase(position = Vector3d.northPole, fieldOfView = 5.degree)
+    val chart = new Chart(position = Vector3d.northPole, fieldOfView = 5.degree)
 
     constelBoundary.updateChart(chart)
     assert(chart.getLayer(Layer.constelBoundary).getChildrenCount ?>= 3)

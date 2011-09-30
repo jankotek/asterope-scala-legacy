@@ -64,7 +64,7 @@ object CoordinateGrid extends ChartFeature[CoordinateGridConfig]{
 	
 	def defaultConfig = new CoordinateGridConfig()
 	
-	def updateChart(chart: ChartBase, config:CoordinateGridConfig){
+	def updateChart(chart: Chart, config:CoordinateGridConfig){
 
 	   paintLines(chart,Layer.coordinateGridJ2000,config.coordinateGridJ2000,None,None,"j2000")
 	   paintLines(chart,Layer.coordinateGridJ1950,config.coordinateGridJ1950,Some(j1950Rotater),Some(j1950Derotater),"j1950")
@@ -95,7 +95,7 @@ object CoordinateGrid extends ChartFeature[CoordinateGridConfig]{
    * There are two rules: if FOV is bigger than 60 degrees.
    * Or if there are null points (outside of sphere) on chart.
    */
-  protected def shouldDisplayAllLines(chart:ChartBase):Boolean = {
+  protected def shouldDisplayAllLines(chart:Chart):Boolean = {
     if(chart.fieldOfView > 30.degree) return true
     for(x <- Range(0, chart.width, chart.width/10);
        y <-  Range(0, chart.width ,chart.width/10)){
@@ -107,7 +107,7 @@ object CoordinateGrid extends ChartFeature[CoordinateGridConfig]{
 
   }
 
-	protected def paintLines(chart:ChartBase, layer:Layer.Value, config:CoordinateGridConfig2,
+	protected def paintLines(chart:Chart, layer:Layer.Value, config:CoordinateGridConfig2,
                            rotater:Option[Rotater],derotater:Option[Rotater],
                            labelPrefix:String){
 
@@ -166,7 +166,7 @@ object CoordinateGrid extends ChartFeature[CoordinateGridConfig]{
       checkInterrupted()
 
       val label = "  " + (//special label for equator
-        if(config.showEquator && de == 0.degree) " "+ChartBase.resMap.getString(labelPrefix+"Equator")
+        if(config.showEquator && de == 0.degree) " "+Chart.resMap.getString(labelPrefix+"Equator")
         else Angle.deToString(de.toRadian)
       )
       assert(label!=null);
@@ -214,7 +214,7 @@ object CoordinateGrid extends ChartFeature[CoordinateGridConfig]{
 
 	}
 	
-	protected def paintPoles(chart:ChartBase, layer:Layer.Value, config:CoordinateGridConfig2, rotater:Option[Rotater],derotater:Option[Rotater]){
+	protected def paintPoles(chart:Chart, layer:Layer.Value, config:CoordinateGridConfig2, rotater:Option[Rotater],derotater:Option[Rotater]){
 		def node = {
 				val n= new PPath(new java.awt.geom.Ellipse2D.Double(-1,-1,1,1));
 				n.setStroke(new BasicStroke(1));
@@ -240,7 +240,7 @@ object CoordinateGrid extends ChartFeature[CoordinateGridConfig]{
 		}
 	}
 	
-	def clearChart(chart: ChartBase){
+	def clearChart(chart: Chart){
 		List(Layer.coordinateGridJ2000,Layer.coordinateGridJ1950,
 				Layer.coordinateGridEcliptic,Layer.coordinateGridGalactic).foreach{
 			chart.getLayer(_).removeAllChildren

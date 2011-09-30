@@ -24,11 +24,11 @@ object Labels
 		extends ChartFeature[LabelsConfig] {
 
 	def defaultConfig = new LabelsConfig
-	def clearChart(chart: ChartBase){
+	def clearChart(chart: Chart){
 		chart.getLayer(Layer.label).removeAllChildren()
 	}
 	
-	def updateChart(chart: ChartBase, config:LabelsConfig){
+	def updateChart(chart: Chart, config:LabelsConfig){
 		val objs:List[(HasNomenclature,PNode)] = findStarsToLabel(chart,config ) ::: findDeepSkyToLabel(chart,config)
 
 
@@ -58,7 +58,7 @@ object Labels
 	/**
 	 * Find brightest stars on chart, for which label is added. 
 	 */
-	def findStarsToLabel(chart: ChartBase, config:LabelsConfig):List[(LiteStar,PNode)] = {
+	def findStarsToLabel(chart: Chart, config:LabelsConfig):List[(LiteStar,PNode)] = {
 			if(!config.showStarLabels) return Nil
 			val liteStars = chart.objects
 					.filter(_.isInstanceOf[LiteStar])
@@ -77,7 +77,7 @@ object Labels
 	/**
 	 * Find brightest deepsky object on chart 
 	 */
-	def findDeepSkyToLabel(chart: ChartBase, config:LabelsConfig):List[(DeepSky,PNode)] = {
+	def findDeepSkyToLabel(chart: Chart, config:LabelsConfig):List[(DeepSky,PNode)] = {
 			if(!config.showDeepSkyLabels) return Nil
 			val ds = chart.objects
 					.filter(_.isInstanceOf[DeepSky])
@@ -153,13 +153,13 @@ object Labels
 	
   /**Find best position where to put label. It uses fuzzy algorithm to find
    * place where label does not overlap with other things
-   * @param chart ChartBase on which label should be placed
+   * @param chart Chart on which label should be placed
    * @param node PNode for which label should be placed
    * @param w width of label
    * @param h height of label
    * @return best position for label  
    */
-  def findBestLabelPosition(chart:ChartBase, node:PNode, w:Int, h:Int):Option[Point2d] = {
+  def findBestLabelPosition(chart:Chart, node:PNode, w:Int, h:Int):Option[Point2d] = {
 	  
 	  /*
 	   * Prepare image 

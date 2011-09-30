@@ -21,7 +21,7 @@ object ChartUtils {
   /**
    * Exports chart into image file. This methods uses Batik to convert to SVG or PNG
    */
-  def saveChartToImageFile(chart: ChartBase, file: File) {
+  def saveChartToImageFile(chart: Chart, file: File) {
     val ext = file.getName.substring(file.getName.lastIndexOf('.') + 1).toLowerCase;
     //first check if we have vector based transcoder
     if (ext == "svg") {

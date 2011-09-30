@@ -26,7 +26,7 @@ class DeepSkyPainter(dao: DeepSkyDao)
 	extends ChartFeature[DeepSkyPainterConfig]
   with ChartPainter[DeepSkyPainterConfig, DeepSky]{
   
-  def paintObject(chart:ChartBase, config:DeepSkyPainterConfig,
+  def paintObject(chart:Chart, config:DeepSkyPainterConfig,
                   ds:DeepSky,addToLayer:Boolean):Option[PNode] = {
 	
 
@@ -70,7 +70,7 @@ class DeepSkyPainter(dao: DeepSkyDao)
     n
   }
 
-  def paintBrightNebula(chart: ChartBase, config:DeepSkyPainterConfig,ds: DeepSky): Option[PNode] = {
+  def paintBrightNebula(chart: Chart, config:DeepSkyPainterConfig,ds: DeepSky): Option[PNode] = {
 	if(!config.showBrightNebula) return None
     val dia = ds.sizeMax.get.toRadian /chart.pixelAngularSize.toRadian
     val shape = orOutline(ds, chart, new Ellipse2D.Double(-dia / 2, -dia / 2, dia, dia))
@@ -82,7 +82,7 @@ class DeepSkyPainter(dao: DeepSkyDao)
   }
 
 
-  def paintDarkNebula(chart: ChartBase, config:DeepSkyPainterConfig,ds: DeepSky): Option[PNode] = {
+  def paintDarkNebula(chart: Chart, config:DeepSkyPainterConfig,ds: DeepSky): Option[PNode] = {
 	if(!config.showDarkNebula) return None
     val dia = ds.sizeMax.get.toRadian /chart.pixelAngularSize.toRadian
     val shape = orOutline(ds, chart, new Ellipse2D.Double(-dia / 2, -dia / 2, dia, dia))
@@ -94,7 +94,7 @@ class DeepSkyPainter(dao: DeepSkyDao)
     return Some(n);
   }
 
-  def paintOpenCluster(chart: ChartBase, config:DeepSkyPainterConfig,ds: DeepSky): Option[PNode] = {
+  def paintOpenCluster(chart: Chart, config:DeepSkyPainterConfig,ds: DeepSky): Option[PNode] = {
     if(!config.showOpenCluster) return None
     val dia = ds.sizeMax.get.toRadian /chart.pixelAngularSize.toRadian
     val shape = orOutline(ds, chart, new Ellipse2D.Double(-dia / 2, -dia / 2, dia, dia))
@@ -106,7 +106,7 @@ class DeepSkyPainter(dao: DeepSkyDao)
     return Some(n);
   }
 
-  def paintGlobularCluster(chart: ChartBase, config:DeepSkyPainterConfig, ds: DeepSky): Option[PNode] = {
+  def paintGlobularCluster(chart: Chart, config:DeepSkyPainterConfig, ds: DeepSky): Option[PNode] = {
     if(!config.showGlobularCluster) return None
     val dia = ds.sizeMax.get.toRadian /chart.pixelAngularSize.toRadian
     val shape = orOutline(ds, chart, new Ellipse2D.Double(-dia / 2, -dia / 2, dia, dia))
@@ -130,7 +130,7 @@ class DeepSkyPainter(dao: DeepSkyDao)
   }
 
   //paints PlanetaryNebula and SupernovaRemnant
-  def paintPlanetaryNebula(chart: ChartBase, config:DeepSkyPainterConfig, ds: DeepSky): Option[PNode] = {
+  def paintPlanetaryNebula(chart: Chart, config:DeepSkyPainterConfig, ds: DeepSky): Option[PNode] = {
     if(!config.showPlanetaryNebula && !config.showSupernovaRemnant) return None
 
     val dia = ds.sizeMax.get.toRadian /chart.pixelAngularSize.toRadian
@@ -157,7 +157,7 @@ class DeepSkyPainter(dao: DeepSkyDao)
     return Some(n);
   }
 
-  def paintGalaxy(chart: ChartBase, config:DeepSkyPainterConfig, ds: DeepSky): Option[PNode] = {
+  def paintGalaxy(chart: Chart, config:DeepSkyPainterConfig, ds: DeepSky): Option[PNode] = {
 	  if(!config.showGalaxy) return None
     val dia1 = ds.sizeMax.get.toRadian /chart.pixelAngularSize.toRadian
     val dia2 =
@@ -177,17 +177,17 @@ class DeepSkyPainter(dao: DeepSkyDao)
   
   def defaultConfig = new DeepSkyPainterConfig()
   
-  def updateChart(chart:ChartBase, config:DeepSkyPainterConfig){
+  def updateChart(chart:Chart, config:DeepSkyPainterConfig){
 	  val deepSkys = dao.deepSkyByArea(chart.area)
 	  paintAll(chart,config,deepSkys)
   }
   
-  def clearChart(chart:ChartBase) = {
+  def clearChart(chart:Chart) = {
 	  chart.getLayer(Layer.deepsky).removeAllChildren
   }
 
 
-  def outlineToShape(chart:ChartBase, outline:DeepSkyOutline,center:Point2d):Shape = {
+  def outlineToShape(chart:Chart, outline:DeepSkyOutline,center:Point2d):Shape = {
     val ret = new Path2D.Double()
     val points = outline.points.flatMap(chart.wcs.project(_))
     ret.moveTo(points.head.x-center.x, points.head.y-center.y)
@@ -198,7 +198,7 @@ class DeepSkyPainter(dao: DeepSkyDao)
     ret
   }
 
-  def orOutline(ds:DeepSky, chart:ChartBase, out: =>Shape):Shape = {
+  def orOutline(ds:DeepSky, chart:Chart, out: =>Shape):Shape = {
     val center = chart.wcs.project(ds.ra,ds.de).get
     dao.findOutline(ds)
       .map(outlineToShape(chart,_,center))

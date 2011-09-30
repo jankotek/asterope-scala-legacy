@@ -28,7 +28,7 @@ class LegendBorder (stars:Stars, deepSky:DeepSkyPainter)
   
 	def defaultConfig = new LegendBorderConfig
 	
-	def clearChart(chart: ChartBase) {
+	def clearChart(chart: Chart) {
 		chart.getLayer(Layer.legend).removeAllChildren
 	}
 	
@@ -41,7 +41,7 @@ class LegendBorder (stars:Stars, deepSky:DeepSkyPainter)
 	 * @param chart to paint on
 	 * @param config stores configuration for this action
 	 */
-	def updateChart(chart: ChartBase, config:LegendBorderConfig){
+	def updateChart(chart: Chart, config:LegendBorderConfig){
 		//paint line around canvas
 		val line = new PLine();
     val ps = 1.0

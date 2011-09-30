@@ -32,7 +32,7 @@ class Stars(
 	
 	def defaultConfig = new StarsConfig()
 	
-	def calculateLimitStarMag(chart:ChartBase, config:StarsConfig):Magnitude = {
+	def calculateLimitStarMag(chart:Chart, config:StarsConfig):Magnitude = {
 		config.limitStarMagForce.getOrElse{
 			val pogson = chart.pixelAngularSize.toRadian;
 			//convert pogson magnitude into real one
@@ -53,7 +53,7 @@ class Stars(
 	 * @param star
 	 * @return node which represents star, or `None` if star disk can not be projected to map
 	 */
-	def paintObject(chart:ChartBase, config:StarsConfig, star:LiteStar,addToLayer:Boolean):Option[PNode] = {
+	def paintObject(chart:Chart, config:StarsConfig, star:LiteStar,addToLayer:Boolean):Option[PNode] = {
 		val limitStarMag = calculateLimitStarMag(chart,config)
 		val diameter = (limitStarMag.mag  - star.mag.mag) * config.starDiscMultiply
 		val pos = chart.wcs.project(star.ra, star.de)
@@ -139,14 +139,14 @@ class Stars(
 	}
 	
 	
-	def updateChart(chart: ChartBase, config:StarsConfig){
+	def updateChart(chart: Chart, config:StarsConfig){
 		val limitStarMag = calculateLimitStarMag(chart,config)
 		Log.info("Refresh with limit star mag: "+limitStarMag)
 		val stars = dao.starsByAreaMag(chart.area, limitStarMag)
 		paintAll(chart, config, stars)
 	}
 	
-	def clearChart(chart: ChartBase){
+	def clearChart(chart: Chart){
 		chart.getLayer(Layer.star).removeAllChildren()
 	}
 	

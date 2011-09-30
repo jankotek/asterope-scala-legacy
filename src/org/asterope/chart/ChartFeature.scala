@@ -3,7 +3,7 @@ package org.asterope.chart
 import org.asterope.util._
 
 /**
- * Provides general functionality class for ChartBase. 
+ * Provides general functionality class for Chart.
  * Implementations draw stars, objects, grids, skyview images etc
  * 
  * Each type of feature should use it's own layer (stars, deepsky, milkyway, coordinate grid). 
@@ -33,7 +33,7 @@ trait ChartFeature[E] {
 	 * @param chart to paint on
 	 * @param config stores configuration for this action
 	 */
-	def updateChart(chart: ChartBase, config:E=defaultConfig);
+	def updateChart(chart: Chart, config:E=defaultConfig);
 	
 
 	/**
@@ -44,7 +44,7 @@ trait ChartFeature[E] {
 	 *  
 	 * @param mc MapControl to revert from  		
 	 */
-	def clearChart(chart: ChartBase);
+	def clearChart(chart: Chart);
 	
 	
 }

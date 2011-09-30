@@ -23,7 +23,7 @@ import collection.mutable.{Map => MMap}
  * 
  * @author Jan Kotek
  */
-case class ChartBase(
+case class Chart(
 	position:Vector3d = Vector3d.asterope,
 	fieldOfView:Angle = 10.degree,
 	projection:String = "Sin", //TODO change projection to enum
@@ -64,7 +64,7 @@ case class ChartBase(
 		
     //create default layers
     Layer.values.foreach{l=>
-      val layer = new ChartLayer(l);
+      val layer = new Layer(l);
       c.addLayer(layer)
       layers.put(l,layer)
     }
@@ -160,7 +160,7 @@ case class ChartBase(
   /**
    * Map of layer names and layers 
    */
-  protected val layers = MMap[Layer.Value, ChartLayer]();
+  protected val layers = MMap[Layer.Value, Layer]();
 
   /**
    * Return layer by name. New layer is created if 
@@ -168,12 +168,12 @@ case class ChartBase(
    * 
    *  @return layer with given name, existing or newly created
    */
-  def getOrCreateLayer(layerName:Layer.Value):ChartLayer = {
+  def getOrCreateLayer(layerName:Layer.Value):Layer = {
     //make sure default layers are initialized
     camera
 
 	  if(!layers.contains(layerName)){
-		  val layer = new ChartLayer(layerName)
+		  val layer = new Layer(layerName)
 		  camera.addLayer(layer)
 		  layers.put(layerName,layer)
 
@@ -184,7 +184,7 @@ case class ChartBase(
   /**
    * Get layer with given name. If layer does not exist, exception is thrown
    */
-  def getLayer(layerName:Layer.Value):ChartLayer = {
+  def getLayer(layerName:Layer.Value):Layer = {
     //make sure default layers are initialized
     camera
     layers(layerName)
@@ -295,8 +295,8 @@ case class ChartBase(
 /**
  * Various static data related to map
  */
-object ChartBase{
-  val resMap = new ResourceMap(classOf[ChartBase])
+object Chart{
+  val resMap = new ResourceMap(classOf[Chart])
 
 }
 

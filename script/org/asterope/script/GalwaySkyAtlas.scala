@@ -507,7 +507,7 @@ Page(473, Vector3d(-0.0012517145698816533,-0.06692896202416283,-0.99775695800781
      val legh = b.legendBorder.height
      val scale  = 0.7
      
-     val chart = new ChartBase(
+     val chart = new Chart(
              position = page.pos,
              width = (scale * (if(page.landscape) 2100 else 1480 )).toInt,
              height = (-legh + scale * (if(page.landscape) 1480 else 2100)).toInt,

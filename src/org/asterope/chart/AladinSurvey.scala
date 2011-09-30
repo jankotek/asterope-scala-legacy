@@ -18,7 +18,7 @@ object AladinSurvey extends ChartFeature[AladinSurveyMem] {
 
   val defaultConfig = new AladinSurveyMem()
 
-  def updateChart(chart: ChartBase, config:AladinSurveyMem=defaultConfig){
+  def updateChart(chart: Chart, config:AladinSurveyMem=defaultConfig){
 
     def translate(pos:Vector3d):Vector3d = {
       config.survey.coordSys match{
@@ -91,7 +91,7 @@ object AladinSurvey extends ChartFeature[AladinSurveyMem] {
 
   }
 
-  def clearChart(chart: ChartBase){
+  def clearChart(chart: Chart){
     chart.executor.sync{
       chart.getLayer(Layer.skyview).removeAllChildren()
     }

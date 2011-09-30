@@ -46,7 +46,7 @@ object UranometriaPagePositions{
           //creates chart with given coordinates
           w = if(portrait)210 else 148;
           h = if(portrait)148 else 210;
-          chart = new ChartBase(position = center, fieldOfView = angle,width = w, height = h);
+          chart = new Chart(position = center, fieldOfView = angle,width = w, height = h);
           //now test if all points are inside given canvas
           if(points.forall(chart.isInsideCanvas(_)))
         ) yield Page(sheet,center, angle,portrait)

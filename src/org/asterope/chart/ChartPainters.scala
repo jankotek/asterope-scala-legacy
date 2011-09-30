@@ -15,7 +15,7 @@ case class ChartMilkyWayConfig()
 class ChartMilkyWay(dao:MilkyWayDao)
 	extends ChartFeature[ChartMilkyWayConfig] with ChartPainter[ChartMilkyWayConfig, MilkyWayPixel]{
 	
-	def paintObject(chart:ChartBase, config:ChartMilkyWayConfig, pixel:MilkyWayPixel,addToLayer:Boolean):Option[PNode] = {
+	def paintObject(chart:Chart, config:ChartMilkyWayConfig, pixel:MilkyWayPixel,addToLayer:Boolean):Option[PNode] = {
 		val pos = chart.wcs.project(pixel.pos)
 		if(pos.isEmpty) return None
 		//calculate diameter size, 
@@ -43,14 +43,14 @@ class ChartMilkyWay(dao:MilkyWayDao)
     Some(n)
 	}
 
-	def updateChart(chart: ChartBase, config:ChartMilkyWayConfig){
+	def updateChart(chart: Chart, config:ChartMilkyWayConfig){
 		val pixels = dao.milkyWayPixelsByArea(chart.area);
 		paintAll(chart,config,pixels)
 	}
 	
 	def defaultConfig = new ChartMilkyWayConfig()
 	
-	def clearChart(chart:ChartBase) {
+	def clearChart(chart:Chart) {
 		chart.getLayer(Layer.milkyway).removeAllChildren()
 	}
 }
@@ -60,7 +60,7 @@ case class ChartConstelLineConfig
 class ChartConstelLine(dao:ConstelLineDao)
 	extends ChartFeature[ChartConstelLineConfig] with ChartPainter[ChartConstelLineConfig, ConstelLine]{
 
-	def paintObject(chart:ChartBase, config:ChartConstelLineConfig, line:ConstelLine,addToLayer:Boolean):Option[PNode] = {
+	def paintObject(chart:Chart, config:ChartConstelLineConfig, line:ConstelLine,addToLayer:Boolean):Option[PNode] = {
 		
 		val p1 = chart.wcs.project(line.v1);
 		val p2 = chart.wcs.project(line.v2);
@@ -75,7 +75,7 @@ class ChartConstelLine(dao:ConstelLineDao)
 		Some(node)
 	}
 	
-	def updateChart(chart: ChartBase, config:ChartConstelLineConfig){
+	def updateChart(chart: Chart, config:ChartConstelLineConfig){
 		val lines = dao.constellationLineByArea(chart.area);
 		paintAll(chart,config,lines)
 	}
@@ -83,7 +83,7 @@ class ChartConstelLine(dao:ConstelLineDao)
 	def defaultConfig = new ChartConstelLineConfig()
  
 	
-	def clearChart(chart:ChartBase) {
+	def clearChart(chart:Chart) {
 		chart.getLayer(Layer.constelLine).removeAllChildren()
 	}
 
@@ -98,11 +98,11 @@ class ChartConstelBoundary(dao: ConstelBoundaryDao)
 
 	def defaultConfig = new ChartConstelBoundaryConfig
 	
-	def clearChart(chart:ChartBase) {
+	def clearChart(chart:Chart) {
 		chart.getLayer(Layer.constelBoundary).removeAllChildren()
 	}
 
-	def updateChart(chart: ChartBase, config:ChartConstelBoundaryConfig){
+	def updateChart(chart: Chart, config:ChartConstelBoundaryConfig){
 		for{
       line <-dao.constelBoundsByArea(chart.area);
 			projected <- chart.projectLine(line);

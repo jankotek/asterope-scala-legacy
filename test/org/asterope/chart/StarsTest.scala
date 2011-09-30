@@ -5,7 +5,7 @@ import org.asterope.util._
 
 class StarsTest extends ScalaTestCase {
 
-	lazy val chart = new ChartBase()
+	lazy val chart = new Chart()
 	lazy val chartStars = new Stars(null)
 	
 	lazy val star = new LiteStar(mag = Magnitude(1.0),

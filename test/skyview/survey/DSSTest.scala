@@ -1,7 +1,7 @@
 package skyview.survey
 
 import org.asterope.util._
-import org.asterope.chart.ChartBase
+import org.asterope.chart.Chart
 import java.io.File
 
 class DSSDistorterTest extends ScalaTestCase {

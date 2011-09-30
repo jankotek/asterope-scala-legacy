@@ -6,9 +6,9 @@ import edu.umd.cs.piccolo.nodes.PText
 import edu.umd.cs.piccolo.PNode
 import org.asterope.util._
 
-class ChartBaseTest extends ScalaTestCase{
+class ChartTest extends ScalaTestCase{
 	
-	val chart = new ChartBase();
+	val chart = new Chart();
 
 	def testAddToCamera{
 		val node = new PNode()
@@ -72,7 +72,7 @@ class ChartBaseTest extends ScalaTestCase{
   }
   
   def testAngleSizeOnChart{
-	  val chart = new ChartBase(position = Vector3d.zeroPoint, 
+	  val chart = new Chart(position = Vector3d.zeroPoint,
 	 		  fieldOfView = 10.degree, width = 10, height=10)
 	  val pos1 = Vector3d.rade2Vector(3.degree, 3.degree)
 	  val size = chart.angleSizeOnChart(pos1, 1.degree).get
@@ -82,7 +82,7 @@ class ChartBaseTest extends ScalaTestCase{
   
   def testLimitMag{
 	  def testFovMag(fov:Angle, min:Double, max:Double){
-	 	  val chart = new ChartBase(fieldOfView = fov, width = 800, height = 600);
+	 	  val chart = new Chart(fieldOfView = fov, width = 800, height = 600);
 	 	  val stars = new Stars(null)
 	 	  val m =  stars.calculateLimitStarMag(chart,stars.defaultConfig).mag
 	 	  assert(m?>= min)
@@ -101,7 +101,7 @@ class ChartBaseTest extends ScalaTestCase{
   
   def testStarDiscSize{
 	  val stars = new Stars(null);
-	  val chart = new ChartBase();
+	  val chart = new Chart();
 	  val config1 = new StarsConfig(starDiscMultiply = 1)
 	  val config2 = new StarsConfig(starDiscMultiply = 2)
 	  val ra = chart.position.getRaRadian.radian
@@ -127,8 +127,8 @@ class ChartBaseTest extends ScalaTestCase{
   }
 
   def testResources{
-    assert("Equator" === ChartBase.resMap.getString("j2000Equator"));
-    assert("Ecliptic" === ChartBase.resMap.getString("eclipticEquator"));
+    assert("Equator" === Chart.resMap.getString("j2000Equator"));
+    assert("Ecliptic" === Chart.resMap.getString("eclipticEquator"));
   }
 
 

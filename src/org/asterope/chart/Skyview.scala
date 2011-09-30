@@ -14,14 +14,14 @@ object Skyview extends ChartFeature[SkyviewConfig]{
 
   def defaultConfig = new SkyviewConfig
 
-    def updateChart(chart: ChartBase, m:SkyviewConfig){
+    def updateChart(chart: Chart, m:SkyviewConfig){
     if(m.useInternalEngine)
       updateChartInternalEngine(chart,m)
     else
       updateChartOnline(chart,m)
   }
 
-  def updateChartInternalEngine(chart: ChartBase, m:SkyviewConfig){
+  def updateChartInternalEngine(chart: Chart, m:SkyviewConfig){
     
     Skyview.lock.synchronized{
       try{
@@ -76,7 +76,7 @@ object Skyview extends ChartFeature[SkyviewConfig]{
   }
   
   
-  protected def updateChartOnline(chart:ChartBase, m:SkyviewConfig) {
+  protected def updateChartOnline(chart:Chart, m:SkyviewConfig) {
       var url = "http://skyview.gsfc.nasa.gov/cgi-bin/runquery.pl?"
       url += "&position=" + chart.position.getRa.toDegree + "," + chart.position.getDe.toDegree
       url += "&pixels=" + chart.width.toInt + "," + chart.height.toInt
@@ -122,7 +122,7 @@ object Skyview extends ChartFeature[SkyviewConfig]{
     }
   
 
-  def clearChart(chart: ChartBase){
+  def clearChart(chart: Chart){
     chart.getLayer(Layer.skyview).removeAllChildren
   }
 

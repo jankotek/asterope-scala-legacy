@@ -8,7 +8,7 @@ class SkyviewTest extends ScalaTestCase{
 
   def testPaint{
 
-    val chart = new ChartBase(fieldOfView = 0.1 degree)
+    val chart = new Chart(fieldOfView = 0.1 degree)
     val mem = new SkyviewConfig();
 
     Skyview.updateChart(chart,mem);
