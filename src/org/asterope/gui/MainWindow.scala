@@ -32,6 +32,7 @@ trait MainWindow {
     c.add(statusBar, BorderLayout.SOUTH)
     setContentPane(c)
     setPreferredSize(new Dimension(1000, 600))
+    setName("mainWindow")
     if(menu!=null)
       setJMenuBar(menu)
   }
@@ -82,6 +83,7 @@ trait MainWindow {
 
     resourceMap.injectActionFields(this)
     mainFrame.pack()
+    resourceMap.injectComponents(mainFrame)
     mainFrame.setVisible(true)
   }
 
