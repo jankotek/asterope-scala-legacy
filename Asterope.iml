@@ -5,7 +5,6 @@
       <configuration>
         <option name="compilerLibraryLevel" value="Project" />
         <option name="compilerLibraryName" value="scalac-lib" />
-        <option name="fsc" value="true" />
       </configuration>
     </facet>
   </component>
