@@ -1,6 +1,5 @@
 package org.asterope.chart
 
-import edu.umd.cs.piccolo.nodes.PPath
 import edu.umd.cs.piccolo.PCamera
 import edu.umd.cs.piccolo.PCanvas
 import edu.umd.cs.piccolo.PNode
@@ -14,7 +13,7 @@ import org.asterope.util._
 import org.asterope.geometry._
 
 import java.awt.image.BufferedImage
-import edu.umd.cs.piccolo.PLayer
+
 import collection.mutable.{Map => MMap}
 
 
@@ -52,16 +51,6 @@ case class Chart(
 		c.setPaint(colors.bg)
 
 
-    //when exporting to SVG, background is not set.
-    //it is probably issue with wrong encoder settings,
-    //this is only workaround which works now
-    //TODO dont use fake node to paint background
-    val l = new PLayer();
-    val s = new PPath(new Rectangle2D.Double(-1000,-1000,width+1000,height+legendHeight+1000))
-    s.setPaint(colors.bg)
-    l.addChild(s)
-    c.addLayer(l)		
-		
     //create default layers
     Layer.values.foreach{l=>
       val layer = new Layer(l);
