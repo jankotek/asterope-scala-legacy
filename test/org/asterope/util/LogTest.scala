@@ -1,8 +1,8 @@
 package org.asterope.util
 
-import java.util.logging.{LogRecord, Handler}
 import collection.mutable.ArrayBuffer
 import java.io.IOException
+import java.util.logging.{Level, LogRecord, Handler}
 
 /** collects testing messages from logger */
 object LogHandler extends Handler {
@@ -24,6 +24,25 @@ class LogTest extends ScalaTestCase{
     LogHandler.data.clear()
   }
 
+  def testMsgInlined(){
+
+    val oldLevel = Log.logger.getLevel
+    try{
+    Log.logger.setLevel(Level.INFO)
+    val msg = new Object{
+      override def toString:String = {
+        fail("toString was called")
+        "SHOULD NOT BE CALLED"
+      }
+    }
+
+    Log.debug(msg.toString);
+    }finally {
+      Log.logger.setLevel(oldLevel)
+    }
+
+
+  }
 
   def test_Method_Location(){
     Log.warning("Testing message")
