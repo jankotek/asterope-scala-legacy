@@ -22,6 +22,7 @@ object Main
 
 
   def main(args:Array[String]){
+    Log.debug("Asterope GUI is starting")
     onEDTWait{
       show()
       addEditor("welcomeEditor",welcomeEditor)

@@ -12,6 +12,14 @@ object Log {
 
   val logger: Logger = Logger.getLogger(getClass.getName)
 
+  //initialize logging to 'profile/asterope.log'
+  private val fileHandler = new FileHandler("profile/asterope.log",true){
+    setLevel(Level.ALL)
+
+  }
+  logger.setLevel(Level.ALL)
+  logger.addHandler(fileHandler)
+
   def debug(@inline msg: => String) {
     log(Level.FINE, msg)
   }
