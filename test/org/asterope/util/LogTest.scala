@@ -24,18 +24,6 @@ class LogTest extends ScalaTestCase{
     LogHandler.data.clear()
   }
 
-  def testMsgInlined(){
-
-    val msg = new Object{
-      override def toString:String = {
-        fail("toString was called")
-        "SHOULD NOT BE CALLED"
-      }
-    }
-    //this test case will fail, if debug is enabled.
-    Log.debug(msg.toString);
-
-  }
 
   def test_Method_Location(){
     Log.warning("Testing message")
