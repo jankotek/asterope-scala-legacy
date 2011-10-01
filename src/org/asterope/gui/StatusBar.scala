@@ -12,7 +12,7 @@ class StatusBar extends JPanel{
     val statusLabel = new JLabel()
     add(statusLabel, "growx")
     addSeparator()
-    add(new StatusBarMemoryUsage, "w 100")
+    add(new StatusBarMemoryUsage, "w 80")
 
 		//show menu tooltips in status bar
 		MenuSelectionManager.defaultManager().addChangeListener(toolTipMenuListener)
@@ -62,18 +62,13 @@ class StatusBar extends JPanel{
 
   }
 
-class StatusBarMemoryUsage extends  JProgressBar{
-
-  setIndeterminate(false)
-  setStringPainted(true)
-  setString("")
+class StatusBarMemoryUsage extends  JLabel{
 
   def update(){
     val max = (Runtime.getRuntime.totalMemory() * 1e-6).toInt
     val used = (max - Runtime.getRuntime.freeMemory() * 1e-6).toInt
     val str = used + "M / "+max+"M"
-    setValue(100 * used/max)
-    setString(str)
+    setText(str)
   }
 
 
