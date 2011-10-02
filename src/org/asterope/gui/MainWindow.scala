@@ -16,8 +16,6 @@ import java.awt.event.ActionEvent
  */
 trait MainWindow {
 
-  CheckThreadViolationRepaintManager.hook()
-
   val resourceMap = new ResourceMap(classOf[MainWindow]);
 
   val menu:JMenuBar

@@ -31,11 +31,13 @@ class ChartEditorTest extends ScalaTestCase
       showMinimized()
       openChartOnObject("M45")
     }
-    waitUntil(getFocusedEditor.isInstanceOf[ChartEditor])
+    onEDTWait{
+      waitUntil(getFocusedEditor.isInstanceOf[ChartEditor])
+    }
   }
 
   override def tearDown(){
-    hide()
+    onEDT{hide()}
   }
 
   def testOpenChartOnObject(){

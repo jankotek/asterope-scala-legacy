@@ -13,17 +13,31 @@ object Main
   with ChartEditorFab
   with MainWindowMenu{
 
-  CheckThreadViolationRepaintManager.hook()
-  UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName)
+
+  /** assert that all repaints are in GUI thread*/
+  RepaintManager.setCurrentManager( new RepaintManager {
+    override def addInvalidComponent(component: JComponent){
+      assertEDT()
+      super.addInvalidComponent(component)
+    }
+
+    override def addDirtyRegion(component: JComponent, x: Int, y: Int, w: Int, h: Int){
+      assertEDT()
+      super.addDirtyRegion(component, x, y, w, h)
+    }
+  })
+
 
   object chartBeans extends ChartBeans
 
   lazy val messageView = new MessageView(resourceMap)
 
 
+
   def main(args:Array[String]){
     Log.debug("Asterope GUI is starting")
     onEDTWait{
+      UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName)
       show()
       addEditor("welcomeEditor",welcomeEditor)
       addLeftTopView("objectsView",new JLabel())

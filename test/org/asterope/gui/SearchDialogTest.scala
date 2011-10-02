@@ -13,18 +13,22 @@ class SearchDialogTest extends GuiTestCase
   def result = findJLabel(form, "resultLabel")
 
   def testBlankDisabled(){
-    form.reset(new NameResolverResult(queryString = ""))
+    onEDTWait{
+      form.reset(new NameResolverResult(queryString = ""))
+    }
     assert(form.okAction.enabled === false)
     assert(result.getText === "Nothing found.")
   }
 
   def testAsterope(){
-    form.reset(new NameResolverResult(queryString = "Asterope"))
-    assert(form.okAction.enabled === true)
-    assert(result.getText === "Found Star in Tau.")
-    val r = form.commit
-    assert(r.pos.get.angle(Vector3d.asterope).radian < 1.arcMinute)
-    assert(r.description.get === "Star")
+    onEDTWait{
+      form.reset(new NameResolverResult(queryString = "Asterope"))
+      assert(form.okAction.enabled === true)
+      assert(result.getText === "Found Star in Tau.")
+      val r = form.commit
+      assert(r.pos.get.angle(Vector3d.asterope).radian < 1.arcMinute)
+      assert(r.description.get === "Star")
+    }
   }
 
 

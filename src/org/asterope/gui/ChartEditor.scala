@@ -252,7 +252,7 @@ class ChartEditor(
     chartBase = chartBase.copy(yscale = -chartBase.yscale)
     refresh()
   }
-  onChartRefreshStart{ m=>   //make sure checkbox are synchronized
+  onChartRefreshStart.listenInEDT{ m=>   //make sure checkbox are synchronized
     actMirrorVert.selected = Some(chartBase.xscale == -1);
     actMirrorHoriz.selected = Some(chartBase.yscale == -1);
   }
@@ -346,7 +346,7 @@ class ChartEditor(
     refresh()
   }
 
-   onChartRefreshStart{ m=> //make sure check box states matches
+   onChartRefreshStart.listenInEDT{ m=> //make sure check box states matches
     actCoordGridJ2000ShowLines.selected = Some(coordGridConfig.coordinateGridJ2000.showLines)
     actCoordGridB1950ShowLines.selected = Some(coordGridConfig.coordinateGridJ1950.showLines)
     actCoordGridEclipticShowLines.selected = Some(coordGridConfig.coordinateGridEcliptic.showLines)
@@ -452,7 +452,7 @@ class ChartEditor(
     refresh()
   }
 
-  onChartRefreshStart{ m =>
+  onChartRefreshStart.listenInEDT{ m =>
 
     actShowGlobularCluster.selected = Some(deepSkyConfig.showGlobularCluster)
     actShowOpenCluster.selected = Some(deepSkyConfig.showOpenCluster)
@@ -506,7 +506,7 @@ class ChartEditor(
 
 
 
-  onChartRefreshStart{m =>
+  onChartRefreshStart.listenInEDT{m =>
     actShowConstelBounds.selected = Some(showConstelBounds)
     actShowConstelLines.selected = Some(showConstelLines)
     actShowLegend.selected = Some(showLegend)

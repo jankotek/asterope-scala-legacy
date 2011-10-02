@@ -34,9 +34,7 @@ abstract class GuiTestCase extends ScalaTestCase{
 //    v
 //  }
 
-  override def setUp{
-    CheckThreadViolationRepaintManager.hook();
-  }
+
 
 //  override def tearDown{
 //    try{

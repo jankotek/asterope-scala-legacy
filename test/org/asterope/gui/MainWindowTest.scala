@@ -52,13 +52,15 @@ class MainWindowTest extends ScalaTestCase with MainWindow{
     }
 
 
-    resourceMap.injectActionFields(mainWindowActions)
-    resourceMap.injectActionFields(editor1)
+    onEDTWait{
+      resourceMap.injectActionFields(mainWindowActions)
+      resourceMap.injectActionFields(editor1)
 
-    onEDT{
       addEditor("editor1",editor1)
-    }
-    waitUntil(getFocusedEditor == editor1)
+      waitUntil(getFocusedEditor == editor1)
+
+
+
 
     //check that call is forwared to editor
     assert(counter1 === 0)
@@ -84,16 +86,16 @@ class MainWindowTest extends ScalaTestCase with MainWindow{
 
 
     //now activate new view, mainWindowActions should be disabled
-    onEDT{
-      addEditor("editor2",editor2)
-    }
+
+    addEditor("editor2",editor2)
+
     waitUntil(getFocusedEditor == editor2)
     assert(mainWindowActions.action.selected === None)
     assert(!mainWindowActions.action.enabled)
 
-    onEDT{
+
       addEditor("editor3",editor3)
-    }
+
     waitUntil(getFocusedEditor == editor3)
     assert(mainWindowActions.action.enabled)
 
@@ -110,6 +112,6 @@ class MainWindowTest extends ScalaTestCase with MainWindow{
     assert(mainWindowActions.action.enabled)
     editor3.action.enabled = false
     assert(!mainWindowActions.action.enabled)
-
+    }
   }
 }

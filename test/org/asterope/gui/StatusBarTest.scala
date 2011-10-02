@@ -7,7 +7,7 @@ class StatusBarTest extends ScalaTestCase {
 
 
   def testStatusBar(){
-    val gc = new StatusBarMemoryUsage()
+    val gc = onEDTWait{new StatusBarMemoryUsage()}
     waitUntil(gc.getText.size>2)
     val text1 = gc.getText
     assert(text1.matches("[0-9]+M / [0-9]+M"))
