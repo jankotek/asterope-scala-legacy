@@ -31,13 +31,13 @@ class MainWindowTest extends ScalaTestCase with MainWindow{
     }
 
     object mainWindowActions {
-      val action = editorForwardAction(classOf[Actions])
+      val action = new EditorBoundAction
     }
 
     var counter1 = 0
 
     object editor1 extends JLabel("editor1") with Actions{
-      val action = act{
+      val action = mainWindowActions.action.editorAction(this){
         counter1 += 1
       }
     }
@@ -46,7 +46,7 @@ class MainWindowTest extends ScalaTestCase with MainWindow{
 
     var counter3 = 0
     object editor3 extends JLabel("editor3") with Actions{
-      val action = act{
+      val action = mainWindowActions.action.editorAction(this){
         counter3 += 1
       }
     }

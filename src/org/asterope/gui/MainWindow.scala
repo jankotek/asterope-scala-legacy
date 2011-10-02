@@ -8,6 +8,8 @@ import java.beans.PropertyChangeEvent
 import javax.swing._
 import java.awt.{BorderLayout, Component, Dimension}
 import org.asterope.util._
+import org.jdesktop.swingx.action.BoundAction
+import java.awt.event.ActionEvent
 
 /**
  * Main window with frame docks
@@ -61,7 +63,7 @@ trait MainWindow {
     r
   }
 
-  protected lazy val editorTabs = new TabWindow(){
+  lazy val editorTabs = new TabWindow(){
     getWindowProperties.setMaximizeEnabled(true)
     getWindowProperties.setRestoreEnabled(true)
   }
@@ -152,73 +154,80 @@ trait MainWindow {
     else null
   }
 
-  def editorForwardAction(clazz:Class[_]):Action = {
-    var mainWinAction:Action = null;
-
-    def editorAction(f:Component):Action = {
-      assert(mainWinAction.getValue("baseName")!=null,"could not get 'baseName', had you call ResourceMap.injectActionFields()?")
-      val name = mainWinAction.getValue("baseName").toString
-      val field = f.getClass.getDeclaredField(name)
-      field.setAccessible(true)
-      field.get(f).asInstanceOf[Action]
-    }
-
-    mainWinAction = act{
-      val f = getFocusedEditor
-      assert(clazz.isAssignableFrom(f.getClass), "Editor is not instance of required class:\n"+f+"\n"+clazz)
-      //use reflection to get into field with the same name as this action
-      editorAction(getFocusedEditor).call()
-    }
 
 
-    /**
-     * Code which synchronizes some action properties
-     * - when active editor changes, it enables or disables mainWinAction
-     * - keeps mainWinAction 'enabled' and 'selected' properties in sync
-     */
-    var oldEditorAction:Action = null;
+class EditorBoundAction extends AbstractAction{
+  setEnabled(false)
 
-    object actionListener extends java.beans.PropertyChangeListener{
+  private var oldEditorAction:Action = null;
 
-      def propertyChange(evt: PropertyChangeEvent){
-        if(evt.getPropertyName == Action.SELECTED_KEY || evt.getPropertyName == "enabled")
-          mainWinAction.putValue(evt.getPropertyName,evt.getNewValue);
-      }
-    }
+  private var listeners = Map[Component,Action]()
 
-    /** called when active editor changes */
-    def rehookActionListeners(f:java.awt.Component){
-      val newAction:Action =
-        if(clazz.isAssignableFrom(f.getClass)) editorAction(f)
-        else null
-
-      mainWinAction.enabled = newAction!=null && newAction.enabled
-      mainWinAction.selected = if(newAction==null) None else newAction.selected
-      if(oldEditorAction!=null)
-        oldEditorAction.removePropertyChangeListener(actionListener)
-      if(newAction!=null)
-        newAction.addPropertyChangeListener(actionListener)
-      oldEditorAction = newAction;
-    }
-
-    editorTabs.addListener(new DockingWindowAdapter{
-      override def windowAdded(addedToWindow: DockingWindow, addedWindow: DockingWindow){
-        if(addedWindow.isInstanceOf[View])
-          rehookActionListeners(addedWindow.asInstanceOf[View].getComponent)
-      }
-      override def windowClosed(window: DockingWindow){
-        rehookActionListeners(getFocusedEditor)
-      }
-
-      override def viewFocusChanged(previouslyFocusedView: View, focusedView: View){
-        if(focusedView!=null)
-          rehookActionListeners(focusedView.getComponent)
-      }
-
-    })
-
-    mainWinAction
+  def addActionListener(editor:Component,action:Action){
+    listeners += editor->action
   }
+
+  /*
+   * Code which synchronizes some action properties
+   * - when active editor changes, it enables or disables mainWinAction
+   * - keeps this 'enabled' and 'selected' properties in sync
+   */
+  private object actionListener extends java.beans.PropertyChangeListener{
+
+    def propertyChange(evt: PropertyChangeEvent){
+      if(evt.getPropertyName == Action.SELECTED_KEY || evt.getPropertyName == "enabled")
+        putValue(evt.getPropertyName,evt.getNewValue);
+    }
+  }
+
+  /** called when active editor changes */
+  private def rehookActionListeners(editor:Component){
+    val newEditorAction:Action = listeners.get(editor).getOrElse(null)
+
+    action2ScalaAction(this).enabled = (newEditorAction!=null && newEditorAction.enabled)
+    action2ScalaAction(this).selected = (if(newEditorAction==null) None else newEditorAction.selected)
+    if(oldEditorAction!=null)
+      oldEditorAction.removePropertyChangeListener(actionListener)
+    if(newEditorAction!=null)
+      newEditorAction.addPropertyChangeListener(actionListener)
+    oldEditorAction = newEditorAction;
+  }
+
+  editorTabs.addListener(new DockingWindowAdapter{
+    override def windowAdded(addedToWindow: DockingWindow, addedWindow: DockingWindow){
+      if(addedWindow.isInstanceOf[View])
+        rehookActionListeners(addedWindow.asInstanceOf[View].getComponent)
+    }
+    override def windowClosed(window: DockingWindow){
+      rehookActionListeners(getFocusedEditor)
+    }
+
+    override def viewFocusChanged(previouslyFocusedView: View, focusedView: View){
+      if(focusedView!=null)
+        rehookActionListeners(focusedView.getComponent)
+    }
+
+  })
+
+  def actionPerformed(e:ActionEvent){
+    //forward to editor
+    if(oldEditorAction!=null){
+      oldEditorAction.actionPerformed(e)
+    }else{
+      throw new Error("EditorBoundAction should not be called when no editor is active.")
+    }
+  }
+
+
+  def editorAction(editor:Component)(block: => Unit):Action = {
+    val action = act{block};
+    //add listener from main window action
+    this.addActionListener(editor,action)
+    action
+  }
+
 
 }
 
+
+}

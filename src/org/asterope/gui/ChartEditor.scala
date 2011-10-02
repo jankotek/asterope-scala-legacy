@@ -8,14 +8,13 @@ import edu.umd.cs.piccolo.event._
 import java.awt.event._
 
 import edu.umd.cs.piccolo.util.PBounds
-
+import org.jdesktop.swingx.action.BoundAction
 
 
 class ChartEditor(
     val beans:ChartBeans
   )
   extends PCanvas
-  with ChartEditorActions
   with ChartWindowSkyviewActions
   {
 
@@ -95,7 +94,7 @@ class ChartEditor(
 
   def getChartBase = chartBase
 
-  def refresh(){
+  def refresh():Unit={
     refreshWorker.run(chartBase)
   }
 
@@ -194,16 +193,16 @@ class ChartEditor(
    * zoom actions
    */
 
-  val actRefresh = chartAct{
+  val actRefresh = Main.actRefresh.editorAction(this){
     refresh();
   }
 
-  val actZoomIn = chartAct{
+  val actZoomIn = Main.actZoomIn.editorAction(this){
     chartBase = chartBase.copy(fieldOfView = chartBase.fieldOfView * 0.5)
     refresh()
   }
 
-  val actZoomOut = chartAct{
+  val actZoomOut = Main.actZoomOut.editorAction(this){
     chartBase = chartBase.copy(fieldOfView = chartBase.fieldOfView / 0.5)
     refresh()
   }
@@ -213,16 +212,16 @@ class ChartEditor(
     refresh();
   }
 
-  val actFov15m = chartAct{setFov(15.arcMinute)}
-  val actFov30m = chartAct{setFov(30.arcMinute)}
-  val actFov1d = chartAct{setFov(1.degree)}
-  val actFov2d = chartAct{setFov(2.degree)}
-  val actFov4d = chartAct{setFov(4.degree)}
-  val actFov8d = chartAct{setFov(8.degree)}
-  val actFov15d = chartAct{setFov(15.degree)}
-  val actFov30d = chartAct{setFov(30.degree)}
-  val actFov60d = chartAct{setFov(60.degree)}
-  val actFov120d = chartAct{setFov(120.degree)}
+  val actFov15m = Main.actFov15m.editorAction(this){setFov(15.arcMinute)}
+  val actFov30m = Main.actFov30m.editorAction(this){setFov(30.arcMinute)}
+  val actFov1d = Main.actFov1d.editorAction(this){setFov(1.degree)}
+  val actFov2d = Main.actFov1d.editorAction(this){setFov(2.degree)}
+  val actFov4d = Main.actFov4d.editorAction(this){setFov(4.degree)}
+  val actFov8d = Main.actFov8d.editorAction(this){setFov(8.degree)}
+  val actFov15d = Main.actFov15d.editorAction(this){setFov(15.degree)}
+  val actFov30d = Main.actFov30d.editorAction(this){setFov(30.degree)}
+  val actFov60d = Main.actFov60d.editorAction(this){setFov(60.degree)}
+  val actFov120d = Main.actFov120d.editorAction(this){setFov(120.degree)}
 
 
   /*
@@ -235,21 +234,21 @@ class ChartEditor(
 		refresh()
 	}
 
-  val actMoveUpLeft = 	chartAct{ chartMove(0.0, 0.0)}
-  val actMoveUp = 		chartAct{ chartMove(0.5, 0.0)}
-  val actMoveUpRight = 	chartAct{ chartMove(1.0, 0.0)}
-  val actMoveRight = 	chartAct{ chartMove(1.0, 0.5)}
-  val actMoveDownRight = chartAct{ chartMove(1.0, 1.0)}
-  val actMoveDown = 	chartAct{ chartMove(0.5, 1.0)}
-  val actMoveDownLeft = chartAct{ chartMove(0.0, 1.0)}
-  val actMoveLeft = 	chartAct{ chartMove(0.0, 0.5)}
+  val actMoveUpLeft = 	Main.actMoveUpLeft.editorAction(this){ chartMove(0.0, 0.0)}
+  val actMoveUp = 		Main.actMoveUp.editorAction(this){ chartMove(0.5, 0.0)}
+  val actMoveUpRight = 	Main.actMoveUpRight.editorAction(this){ chartMove(1.0, 0.0)}
+  val actMoveRight = 	Main.actMoveRight.editorAction(this){ chartMove(1.0, 0.5)}
+  val actMoveDownRight = Main.actMoveDownRight.editorAction(this){ chartMove(1.0, 1.0)}
+  val actMoveDown = 	Main.actMoveDown.editorAction(this){ chartMove(0.5, 1.0)}
+  val actMoveDownLeft = Main.actMoveDownLeft.editorAction(this){ chartMove(0.0, 1.0)}
+  val actMoveLeft = 	Main.actMoveLeft.editorAction(this){ chartMove(0.0, 0.5)}
 
-  val actMirrorVert = chartAct{
+  val actMirrorVert = Main.actMirrorVert.editorAction(this){
     chartBase = chartBase.copy(xscale = -chartBase.xscale)
     refresh()
   }
 
-  val actMirrorHoriz = chartAct{
+  val actMirrorHoriz = Main.actMirrorHoriz.editorAction(this){
     chartBase = chartBase.copy(yscale = -chartBase.yscale)
     refresh()
   }
@@ -259,17 +258,17 @@ class ChartEditor(
   }
 
 
-  val actRotateLeft = chartAct{
+  val actRotateLeft = Main.actRotateLeft.editorAction(this){
     chartBase = chartBase.copy(rotation = chartBase.rotation + 45.degree)
     refresh()
   }
 
-  val actRotateRight = chartAct{
+  val actRotateRight = Main.actRotateRight.editorAction(this){
     chartBase = chartBase.copy(rotation = chartBase.rotation - 45.degree)
     refresh()
   }
 
-  val actRotateCustom = chartAct{
+  val actRotateCustom = Main.actRotateCustom.editorAction(this){
     //TODO localization
     val ret = JOptionPane.showInputDialog("Rotation angle: ",
        chartBase.rotation.toDegree)
@@ -280,7 +279,7 @@ class ChartEditor(
     }
   }
 
-  val actTransformReset = chartAct{
+  val actTransformReset = Main.actTransformReset.editorAction(this){
     chartBase = chartBase.copy(rotation = 0.degree, xscale = 1, yscale = 1)
     refresh()
   }
@@ -292,57 +291,57 @@ class ChartEditor(
    */
 
 
-  val actCoordGridJ2000ShowLines = chartAct{
+  val actCoordGridJ2000ShowLines = Main.actCoordGridJ2000ShowLines.editorAction(this){
     coordGridConfig = coordGridConfig
       .copy(coordinateGridJ2000 = coordGridConfig.coordinateGridJ2000
       .copy(showLines = !coordGridConfig.coordinateGridJ2000.showLines))
     refresh()
   }
-  val actCoordGridB1950ShowLines = chartAct{
+  val actCoordGridB1950ShowLines = Main.actCoordGridB1950ShowLines.editorAction(this){
     coordGridConfig = coordGridConfig
       .copy(coordinateGridJ1950 = coordGridConfig.coordinateGridJ1950
       .copy(showLines = !coordGridConfig.coordinateGridJ1950.showLines))
     refresh()
   }
-  val actCoordGridEclipticShowLines = chartAct{
+  val actCoordGridEclipticShowLines = Main.actCoordGridEclipticShowLines.editorAction(this){
     coordGridConfig = coordGridConfig.copy(coordinateGridEcliptic = coordGridConfig.coordinateGridEcliptic.copy(showLines = !coordGridConfig.coordinateGridEcliptic.showLines))
     refresh()
   }
-  val actCoordGridGalacticShowLines = chartAct{
+  val actCoordGridGalacticShowLines = Main.actCoordGridGalacticShowLines.editorAction(this){
     coordGridConfig = coordGridConfig.copy(coordinateGridGalactic = coordGridConfig.coordinateGridGalactic.copy(showLines = !coordGridConfig.coordinateGridGalactic.showLines))
     refresh()
   }
 
-  val actCoordGridJ2000ShowPoles = chartAct{
+  val actCoordGridJ2000ShowPoles = Main.actCoordGridJ2000ShowPoles.editorAction(this){
     coordGridConfig = coordGridConfig.copy(coordinateGridJ2000 = coordGridConfig.coordinateGridJ2000.copy(showPoles = !coordGridConfig.coordinateGridJ2000.showPoles))
     refresh()
   }
-  val actCoordGridB1950ShowPoles = chartAct{
+  val actCoordGridB1950ShowPoles = Main.actCoordGridB1950ShowPoles.editorAction(this){
     coordGridConfig = coordGridConfig.copy(coordinateGridJ1950 = coordGridConfig.coordinateGridJ1950.copy(showPoles = !coordGridConfig.coordinateGridJ1950.showPoles))
     refresh()
   }
-  val actCoordGridEclipticShowPoles = chartAct{
+  val actCoordGridEclipticShowPoles = Main.actCoordGridEclipticShowPoles.editorAction(this){
     coordGridConfig = coordGridConfig.copy(coordinateGridEcliptic = coordGridConfig.coordinateGridEcliptic.copy(showPoles = !coordGridConfig.coordinateGridEcliptic.showPoles))
     refresh()
   }
-  val actCoordGridGalacticShowPoles = chartAct{
+  val actCoordGridGalacticShowPoles = Main.actCoordGridGalacticShowPoles.editorAction(this){
     coordGridConfig = coordGridConfig.copy(coordinateGridGalactic = coordGridConfig.coordinateGridGalactic.copy(showPoles = !coordGridConfig.coordinateGridGalactic.showPoles))
     refresh()
   }
 
-  val actCoordGridJ2000ShowEquator = chartAct{
+  val actCoordGridJ2000ShowEquator = Main.actCoordGridJ2000ShowEquator.editorAction(this){
     coordGridConfig = coordGridConfig.copy(coordinateGridJ2000 = coordGridConfig.coordinateGridJ2000.copy(showEquator = !coordGridConfig.coordinateGridJ2000.showEquator))
     refresh()
   }
-  val actCoordGridB1950ShowEquator = chartAct{
+  val actCoordGridB1950ShowEquator = Main.actCoordGridB1950ShowEquator.editorAction(this){
     coordGridConfig = coordGridConfig.copy(coordinateGridJ1950 = coordGridConfig.coordinateGridJ1950.copy(showEquator = !coordGridConfig.coordinateGridJ1950.showEquator))
     refresh()
   }
-  val actCoordGridEclipticShowEquator = chartAct{
+  val actCoordGridEclipticShowEquator = Main.actCoordGridEclipticShowEquator.editorAction(this){
     coordGridConfig = coordGridConfig.copy(coordinateGridEcliptic = coordGridConfig.coordinateGridEcliptic.copy(showEquator = !coordGridConfig.coordinateGridEcliptic.showEquator))
     refresh()
   }
-  val actCoordGridGalacticShowEquator = chartAct{
+  val actCoordGridGalacticShowEquator = Main.actCoordGridGalacticShowEquator.editorAction(this){
     coordGridConfig = coordGridConfig.copy(coordinateGridGalactic = coordGridConfig.coordinateGridGalactic.copy(showEquator = !coordGridConfig.coordinateGridGalactic.showEquator))
     refresh()
   }
@@ -366,7 +365,7 @@ class ChartEditor(
    * stars
    */
 
-  val actLimitMagCustom = chartAct{
+  val actLimitMagCustom = Main.actLimitMagCustom.editorAction(this){
       //TODO localization
         val ret = JOptionPane.showInputDialog("Limit magnitude:",
           beans.stars.calculateLimitStarMag(chartBase, starsConfig));
@@ -378,28 +377,28 @@ class ChartEditor(
         refresh()
   }
 
-  val actMoreStars = chartAct{
+  val actMoreStars = Main.actMoreStars.editorAction(this){
     starsConfig = starsConfig.copy(limitStarMagDelta = starsConfig.limitStarMagDelta+0.5)
     refresh()
   }
 
-  val actLessStars = chartAct{
+  val actLessStars = Main.actLessStars.editorAction(this){
 
     starsConfig = starsConfig.copy(limitStarMagDelta = starsConfig.limitStarMagDelta-0.5)
     refresh()
   }
 
-  val actBiggerStars = chartAct{
+  val actBiggerStars = Main.actBiggerStars.editorAction(this){
     starsConfig = starsConfig.copy(starDiscMultiply = starsConfig.starDiscMultiply * 1.4)
     refresh()
   }
 
-  val actSmallerStars = chartAct{
+  val actSmallerStars = Main.actSmallerStars.editorAction(this){
     starsConfig = starsConfig.copy(starDiscMultiply = starsConfig.starDiscMultiply / 1.4)
     refresh()
   }
 
-  val actStarReset = chartAct{
+  val actStarReset = Main.actStarReset.editorAction(this){
     val orig = new StarsConfig();
     starsConfig = starsConfig.copy(starDiscMultiply = orig.starDiscMultiply,
         limitStarMagDelta = orig.limitStarMagDelta,
@@ -411,43 +410,43 @@ class ChartEditor(
   /*
    * deep sky
    */
-  val actShowGlobularCluster = chartAct{
+  val actShowGlobularCluster = Main.actShowGlobularCluster.editorAction(this){
     deepSkyConfig = deepSkyConfig.copy(
         showGlobularCluster = !deepSkyConfig.showGlobularCluster)
     refresh()
   }
 
-  val actShowOpenCluster = chartAct{
+  val actShowOpenCluster = Main.actShowOpenCluster.editorAction(this){
     deepSkyConfig = deepSkyConfig.copy(
         showOpenCluster = !deepSkyConfig.showOpenCluster)
     refresh()
   }
 
-  val actShowGalaxy = chartAct{
+  val actShowGalaxy = Main.actShowGalaxy.editorAction(this){
     deepSkyConfig = deepSkyConfig.copy(
         showGalaxy = !deepSkyConfig.showGalaxy)
     refresh()
   }
 
-  val actShowBrightNebula = chartAct{
+  val actShowBrightNebula = Main.actShowBrightNebula.editorAction(this){
     deepSkyConfig = deepSkyConfig.copy(
         showBrightNebula = !deepSkyConfig.showBrightNebula)
     refresh()
   }
 
-  val actShowPlanetaryNebula = chartAct{
+  val actShowPlanetaryNebula = Main.actShowPlanetaryNebula.editorAction(this){
     deepSkyConfig = deepSkyConfig.copy(
         showPlanetaryNebula = !deepSkyConfig.showPlanetaryNebula)
     refresh()
   }
 
-  val actShowDarkNebula = chartAct{
+  val actShowDarkNebula = Main.actShowDarkNebula.editorAction(this){
     deepSkyConfig = deepSkyConfig.copy(
         showDarkNebula = !deepSkyConfig.showDarkNebula)
     refresh()
   }
 
-  val actShowSupernovaRemnant = chartAct{
+  val actShowSupernovaRemnant = Main.actShowSupernovaRemnant.editorAction(this){
     deepSkyConfig = deepSkyConfig.copy(
         showSupernovaRemnant = !deepSkyConfig.showSupernovaRemnant)
     refresh()
@@ -464,22 +463,22 @@ class ChartEditor(
     actShowSupernovaRemnant.selected = Some(deepSkyConfig.showSupernovaRemnant)
   }
 
-  val actShowConstelLines = chartAct{
+  val actShowConstelLines = Main.actShowConstelLines.editorAction(this){
     showConstelLines = !showConstelLines
     refresh()
   }
-  val actShowConstelBounds = chartAct{
+  val actShowConstelBounds = Main.actShowConstelBounds.editorAction(this){
     showConstelBounds = !showConstelBounds
     refresh()
   }
 
-  val actShowLegend = chartAct{
+  val actShowLegend = Main.actShowLegend.editorAction(this){
     showLegend = !showLegend
     refresh()
   }
 
 
-  val actInvertColors = chartAct{
+  val actInvertColors = Main.actInvertColors.editorAction(this){
     val colors =
       if(chartBase.colors == DarkBlueColors) LightColors
       else DarkBlueColors
@@ -487,28 +486,24 @@ class ChartEditor(
     refresh()
   }
 
-  val actDSSAladinSurvey = chartAct{
+  val actDSSAladinSurvey = Main.actDSSAladinSurvey.editorAction(this){
     aladinConfig = Some(new AladinSurveyMem(survey = AladinSurvey.dssColorSurvey))
     refresh()
   }
 
-  val actMellingerAladinSurvey = chartAct{
+  val actMellingerAladinSurvey = Main.actMellingerAladinSurvey.editorAction(this){
     aladinConfig = Some(new AladinSurveyMem(survey = AladinSurvey.mellingerSurvey))
     refresh()
   }
 
-  val actNoneAladinSurvey = chartAct{
+  val actNoneAladinSurvey = Main.actNoneAladinSurvey.editorAction(this){
     aladinConfig = None
     refresh()
   }
 
 
 
-  /**
-   * Action used for Chart editor.
-   * It is disabled while map is being modified
-   */
-  def chartAct(block: => Unit):Action = act(block)
+
 
 
   onChartRefreshStart{m =>

@@ -6,8 +6,7 @@ import javax.swing._
  * Defines menu used in main window
  */
 trait MainWindowMenu
-  extends ChartEditorActions
-  with MainWindowActions{
+  extends  MainWindowActions{
 
 
 
