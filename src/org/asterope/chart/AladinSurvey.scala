@@ -39,7 +39,6 @@ object AladinSurvey extends ChartFeature[AladinSurveyMem] {
     val nside = PixTools.norder2nside(norder)
     val tools = new PixTools(nside)
 
-    val worker = new Worker[Unit](delay=0)
 
     val pixelsRing = tools.query_disc(translate(chart.position),chart.fieldOfView.toRadian,false)
     for(
@@ -60,7 +59,7 @@ object AladinSurvey extends ChartFeature[AladinSurveyMem] {
       file = config.survey.url+"Norder"+norder+"/Dir"+(nested-nested%10000)+"/Npix"+nested+config.survey.suffix
     ){
 
-      worker.addTask{ unit=>
+
         val is = GetURL(new URL(file));
         checkInterrupted()
         val img = ImageIO.read(is)
@@ -77,11 +76,8 @@ object AladinSurvey extends ChartFeature[AladinSurveyMem] {
           chart.addNode(layer=Layer.skyview, node=node)
         }
         checkInterrupted()
-      }
     }
 
-    worker.run(Unit);
-    worker.waitWhileRunning()
 
     //add label with copyright
     val text = new PText(config.survey.copyright)

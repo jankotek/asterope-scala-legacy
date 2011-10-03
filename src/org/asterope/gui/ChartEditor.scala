@@ -1,7 +1,5 @@
 package org.asterope.gui
 
-import org.asterope.chart._
-import javax.swing._
 import org.asterope.util._
 import edu.umd.cs.piccolo._
 import edu.umd.cs.piccolo.event._
@@ -9,6 +7,8 @@ import java.awt.event._
 
 import edu.umd.cs.piccolo.util.PBounds
 import org.jdesktop.swingx.action.BoundAction
+import javax.swing._
+import org.asterope.chart._
 
 
 class ChartEditor(
@@ -58,9 +58,6 @@ class ChartEditor(
 
 
 
-  /** repaints map with delay, multiple events are merged, so map repaints only once */
-  private val refreshWorker = new Worker[Chart](delay = 200)
-
   //refresh when canvas size changes
   addComponentListener(new ComponentAdapter{
     override def componentResized(e:ComponentEvent){
@@ -78,11 +75,8 @@ class ChartEditor(
    */
   lazy val onChartRefreshFinish = new Publisher[Chart]()
 
-  /** indicates if refresh is currently in progress */
-  def isRefreshInProgress:Boolean = _isRefreshInProgress
-  private var _isRefreshInProgress = false;
 
-  private var chartBase = new Chart();
+  private var chartBase = new Chart(executor = new EDTChartExecutor);
   private var coordGridConfig = CoordinateGrid.defaultConfig
   private var starsConfig = beans.stars.defaultConfig
   private var showLegend = true
@@ -94,94 +88,84 @@ class ChartEditor(
 
   def getChartBase = chartBase
 
+  private var refreshWorker:SwingWorker[Chart, Unit] = null
+
+  def refreshInProgress:Boolean = refreshWorker == null || !refreshWorker.isDone
+
   def refresh():Unit={
-    refreshWorker.run(chartBase)
-  }
+    if(refreshWorker!=null)
+      while(!refreshWorker.isDone && !refreshWorker.cancel(true)) Thread.sleep(1)
 
-  refreshWorker.preprocess{chartBase2 =>
-    _isRefreshInProgress = true;
-    if (getInteracting){
-      //if user used mouse to move chart, center on new position and update FOV
-      val bounds = chartBase.camera.getViewBounds;
-      val center = chartBase.wcs.deproject(bounds.getCenter2D);
-      if(center.isDefined){
-    	  val fov = chartBase.wcs.deproject(bounds.getOrigin).map(_.angle(center.get) * 2).getOrElse(120 * Angle.D2R);
-    	  chartBase = chartBase.copy(position = center.get, fieldOfView = fov.radian)
+    refreshWorker = new SwingWorker[Chart,Unit]{
+      def doInBackground:Chart = {
+
+      Thread.sleep(500)
+
+      if (getInteracting){
+        //if user used mouse to move chart, center on new position and update FOV
+        val bounds = chartBase.camera.getViewBounds;
+        val center = chartBase.wcs.deproject(bounds.getCenter2D);
+        if(center.isDefined){
+          val fov = chartBase.wcs.deproject(bounds.getOrigin).map(_.angle(center.get) * 2).getOrElse(120 * Angle.D2R);
+          chartBase = chartBase.copy(position = center.get, fieldOfView = fov.radian)
+        }
       }
+
+
+      val chart = chartBase.copy(width = getWidth,
+        height = if( !showLegend) getHeight else (getHeight - beans.legendBorder.height),
+        legendHeight = if(showLegend) beans.legendBorder.height else 0,
+        executor = new EDTChartExecutor
+      )
+
+      beans.stars.updateChart(chart,starsConfig)
+      beans.deepSky.updateChart(chart,deepSkyConfig)
+
+      if(showConstelBounds)
+          beans.constelBoundary.updateChart(chart)
+
+      if(showConstelLines)
+          beans.constelLine.updateChart(chart)
+
+      aladinConfig.foreach{mem=>
+        AladinSurvey.updateChart(chart,mem)
+      }
+
+      beans.milkyWay.updateChart(chart)
+
+      CoordinateGrid.updateChart(chart,coordGridConfig)
+
+      if(showLegend)
+          beans.legendBorder.updateChart(chart)
+
+      chart
     }
 
+      override def done{
+        if(isCancelled) return
 
-    chartBase = chartBase.copy(width = getWidth,
-      height = if( !showLegend) getHeight else (getHeight - beans.legendBorder.height),
-      legendHeight = if(showLegend) beans.legendBorder.height else 0,
-      executor = new EDTChartExecutor
-    )
-    chartBase
+        val chart = get()
+        //labels must be last,
+        // placement alghorihm depends on graphic created by other features
+        Labels.updateChart(chart)
+        chartBase = chart;
+        chartBase.executor.asInstanceOf[EDTChartExecutor].plugIntoSwing()
+        getCamera.removeAllChildren();
+        if(getInteracting)
+           setInteracting(false) //this will cause repaint, but chart is already empy so no performace problem
+
+        getCamera.addChild(chartBase.camera)
+        onChartRefreshFinish.firePublish(chartBase)
+
+      }
   }
 
-  refreshWorker.addTask{chartBase =>
-    onChartRefreshStart.firePublish(chartBase)
-  }
+    refreshWorker.execute()
 
-  refreshWorker.addTask{chartBase =>
-      beans.stars.updateChart(chartBase,starsConfig)
-  }
-
-  refreshWorker.addTask{chartBase =>
-      beans.deepSky.updateChart(chartBase,deepSkyConfig)
-  }
-
-  refreshWorker.addTask{chartBase =>
-    if(showConstelBounds)
-        beans.constelBoundary.updateChart(chartBase)
-  }
-
-  refreshWorker.addTask{chartBase =>
-    if(showConstelLines)
-        beans.constelLine.updateChart(chartBase)
-  }
-
-  refreshWorker.addTask{chartBase =>
-    aladinConfig.foreach{mem=>
-      AladinSurvey.updateChart(chartBase,mem)
-    }
   }
 
 
-  refreshWorker.addTask{chartBase =>
-      beans.milkyWay.updateChart(chartBase)
-  }
 
-  refreshWorker.addTask{chartBase =>
-      CoordinateGrid.updateChart(chartBase,coordGridConfig)
-  }
-
-  refreshWorker.addTask{chartBase =>
-    if(showLegend)
-        beans.legendBorder.updateChart(chartBase)
-  }
-
-  refreshWorker.onFinished.listenInEDT{chartBase=>
-      _isRefreshInProgress = false;
-      //labels must be last,
-      // placement alghorihm depends on graphic created by other features
-      Labels.updateChart(chartBase)
-
-      chartBase.executor.asInstanceOf[EDTChartExecutor].plugIntoSwing()
-      getCamera.removeAllChildren();
-      if(getInteracting)
-          setInteracting(false) //this will cause repaint, but chart is already empy so no performace problem
-
-
-      getCamera.addChild(chartBase.camera)
-      onChartRefreshFinish.firePublish(chartBase)
-
-  }
-
-  refreshWorker.onFailed{
-    _isRefreshInProgress = false;
-    _.printStackTrace()
-  }
 
 
   def centerOnPosition(pos:Vector3d){
