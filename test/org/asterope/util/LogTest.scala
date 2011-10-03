@@ -46,7 +46,8 @@ class LogTest extends ScalaTestCase{
 
   def test_Method_Location(){
     Log.warning("Testing message")
-    assert(LogHandler.data(0).getSourceMethodName==="test_Method_Location")
+    val msg = LogHandler.data.find(_.getSourceMethodName=="test_Method_Location")
+    assert(msg.isDefined)
   }
 
   def test_uncaught_exception_handled(){
