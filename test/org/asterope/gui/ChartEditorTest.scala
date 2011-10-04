@@ -145,41 +145,6 @@ class ChartEditorTest extends ScalaTestCase
   }
 
 
-  def testShowGalaxy(){
-    open();
-    waitForRefresh()
-    onEDT{
-      openChartOnObject("M31")
-    }
-    assert(chartEditor.actShowGalaxy.selected == Some(true))
-    def galaxyFound = chart.objects.find{f=>
-      f.isInstanceOf[DeepSky] && f.asInstanceOf[DeepSky].deepSkyType == DeepSkyType.GALXY
-    }.isDefined
-    assert(galaxyFound)
-    chartEditor.actShowGalaxy.call()
-    waitForRefresh()
-    assert(Main.actShowGalaxy.selected === Some(false))
-    assert(!galaxyFound)
-
-  }
-
-  def testShowGlobularCluster(){
-    open();
-    waitForRefresh()
-    onEDT{
-      openChartOnObject("M13")
-    }
-    assert(chartEditor.actShowGlobularCluster.selected == Some(true))
-    def clusterFound = chart.objects.find{f=>
-      f.isInstanceOf[DeepSky] && f.asInstanceOf[DeepSky].deepSkyType == DeepSkyType.GLOCL
-    }.isDefined
-    assert(clusterFound)
-    chartEditor.actShowGlobularCluster.call()
-    waitForRefresh()
-    assert(Main.actShowGlobularCluster.selected === Some(false))
-    assert(!clusterFound)
-
-  }
 
 
 }
