@@ -19,6 +19,7 @@ class ChartEditorTest extends ScalaTestCase
   def chartEditor = getFocusedEditor.asInstanceOf[ChartEditor]
 
   def waitForRefresh(){
+    sleep(1000)
     waitUntil(!chartEditor.refreshInProgress)
   }
 
@@ -125,6 +126,7 @@ class ChartEditorTest extends ScalaTestCase
     waitForRefresh()
     def labelCount = chart.getLayer(Layer.label).getChildrenCount
     def legendCount = chart.getLayer(Layer.legend).getChildrenCount
+
     assert(chartEditor.actShowLegend.selected === Some(true))
     assert(labelCount?>0)
     assert(legendCount?>0)
@@ -149,7 +151,6 @@ class ChartEditorTest extends ScalaTestCase
     onEDT{
       openChartOnObject("M31")
     }
-    sleep(1000)          //TODO remove sleep
     assert(chartEditor.actShowGalaxy.selected == Some(true))
     def galaxyFound = chart.objects.find{f=>
       f.isInstanceOf[DeepSky] && f.asInstanceOf[DeepSky].deepSkyType == DeepSkyType.GALXY
@@ -157,8 +158,9 @@ class ChartEditorTest extends ScalaTestCase
     assert(galaxyFound)
     chartEditor.actShowGalaxy.call()
     waitForRefresh()
+    assert(Main.actShowGalaxy.selected === Some(false))
     assert(!galaxyFound)
-    assert(chartEditor.actShowGalaxy.selected == Some(false))
+
   }
 
   def testShowGlobularCluster(){
@@ -167,7 +169,6 @@ class ChartEditorTest extends ScalaTestCase
     onEDT{
       openChartOnObject("M13")
     }
-    sleep(1000) //TODO remove sleep
     assert(chartEditor.actShowGlobularCluster.selected == Some(true))
     def clusterFound = chart.objects.find{f=>
       f.isInstanceOf[DeepSky] && f.asInstanceOf[DeepSky].deepSkyType == DeepSkyType.GLOCL
@@ -175,8 +176,9 @@ class ChartEditorTest extends ScalaTestCase
     assert(clusterFound)
     chartEditor.actShowGlobularCluster.call()
     waitForRefresh()
+    assert(Main.actShowGlobularCluster.selected === Some(false))
     assert(!clusterFound)
-    assert(chartEditor.actShowGlobularCluster.selected == Some(false))
+
   }
 
 

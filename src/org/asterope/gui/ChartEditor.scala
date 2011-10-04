@@ -6,7 +6,6 @@ import edu.umd.cs.piccolo.event._
 import java.awt.event._
 
 import edu.umd.cs.piccolo.util.PBounds
-import org.jdesktop.swingx.action.BoundAction
 import javax.swing._
 import org.asterope.chart._
 
@@ -90,7 +89,9 @@ class ChartEditor(
 
   private var refreshWorker:SwingWorker[Chart, Unit] = null
 
-  def refreshInProgress:Boolean = refreshWorker == null || !refreshWorker.isDone
+  def refreshInProgress:Boolean = onEDTWait{
+    refreshWorker == null || !refreshWorker.isDone
+  }
 
   def refresh():Unit={
     if(refreshWorker!=null)
@@ -117,6 +118,7 @@ class ChartEditor(
         legendHeight = if(showLegend) beans.legendBorder.height else 0,
         executor = new EDTChartExecutor
       )
+      onChartRefreshStart.firePublish(chart)
 
       beans.stars.updateChart(chart,starsConfig)
       beans.deepSky.updateChart(chart,deepSkyConfig)
