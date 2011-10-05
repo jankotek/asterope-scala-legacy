@@ -12,13 +12,13 @@ import java.awt.{Image, Graphics2D, Shape}
 import org.asterope.geometry.CoordinateSystem.Galactic
 import edu.umd.cs.piccolo.nodes.PText
 
-object AladinSurvey extends ChartFeature[AladinSurveyMem] {
+object AllSkySurvey extends ChartFeature[AllSkySurveyMem] {
 
 
 
-  val defaultConfig = new AladinSurveyMem()
+  val defaultConfig = new AllSkySurveyMem()
 
-  def updateChart(chart: Chart, config:AladinSurveyMem=defaultConfig){
+  def updateChart(chart: Chart, config:AllSkySurveyMem=defaultConfig){
 
     def translate(pos:Vector3d):Vector3d = {
       config.survey.coordSys match{
@@ -93,7 +93,7 @@ object AladinSurvey extends ChartFeature[AladinSurveyMem] {
     }
   }
 
-  def getNorder(pixelSize:Angle, mem:AladinSurveyMem):Int = {
+  def getNorder(pixelSize:Angle, mem:AllSkySurveyMem):Int = {
     val ang = pixelSize.toArcSec * mem.survey.imgWidth
     val nside = PixTools.GetNSide(ang)
     val norder = PixTools.nside2norder(nside)
@@ -186,5 +186,5 @@ object AladinSurvey extends ChartFeature[AladinSurveyMem] {
 
 }
 
-case class AladinSurveyMem( survey:AladinSurvey.Survey = AladinSurvey.dssColorSurvey)
+case class AllSkySurveyMem( survey:AllSkySurvey.Survey = AllSkySurvey.dssColorSurvey)
 

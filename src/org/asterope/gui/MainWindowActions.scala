@@ -93,9 +93,9 @@ trait MainWindowActions extends ChartEditorFab{
   
   val actChartSkyview = new EditorBoundAction()
 
-  val actDSSAladinSurvey  = new EditorBoundAction()
-  val actMellingerAladinSurvey  = new EditorBoundAction()
-  val actNoneAladinSurvey  = new EditorBoundAction()
+  val actDSSAllSkySurvey  = new EditorBoundAction()
+  val actMellingerAllSkySurvey  = new EditorBoundAction()
+  val actNoneAllSkySurvey  = new EditorBoundAction()
   
 
 }

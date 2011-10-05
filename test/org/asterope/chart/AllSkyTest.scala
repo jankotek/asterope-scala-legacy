@@ -7,7 +7,7 @@ import java.awt.Color
 import javax.imageio.ImageIO
 import java.io.File
 
-class AladinSurveyTest extends ScalaTestCase{
+class AllSkyTest extends ScalaTestCase{
 
   def createImg(width:Int, height:Int, color:Color):BufferedImage = {
     val img = new BufferedImage(width,height,BufferedImage.TYPE_INT_RGB);
@@ -32,7 +32,7 @@ class AladinSurveyTest extends ScalaTestCase{
 
     //only one side is drawn
     val canvas = createImg(500,500,Color.BLACK);
-    AladinSurvey.drawTriangle(canvas.createGraphics(),img,corners,0,100)
+    AllSkySurvey.drawTriangle(canvas.createGraphics(),img,corners,0,100)
     assert(canvas.getRGB(99,99) == Color.black.getRGB)
     assert(canvas.getRGB(101,101) == Color.blue.getRGB)
     assert(canvas.getRGB(201,99) == Color.black.getRGB)
@@ -55,7 +55,7 @@ class AladinSurveyTest extends ScalaTestCase{
 
     //paint triangle on first canvas without cutting
     val canvas = createImg(500,500,Color.BLACK);
-    AladinSurvey.drawTriangle(canvas.createGraphics(),img,corners,0,100)
+    AllSkySurvey.drawTriangle(canvas.createGraphics(),img,corners,0,100)
     //saveImg(canvas)
 
     assert(canvas.getRGB(150,49) == Color.black.getRGB)

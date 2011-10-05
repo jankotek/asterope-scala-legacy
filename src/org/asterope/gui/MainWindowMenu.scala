@@ -123,10 +123,10 @@ trait MainWindowMenu
 
   lazy val imageMenu  = new JMenu() {
       setName("imageMenu")
-      add(new JRadioButtonMenuItem(actDSSAladinSurvey))
+      add(new JRadioButtonMenuItem(actDSSAllSkySurvey))
 
-      add(new JRadioButtonMenuItem(actMellingerAladinSurvey))
-      add(new JRadioButtonMenuItem(actNoneAladinSurvey))
+      add(new JRadioButtonMenuItem(actMellingerAllSkySurvey))
+      add(new JRadioButtonMenuItem(actNoneAllSkySurvey))
 
 
       add(new JSeparator)

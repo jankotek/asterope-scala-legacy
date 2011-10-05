@@ -82,7 +82,7 @@ class ChartEditor(
   private var showConstelBounds = true
   private var showConstelLines = true;
   private var deepSkyConfig = beans.deepSky.defaultConfig
-  private var aladinConfig:Option[AladinSurveyMem] = None
+  private var allSkyConfig:Option[AllSkySurveyMem] = None
 
 
   def getChartBase = chartBase
@@ -129,8 +129,8 @@ class ChartEditor(
       if(showConstelLines)
           beans.constelLine.updateChart(chart)
 
-      aladinConfig.foreach{mem=>
-        AladinSurvey.updateChart(chart,mem)
+      allSkyConfig.foreach{mem=>
+        AllSkySurvey.updateChart(chart,mem)
       }
 
       beans.milkyWay.updateChart(chart)
@@ -472,18 +472,18 @@ class ChartEditor(
     refresh()
   }
 
-  val actDSSAladinSurvey = Main.actDSSAladinSurvey.editorAction(this){
-    aladinConfig = Some(new AladinSurveyMem(survey = AladinSurvey.dssColorSurvey))
+  val actDSSAllSkySurvey = Main.actDSSAllSkySurvey.editorAction(this){
+    allSkyConfig = Some(new AllSkySurveyMem(survey = AllSkySurvey.dssColorSurvey))
     refresh()
   }
 
-  val actMellingerAladinSurvey = Main.actMellingerAladinSurvey.editorAction(this){
-    aladinConfig = Some(new AladinSurveyMem(survey = AladinSurvey.mellingerSurvey))
+  val actMellingerAllSkySurvey = Main.actMellingerAllSkySurvey.editorAction(this){
+    allSkyConfig = Some(new AllSkySurveyMem(survey = AllSkySurvey.mellingerSurvey))
     refresh()
   }
 
-  val actNoneAladinSurvey = Main.actNoneAladinSurvey.editorAction(this){
-    aladinConfig = None
+  val actNoneAllSkySurvey = Main.actNoneAllSkySurvey.editorAction(this){
+    allSkyConfig = None
     refresh()
   }
 
@@ -496,9 +496,9 @@ class ChartEditor(
     actShowConstelBounds.selected = Some(showConstelBounds)
     actShowConstelLines.selected = Some(showConstelLines)
     actShowLegend.selected = Some(showLegend)
-    actDSSAladinSurvey.selected = Some(aladinConfig.isDefined && aladinConfig.get.survey == AladinSurvey.dssColorSurvey)
-    actMellingerAladinSurvey.selected = Some(aladinConfig.isDefined && aladinConfig.get.survey == AladinSurvey.mellingerSurvey)
-    actNoneAladinSurvey.selected = Some(!aladinConfig.isDefined)
+    actDSSAllSkySurvey.selected = Some(allSkyConfig.isDefined && allSkyConfig.get.survey == AllSkySurvey.dssColorSurvey)
+    actMellingerAllSkySurvey.selected = Some(allSkyConfig.isDefined && allSkyConfig.get.survey == AllSkySurvey.mellingerSurvey)
+    actNoneAllSkySurvey.selected = Some(!allSkyConfig.isDefined)
   }
 
 
