@@ -16,7 +16,7 @@ import org.asterope.util._
 case class ConstelLine(
 		 v1:Vector3d,  v2:Vector3d,
 		hipparcos1:Int, hipparcos2:Int, constellation: String,
-		lineWidth:Int
+		lineWidth:Int //TODO current data from stellarium do not contain line width
 		) {
 	val line = TwoPointSkyLine(v1,v2)
 

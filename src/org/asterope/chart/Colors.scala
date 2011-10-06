@@ -7,7 +7,7 @@ object Colors {
 
 	val WHITE = new Color(255, 255, 255);
 	val BLACK = new Color(0,0,0)
-	val DARK_BLUE = new Color(0,0,64)
+	val DARK_BLUE = new Color(0,0,32)
 
 	/**
 	 * Calculates color between two colors
@@ -63,31 +63,31 @@ trait Colors{
 }
 
 object DarkBlueColors extends Colors{
-  val fg = Colors.WHITE
-  val bg = Colors.DARK_BLUE
-  val gridColor = new Color(32,32,127)
-  val gridLabel = new Color(96,96,150)
+  val fg = new Color(200,200,200)
+  val bg = new Color(0,0,32)
+  val gridColor = new Color(64,64,196)
+  val gridLabel = new Color(160,160,255)
 
-  val galaxy = new Color(255,0,0)
-  val brightNebula = new Color(0,255,0)
-  val darkNebula= new Color(200, 200, 255,128);
-  val planetaryNebula = new Color(0,255,0)
+  val galaxy = new Color(64,255,64)
+  val brightNebula = new Color(238,130,238)
+  val darkNebula= new Color(200, 200, 255,200);
+  val planetaryNebula = new Color(238,130,238)
   val openCluster = new Color(255, 255, 0)
   val globularCluster = new Color(255, 255, 0)
   val unknown = new Color(0,0,255)
 
-  private val trans = 64
-  val galaxyInside = new Color(255,0,0,trans)
-  val brightNebulaInside = new Color(0,255,0,trans)
-  val darkNebulaInside = new Color(200, 200, 255,trans);
-  val planetaryNebulaInside = new Color(0,255,0,trans)
-  val openClusterInside = new Color(255, 255, 0,trans)
+  private val trans = 32
+  val galaxyInside = new Color(64,255,64,trans)
+  val brightNebulaInside = new Color(238,130,238,trans)
+  val darkNebulaInside = new Color(0, 0, 0,trans * 2);
+  val planetaryNebulaInside = new Color(238,130,238,trans)
+  val openClusterInside = new Color(255, 255, 0,0)
   val globularClusterInside = new Color(255, 255, 0,trans)
   val unknownInside = new Color(0,0,255,trans)
 
-  val milkyWay = new Color(0, 127, 127, 255)
-  val constelLine = new Color(64, 64, 160)
-  val constelBoundary = new Color(32, 32, 120)
+  val milkyWay = new Color(64, 96, 170,12)
+  val constelLine = new Color(96, 96, 96)
+  val constelBoundary = new Color(96, 32, 32)
   val star = new Color(255,255,255)
 }
 
