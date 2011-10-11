@@ -67,5 +67,5 @@ Git repository contains basic Intellij Idea project files. To import Asterope as
 
 Screenshots
 -----------------------
-![M45](https://github.com/jankotek/asterope/raw/master/tools/artwork/m45-screenshot.jpeg)
+![M45](raw/master/tools/artwork/m45-screenshot.jpeg)
 
