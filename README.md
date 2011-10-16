@@ -1,14 +1,3 @@
-Warning
------------------------
-
-This project is no longer maintained since October 2011.
-I decided to leave 'one big Swing desktop application' idea and make Android application first.
-This project was splited into smaller pieces which can be found in my repository.
-It is possible that this application will be actually created in a few years, but it is not going to be this repository.
-
-Overview
------------------------
-
 Asterope is an astronomical application focused on advanced amateur astronomers.
 When finished it will provide skycharting, ephemeris, observation planning,
 telescope control and image manipulation.
@@ -75,5 +64,5 @@ Git repository contains basic Intellij Idea project files. To import Asterope as
 
 Screenshots
 -----------------------
-![M45](https://github.com/jankotek/asterope-scala-legacy/raw/master/tools/artwork/m45-screenshot.jpeg)
+![M45](https://github.com/jankotek/asterope/raw/master/tools/artwork/m45-screenshot.jpeg)
 
