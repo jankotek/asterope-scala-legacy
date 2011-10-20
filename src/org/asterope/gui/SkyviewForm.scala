@@ -176,9 +176,8 @@ trait ChartWindowSkyviewActions{ self:ChartEditor =>
 
    *  skyview stuff
    *************************************************************/
-  val actChartSkyview = act{
+  val actChartSkyview = Main.actChartSkyview.editorAction(this){
     showSkyviewSurveyDialog(lastSkyviewConfig.survey)
-
   }
 
   def showSkyviewSurveyDialog(survey:String){
