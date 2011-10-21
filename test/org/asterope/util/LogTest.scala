@@ -51,7 +51,7 @@ class LogTest extends ScalaTestCase{
   }
 
   def test_uncaught_exception_handled(){
-    fork("test"){
+    fork{
       throw new IOException()
     }
     while(LogHandler.data.size<0)

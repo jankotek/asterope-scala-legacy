@@ -8,6 +8,9 @@ import java.awt.event._
 import edu.umd.cs.piccolo.util.PBounds
 import javax.swing._
 import org.asterope.chart._
+import java.util.concurrent._
+import collection.mutable.ArrayBuffer
+;
 
 
 class ChartEditor(
@@ -87,22 +90,24 @@ class ChartEditor(
 
   def getChartBase = chartBase
 
-  private var refreshWorker:SwingWorker[Chart, Unit] = null
+  private var refreshWorker:Future[Chart] = null
 
   def refreshInProgress:Boolean = onEDTWait{
     refreshWorker == null || !refreshWorker.isDone
   }
 
-  def refresh():Unit={
-    if(refreshWorker!=null)
-      while(!refreshWorker.isDone && !refreshWorker.cancel(true)) Thread.sleep(1)
+  def refresh(){
+    //cancel previously running tasks
+    if(refreshWorker!=null ){
+      refreshWorker.cancel(true);
+    }
 
-    refreshWorker = new SwingWorker[Chart,Unit]{
-      def doInBackground:Chart = {
-
-      Thread.sleep(500)
-
+    refreshWorker = future[Chart]{
       if (getInteracting){
+        //wait a bit in case user is zooming or performing other interactive task
+        //this way new tasks may cancel this future without even starting
+        Thread.sleep(500);
+
         //if user used mouse to move chart, center on new position and update FOV
         val bounds = chartBase.camera.getViewBounds;
         val center = chartBase.wcs.deproject(bounds.getCenter2D);
@@ -112,57 +117,70 @@ class ChartEditor(
         }
       }
 
-
+      //take current size of windows
       val chart = chartBase.copy(width = getWidth,
         height = if( !showLegend) getHeight else (getHeight - beans.legendBorder.height),
         legendHeight = if(showLegend) beans.legendBorder.height else 0,
         executor = new EDTChartExecutor
       )
+
       onChartRefreshStart.firePublish(chart)
 
-      beans.stars.updateChart(chart,starsConfig)
-      beans.deepSky.updateChart(chart,deepSkyConfig)
+      val futures = new ArrayBuffer[Future[Unit]];
 
-      if(showConstelBounds)
-          beans.constelBoundary.updateChart(chart)
-
-      if(showConstelLines)
-          beans.constelLine.updateChart(chart)
-
-      allSkyConfig.foreach{mem=>
-        AllSkySurvey.updateChart(chart,mem)
+      futures+=future{
+        beans.stars.updateChart(chart,starsConfig)
+      }
+      futures+=future{
+        beans.deepSky.updateChart(chart,deepSkyConfig)
       }
 
-      beans.milkyWay.updateChart(chart)
+      if(showConstelBounds) futures+=future{
+          beans.constelBoundary.updateChart(chart)
+      }
 
-      CoordinateGrid.updateChart(chart,coordGridConfig)
+      if(showConstelLines) futures+=future{
+          beans.constelLine.updateChart(chart)
+      }
 
-      if(showLegend)
+      allSkyConfig.foreach{mem=>
+        futures+=future{
+          AllSkySurvey.updateChart(chart,mem)
+        }
+      }
+
+      futures+=future{
+        beans.milkyWay.updateChart(chart)
+      }
+
+      futures+=future{
+        CoordinateGrid.updateChart(chart,coordGridConfig)
+      }
+
+      if(showLegend) futures+=future{
           beans.legendBorder.updateChart(chart)
+      }
 
-      chart
-    }
+      //now wait for all futures to finish
+      waitOrInterrupt(futures)
 
-      override def done{
-        if(isCancelled) return
-
-        val chart = get()
+      //good now perform final tasks on EDT
+      onEDTWait{
         //labels must be last,
-        // placement alghorihm depends on graphic created by other features
+        // placement algorithm depends on graphic created by other features
         Labels.updateChart(chart)
         chartBase = chart;
         chartBase.executor.asInstanceOf[EDTChartExecutor].plugIntoSwing()
         getCamera.removeAllChildren();
         if(getInteracting)
-           setInteracting(false) //this will cause repaint, but chart is already empy so no performace problem
+           setInteracting(false) //this will cause repaint, but chart is already emppy so no performace problem
 
         getCamera.addChild(chartBase.camera)
         onChartRefreshFinish.firePublish(chartBase)
-
       }
-  }
 
-    refreshWorker.execute()
+      chart
+    }
 
   }
 

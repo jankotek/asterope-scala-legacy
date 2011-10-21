@@ -125,7 +125,7 @@ object SkyviewProgressDialog extends JDialog{
     cancelButton.setEnabled(false)
     cancelButton.setText("Cancelling...") //TODO externalize
     skyview.executive.Settings.cancel = true;
-    fork("Skyview cancel"){
+    fork{
       //wait until process was really canceled, when it is done variable is set back to false
       while(skyview.executive.Settings.cancel == true) Thread.sleep(1)
       //now close dialog
@@ -193,7 +193,7 @@ trait ChartWindowSkyviewActions{ self:ChartEditor =>
         SkyviewProgressDialog.show()
       }
 
-      fork("skyview imager"){
+      fork{
         try{
           Skyview.updateChart(getChartBase,lastSkyviewConfig)
           onEDT{
@@ -206,7 +206,7 @@ trait ChartWindowSkyviewActions{ self:ChartEditor =>
                 e.printStackTrace(skyview.executive.Settings.err)
                 Settings.err.println("An exception happend, hit Cancel to hide this dialog!")
                 //original imager is no longer running, so start thread which would react to cancelled event
-                fork("Cancel"){
+                fork{
                     while(true){
                         Settings.checkCancelled()
                         Thread.sleep(1)

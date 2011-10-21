@@ -74,7 +74,7 @@ class StatusBarMemoryUsage extends  JLabel{
 
   /** run garbage collector, triggered when user click on this progressbar*/
   val runGC = act{
-    fork("runGC"){
+    fork{
       System.gc()
     }
   }

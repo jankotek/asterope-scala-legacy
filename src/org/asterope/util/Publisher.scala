@@ -77,7 +77,7 @@ class Publisher[E] {
    */
 	def listenInFork(block:(E) =>Unit){
 		listen{e=>
-      fork("listen"+System.currentTimeMillis()){
+      fork{
         block(e)
       }
     }

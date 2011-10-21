@@ -4,6 +4,7 @@ package org.asterope
 import java.lang.{IllegalAccessError, InterruptedException}
 import javax.swing.{JComponent, SwingUtilities, AbstractAction, Action}
 import java.io._
+import java.util.concurrent._
 
 /**
  * Various general purpose utilities. 
@@ -13,10 +14,25 @@ import java.io._
  */
 package object util{
 
-  def fork(threadName:String)( block: =>Any){
-	  val t = new Thread(Runnable(block),threadName)
-	  t.setDaemon(true);
-	  t.start();
+  private val executor = Executors.newScheduledThreadPool(8)
+
+  def fork( block: =>Any):Unit = {
+    executor.submit(Runnable(block),Unit)
+  }
+
+  def future[E](t: =>E):Future[E] = {
+    executor.submit(Callable(t));
+  }
+
+  def waitOrInterrupt(futures:Iterable[Future[_]]){
+    try{
+      futures.foreach(_.get)
+    }catch{
+      //in case this thread was interrupted, forward it to other threads
+      case _:InterruptedException=>{
+        futures.foreach(_.cancel(true))
+      }
+    }
   }
 
   def Runnable(block: =>Unit) = new Runnable {
@@ -24,6 +40,13 @@ package object util{
       block
     }
   }
+
+  def Callable[E](block: =>E) = new Callable[E] {
+    def call():E={
+      block
+    }
+  }
+
 
   def stopWatch(block: =>Unit): Long = {
 	  val  l = System.currentTimeMillis();

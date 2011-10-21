@@ -12,7 +12,7 @@ class SkyviewFormTest extends GuiTestCase{
   def testFields{
     val m1 = new SkyviewConfig
     var m2:SkyviewConfig = m1;
-    fork("test"){
+    fork{
       m2=Form.showDialog(m1,form).get
     }
     sleep

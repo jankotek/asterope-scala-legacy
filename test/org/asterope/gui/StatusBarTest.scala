@@ -14,7 +14,7 @@ class StatusBarTest extends ScalaTestCase {
 
     //allocate 2 MB array, this should change memory usage
     var array:Array[Byte] = null
-    fork("gc"){
+    fork{
       sleep(10)
       array = new Array[Byte](2e6.toInt)
     }

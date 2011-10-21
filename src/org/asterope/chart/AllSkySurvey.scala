@@ -41,7 +41,7 @@ object AllSkySurvey extends ChartFeature[AllSkySurveyMem] {
 
 
     val pixelsRing = tools.query_disc(translate(chart.position),chart.fieldOfView.toRadian,false)
-    for(
+    val futures = for(
       ring<-pixelsRing.longIterator;
       nested = Nested.ring2nest(nside,ring);
       bounds = tools.makePix2Vect(ring);
@@ -57,8 +57,7 @@ object AllSkySurvey extends ChartFeature[AllSkySurveyMem] {
       h = points.map(_.y).max - y;
       if(chart.isInsideCanvas(new PBounds(x,y,w,h)));
       file = config.survey.url+"Norder"+norder+"/Dir"+(nested-nested%10000)+"/Npix"+nested+config.survey.suffix
-    ){
-
+    )yield future[Unit]{
 
         val is = GetURL(new URL(file));
         checkInterrupted()
@@ -77,6 +76,12 @@ object AllSkySurvey extends ChartFeature[AllSkySurveyMem] {
         }
         checkInterrupted()
     }
+
+
+    //wait for all scheduled futures to finish
+    waitOrInterrupt(futures.toBuffer)
+
+
 
 
     //add label with copyright
