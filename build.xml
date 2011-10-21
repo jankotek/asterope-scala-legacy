@@ -219,7 +219,7 @@
 				<exclude name="*.png" />
                 <exclude name="Asterope.iml" />
             </fileset>
-            <!-- make ant.sh executable on unix -->
+            <!-- make ant executable on unix -->
             <zipfileset dir="." includes="ant.sh" filemode="0755"/>
         </zip>
 

@@ -16,23 +16,23 @@ You need an Linux, Windows or MacOSX machine with **JRE 7** (JRE6 wont work) to 
 Source distribution already contains everything you need for build 
 (including compiler, Ant build system, IDE project files and data). There is no reason to install JDK or Ant.
 
-To invoke Ant use batch file 'ant.bat' on Windows or './ant.sh' on Unix like systems.
+To invoke Ant use batch file 'ant.bat' on Windows or './ant' on Unix like systems.
 Asterope uses embedded Ant, so you should not use one installed on your system.
 
 First step is to compile star and  deep-sky database. This may take 20 to 60 minutes, but needs to be performed only once.
 Asterope sources contains all data, you just need to run Ant target:
 
 ```
-    ant.bat compiledb          (on Windows)
-    ./ant.sh compiledb         (on Linux or MacOSX)
+    ant.bat compiledb       (on Windows)
+    ./ant compiledb         (on Linux or MacOSX)
 ```
 
 Second step is to run unit tests. It may download some data from internet, but data are cached locally. 
 To run tests:
 
 ```
-    ant.bat test         (on Windows)
-    ./ant.sh test        (on Linux or MacOSX)
+    ant.bat test      (on Windows)
+    ./ant test        (on Linux or MacOSX)
 ```
 
 Test reports are saved in:
@@ -42,11 +42,11 @@ Test reports are saved in:
 
 Asterope is distributed in two zip archives: sources and compiled. You may build distribution archives with this command:
 ```
-    ./ant.sh dist
+    ./ant dist
 ```
-You may also run Astreope GUI directly from Ant. Use 'main' target:
+You may also run Asterope GUI directly from Ant. Use 'main' target:
 ```
-    ./ant.sh main
+    ./ant main
 ```
 
 IDE
@@ -55,10 +55,10 @@ Git repository contains basic Intellij Idea project files. To import Asterope as
 
  - Open Asterope folder as new project
  - Set SDK in Project Settings / Project / Project SDK
- - Set resource pattern under File / Settings / Compiler / Resource patterns / enter *.*
+ - Set resource pattern under File / Settings / Compiler / Resource patterns / enter *
  - Project is configured to use Scala Fast Compiler daemon, so start it from Ant:
 ```
-    ./ant.sh fsc
+    ./ant fsc
 ```
  -  Hit Recompile and try to run tests
 
