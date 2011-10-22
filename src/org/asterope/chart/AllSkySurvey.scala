@@ -72,7 +72,8 @@ object AllSkySurvey extends ChartFeature[AllSkySurveyMem] {
           }
         }
         chart.executor.async{
-          chart.addNode(layer=Layer.skyview, node=node)
+          chart.addNode(layer=Layer.skyview, node=node,async=false)
+          node.repaint()
         }
         checkInterrupted()
     }

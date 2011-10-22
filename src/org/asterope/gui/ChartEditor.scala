@@ -143,11 +143,6 @@ class ChartEditor(
           beans.constelLine.updateChart(chart)
       }
 
-      allSkyConfig.foreach{mem=>
-        futures+=future{
-          AllSkySurvey.updateChart(chart,mem)
-        }
-      }
 
       futures+=future{
         beans.milkyWay.updateChart(chart)
@@ -177,6 +172,15 @@ class ChartEditor(
 
         getCamera.addChild(chartBase.camera)
         onChartRefreshFinish.firePublish(chartBase)
+
+
+      }
+
+
+      allSkyConfig.foreach{mem=>
+//        futures+=future{
+          AllSkySurvey.updateChart(chart,mem)
+//        }
       }
 
       chart
