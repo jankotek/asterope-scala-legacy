@@ -12,11 +12,11 @@ class StatusBarTest extends ScalaTestCase {
     val text1 = gc.getText
     assert(text1.matches("[0-9]+M / [0-9]+M"))
 
-    //allocate 2 MB array, this should change memory usage
+    //allocate 100 MB array, this should change memory usage
     var array:Array[Byte] = null
     fork{
       sleep(10)
-      array = new Array[Byte](2e6.toInt)
+      array = new Array[Byte](1e8.toInt)
     }
 
     waitUntil(text1 != gc.getText)
