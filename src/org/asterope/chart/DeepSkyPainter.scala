@@ -75,7 +75,7 @@ class DeepSkyPainter(dao: DeepSkyDao)
     val dia = ds.sizeMax.get.toRadian /chart.pixelAngularSize.toRadian
     val shape = orOutline(ds, chart, new Ellipse2D.Double(-dia / 2, -dia / 2, dia, dia))
     val n = new PPath(shape);
-    n.setStroke(new BasicStroke(1))
+    n.setStroke(new BasicStroke(0.33F))
     n.setStrokePaint(chart.colors.brightNebula)
     n.setPaint(chart.colors.brightNebulaInside)
     return Some(n);
