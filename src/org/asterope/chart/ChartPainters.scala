@@ -67,15 +67,8 @@ class ChartConstelLine(dao:ConstelLineDao)
 		if(p1.isEmpty || p2.isEmpty) return None
 		val projected = chart.projectLine(line.line)
 		if(projected.isEmpty) return None
-    val area = new Area(projected.get)
-    //cutout ends so line does not connect directly to star
-    def cutoutArea(x:Double, y:Double) = new Area(new Ellipse2D.Double(
-          (x - config.cutoutCircle), (y - config.cutoutCircle),
-          config.cutoutCircle*2, config.cutoutCircle*2))
-    area.subtract(cutoutArea(p1.get.getX, p1.get.getY))
-    area.subtract(cutoutArea(p2.get.getX, p2.get.getY))
 
-		val node = new PPath(area)
+		val node = new PPath(projected.get)
 	  node.setStroke(config.stroke.getStroke);
 	  node.setStrokePaint(chart.colors.constelLine);
 	  if(addToLayer)
