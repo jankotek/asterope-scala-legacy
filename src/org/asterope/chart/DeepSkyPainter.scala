@@ -75,7 +75,7 @@ class DeepSkyPainter(dao: DeepSkyDao)
     val dia = ds.sizeMax.get.toRadian /chart.pixelAngularSize.toRadian
     val shape = orOutline(ds, chart, new Ellipse2D.Double(-dia / 2, -dia / 2, dia, dia))
     val n = new PPath(shape);
-    n.setStroke(new BasicStroke(0.33F))
+    n.setStroke(new BasicStroke(0.66F))
     n.setStrokePaint(chart.colors.brightNebula)
     n.setPaint(chart.colors.brightNebulaInside)
     return Some(n);
@@ -122,7 +122,7 @@ class DeepSkyPainter(dao: DeepSkyDao)
     n.addChild(vert)
 
     val horz = new PPath(new Line2D.Double(0, -dia / 2, 0, dia / 2));
-    horz.setStroke(new BasicStroke(1))
+    horz.setStroke(new BasicStroke(0.66F))
     horz.setStrokePaint(stroke)
     n.addChild(horz)
 
@@ -136,7 +136,7 @@ class DeepSkyPainter(dao: DeepSkyDao)
     val dia = ds.sizeMax.get.toRadian /chart.pixelAngularSize.toRadian
     val shape = orOutline(ds, chart, new Ellipse2D.Double(-dia / 2, -dia / 2, dia, dia))
     val n = new PPath(shape);
-    n.setStroke(new BasicStroke(1))
+    n.setStroke(new BasicStroke(0.66F))
     val stroke = chart.colors.planetaryNebula
     n.setStrokePaint(stroke)
     n.setPaint(chart.colors.planetaryNebulaInside)
@@ -149,7 +149,7 @@ class DeepSkyPainter(dao: DeepSkyDao)
       )
 
     lines.foreach { p: PPath =>
-      p.setStroke(new BasicStroke(1))
+      p.setStroke(new BasicStroke(0.66F))
       p.setStrokePaint(stroke)
       n.addChild(p)
     }
@@ -169,7 +169,7 @@ class DeepSkyPainter(dao: DeepSkyDao)
       val pa = 90.degree - ds.posAngle.get
       n.setRotation(pa.toRadian);
     }
-    n.setStroke(new BasicStroke(1))
+    n.setStroke(new BasicStroke(0.66F))
     n.setStrokePaint(chart.colors.galaxy)
     n.setPaint(chart.colors.galaxyInside)
     return Some(n);
