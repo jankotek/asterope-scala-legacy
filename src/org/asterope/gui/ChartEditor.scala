@@ -7,9 +7,12 @@ import java.awt.event._
 
 import edu.umd.cs.piccolo.util.PBounds
 import javax.swing._
+import nodes.PPath
 import org.asterope.chart._
 import java.util.concurrent._
 import collection.mutable.ArrayBuffer
+import java.awt.{Rectangle, Color}
+import java.awt.geom.{Ellipse2D, Area}
 ;
 
 
@@ -29,7 +32,14 @@ class ChartEditor(
     //install zoom handler
     getCamera.addInputEventListener(new PBasicInputEventHandler {
       override def mouseClicked(event: PInputEvent) {
-        if (event.isMouseEvent && event.getButton == 2 && event.getClickCount == 1) {
+        //change selection with mid button
+        if(event.isMouseEvent && event.getClickCount == 1 && event.getButton == 1){
+          event.setHandled(true)
+          val node = event.getPickedNode
+          val obj = if(node==null) None else chartBase.getObjectForNode(node)
+          selectObject(obj)
+        } else if (event.isMouseEvent && event.getClickCount == 1 && event.getButton == 2) {
+          //center on new position with mid mouse button
           event.setHandled(true);
           if(!getInteracting) setInteracting(true)
 
@@ -40,10 +50,10 @@ class ChartEditor(
           val bounds = new PBounds(viewPos.getX - width / 2, viewPos.getY - height / 2, width, height);
           chartBase.camera.setViewBounds(bounds);
           refresh()
-
-      }
+       }
       }
       override def mouseWheelRotated(event: PInputEvent) {
+        //zoom with mouse wheel
         if (event.isMouseWheelEvent) {
           event.setHandled(true);
           if(!getInteracting) setInteracting(true)
@@ -53,7 +63,7 @@ class ChartEditor(
           val viewPos = event.getPosition;
           chartBase.camera.scaleViewAboutPoint(newScale, viewPos.getX, viewPos.getY);
           refresh()
-          event.setHandled(true)
+
         }
       }
     })
@@ -169,14 +179,14 @@ class ChartEditor(
         chartBase.executor.asInstanceOf[EDTChartExecutor].plugIntoSwing()
         getCamera.removeAllChildren();
         if(getInteracting)
-           setInteracting(false) //this will cause repaint, but chart is already emppy so no performace problem
+           setInteracting(false) //this will cause repaint, but chart is already empty so no performance problem
+
+        //restore selection
+        selectObject(selectedObject,selectionAfterRefresh=true)
 
         getCamera.addChild(chartBase.camera)
         onChartRefreshFinish.firePublish(chartBase)
-
-
       }
-
 
       allSkyConfig.foreach{mem=>
 //        futures+=future{
@@ -199,9 +209,55 @@ class ChartEditor(
   }
 
 
+  private var selectedPointer:Option[PNode] = None
+  private var selectedObject:Option[Any] = None
+  def getSelectedObject = selectedObject
 
 
+  val onSelectionChanged = new Publisher[Chart]()
+
+  def selectObject(obj:Option[Any], selectionAfterRefresh:Boolean = false){
+
+    def createPointer(node:PNode):PNode = {
+      val w = 18
+      val h = 2
+      val d = math.max(w+10,node.getFullBoundsReference.width.toInt/2 + 10)
+
+      val area = new Area(new Ellipse2D.Double(-d-h, -d-h, (d+h)*2, (d+h)*2));
+      area.subtract(new Area(new Ellipse2D.Double(-d, -d, d*2, d*2)))
+      area.add(new Area(new Rectangle(-d-w,-h/2,w*2,h)))
+      area.add(new Area(new Rectangle(d-w,-h/2,w*2,h)))
+      area.add(new Area(new Rectangle(-h/2,-d-w,h,w*2)))
+      area.add(new Area(new Rectangle(-h/2,d-w,h,w*2)))
+
+      val n = new PPath(area)
+      n.setPaint(Color.red)
+      n.centerFullBoundsOnPoint(node.getFullBoundsReference.getCenterX, node.getFullBoundsReference.getCenterY)
+      n;
+    }
+
+    if(obj == selectedObject && !selectionAfterRefresh){
+      return
+    }
+
+    //unselect old
+    selectedPointer.foreach(_.removeFromParent())
+    selectedPointer = None;
+
+    obj.foreach{o=>
+      val node:PNode = chartBase.getNodeForObject(o).getOrElse(throw new IllegalArgumentException("Object not on map"))
+      val pointer = createPointer(node);
+      selectedPointer = Some(pointer)
+      chartBase.addNode(Layer.fg, pointer, async=false)
+      pointer.repaint()
+    }
+
+    if(selectedObject!=obj){
+      selectedObject = obj
+      onSelectionChanged.firePublish(chartBase)
+    }
+
+
+  }
 
 }
-
-
