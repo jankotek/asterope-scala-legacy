@@ -8,9 +8,9 @@ import javax.imageio.ImageIO
 import edu.umd.cs.piccolo.PNode
 import edu.umd.cs.piccolo.util._
 import java.awt.geom.{Area, AffineTransform, Path2D}
-import java.awt.{Image, Graphics2D, Shape}
 import org.asterope.geometry.CoordinateSystem.Galactic
 import edu.umd.cs.piccolo.nodes.PText
+import java.awt.{Color, Image, Graphics2D, Shape}
 
 object AllSkySurvey extends ChartFeature[AllSkySurveyMem] {
 
@@ -19,6 +19,13 @@ object AllSkySurvey extends ChartFeature[AllSkySurveyMem] {
   val defaultConfig = new AllSkySurveyMem()
 
   def updateChart(chart: Chart, config:AllSkySurveyMem=defaultConfig){
+
+    //add label with copyright
+    val text = new PText(config.survey.copyright)
+    text.setPaint(new Color(chart.colors.bg.getRed,chart.colors.bg.getGreen,chart.colors.bg.getBlue,128))
+    text.setTextPaint(chart.colors.fg)
+    text.centerBoundsOnPoint(chart.width - text.getWidth/2 - 10, chart.height - text.getHeight/2 - 10)
+    chart.addNode(Layer.skyview,text,zorder = 1);
 
     def translate(pos:Vector3d):Vector3d = {
       config.survey.coordSys match{
@@ -84,12 +91,6 @@ object AllSkySurvey extends ChartFeature[AllSkySurveyMem] {
 
 
 
-
-    //add label with copyright
-    val text = new PText(config.survey.copyright)
-    text.setTextPaint(chart.colors.fg)
-    text.centerBoundsOnPoint(chart.width - text.getWidth/2 - 10, chart.height - text.getHeight/2 - 10)
-    chart.addNode(Layer.skyview,text,zorder = 1);
 
   }
 
