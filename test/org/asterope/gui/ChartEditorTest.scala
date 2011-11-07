@@ -6,7 +6,6 @@ import edu.umd.cs.piccolo.PNode
 import org.asterope.chart.{Layer, ChartBeans}
 import collection.JavaConversions._
 import org.asterope.data._
-import org.asterope.ephem.Star
 
 class ChartEditorTest extends ScalaTestCase
   with MainWindow
