@@ -1,6 +1,7 @@
 package org.asterope.data
 
 import org.asterope.util._
+import org.apache.commons.math.geometry.Vector3D
 
 
 class NameResolver(ds:DeepSkyDao, stars:LiteStarDao) {
@@ -29,7 +30,7 @@ class NameResolver(ds:DeepSkyDao, stars:LiteStarDao) {
 }
 
 
-case class NameResolverResult(pos:Option[Vector3d]=None,description:Option[String]=None, queryString:String){
+case class NameResolverResult(pos:Option[Vector3D]=None,description:Option[String]=None, queryString:String){
 
   def constel = Constel.constelOnPosition(pos.get)
 }

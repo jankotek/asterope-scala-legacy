@@ -5,6 +5,7 @@ import org.asterope.chart.Point2d
 import org.asterope.util._
 import java.awt.geom.Point2D
 import java.lang.IllegalArgumentException
+import org.apache.commons.math.geometry.Vector3D
 
 /**A World Coordinate System defines
  *  a translation between celestial and pixel
@@ -181,8 +182,8 @@ class WCS(csys: CoordinateSystem, proj: Projection, sphereDistorder:Distorter = 
    * @param vector3d normalized vector on sphere
    * @return point on canvas, or None if point can not be projected
    */
-  def project(vector: Vector3d):Option[Point2d] = {
-    Vector3d.assertNormalized(vector);
+  def project(vector: Vector3D):Option[Point2d] = {
+    assertNormalized(vector);
     val p = project(vector.toArray)
     if(p.isDefined) Some(Point2d(p.get(0),p.get(1)));
     else None
@@ -193,9 +194,9 @@ class WCS(csys: CoordinateSystem, proj: Projection, sphereDistorder:Distorter = 
    * @param  de in radians
    * @return point on canvas, or None if point can not be projected
    */
-  def project(ra: Double, de: Double):Option[Point2d] = project(Vector3d.rade2Vector(ra,de));
+  def project(ra: Double, de: Double):Option[Point2d] = project(rade2Vector(ra,de));
 
-  def project(ra: Angle, de: Angle):Option[Point2d] = project(Vector3d.rade2Vector(ra,de));
+  def project(ra: Angle, de: Angle):Option[Point2d] = project(rade2Vector(ra,de));
 
 
 
@@ -220,14 +221,14 @@ class WCS(csys: CoordinateSystem, proj: Projection, sphereDistorder:Distorter = 
   * @param y coordinate on canvas
   * @return Spherical 3d vector or None, if deprojection fails
   */
-  def deproject(x:Double, y:Double):Option[Vector3d] = {
+  def deproject(x:Double, y:Double):Option[Vector3D] = {
     val xy = Array[Double](x,y)
     val xyz = deproject(xy);
-    if(xyz.isDefined) Some(Vector3d(xyz.get));
+    if(xyz.isDefined) Some(new Vector3D(xyz.get(0),xyz.get(1),xyz.get(2)));
     else None;
   }
 
-  def deproject(p:Point2D):Option[Vector3d] = deproject(p.getX, p.getY)
+  def deproject(p:Point2D):Option[Vector3D] = deproject(p.getX, p.getY)
 
 
 }

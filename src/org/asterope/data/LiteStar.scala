@@ -24,7 +24,7 @@ case class LiteStar(
 	) extends HasNomenclature {
 	
 	/** normalized vector with position calculated from Ra De */
-	val vector = Vector3d.rade2Vector(ra,de)
+	val vector = rade2Vector(ra,de)
 	/** healpix ipix */
 	lazy val ipix = Pixelization.vector2Ipix(vector);
 }

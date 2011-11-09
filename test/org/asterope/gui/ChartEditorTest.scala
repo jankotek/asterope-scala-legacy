@@ -6,6 +6,7 @@ import edu.umd.cs.piccolo.PNode
 import org.asterope.chart.{Layer, ChartBeans}
 import collection.JavaConversions._
 import org.asterope.data._
+import org.apache.commons.math.geometry.Vector3D
 
 class ChartEditorTest extends ScalaTestCase
   with MainWindow
@@ -39,7 +40,7 @@ class ChartEditorTest extends ScalaTestCase
 
   def testOpenChartOnObject(){
     open()
-    assert(chart.position.angle(Vector3d.asterope) < 1 * Angle.D2R)
+    assert(Vector3D.angle(chart.position,Vector3D_asterope) < 1 * Angle.D2R)
   }
 
   def testResizeWindow(){

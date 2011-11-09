@@ -504,8 +504,8 @@ public class EphemElement implements Serializable
 		return this.location;
 	}
 	
-//	public Vector3d getPosition(){
-//		return Vector3d.rade2Vector(Arc.normalizeRa(rightAscension), declination);
+//	public Vector3D getPosition(){
+//		return rade2Vector(Arc.normalizeRa(rightAscension), declination);
 //	}
 
 	/**

@@ -3,6 +3,7 @@ package org.asterope.geometry
 
 import org.asterope.util.Angle._
 import org.asterope.util._
+import org.apache.commons.math.geometry.Vector3D
 
 
 class WCSBuilderTest extends ScalaTestCase {
@@ -21,7 +22,7 @@ class WCSBuilderTest extends ScalaTestCase {
   }
 
   private def testCenterPoint(ra: Double, de: Double, p: Projection){
-    var testPoint: Array[Double] = Vector3d.rade2Vector(ra, de).toArray
+    var testPoint: Array[Double] = rade2Vector(ra, de).toArray
     if (p.getRotater == null) return
     testPoint = p.getRotater.transform(testPoint)
     testPoint = p.getProjecter.transform(testPoint)
@@ -34,13 +35,13 @@ class WCSBuilderTest extends ScalaTestCase {
    * Test that single RA DE point is projected and deprojected to same position
    */
   private def testPoint(name: String, ra: Double, de: Double, p: Projection){
-    var testPoint: Array[Double] = Vector3d.rade2Vector(ra, de).toArray
+    var testPoint: Array[Double] = rade2Vector(ra, de).toArray
     if (p.getRotater != null) testPoint = p.getRotater.transform(testPoint)
     testPoint = p.getProjecter.transform(testPoint)
     assert(testPoint.length === 2)
     testPoint = p.getProjecter.inverse.transform(testPoint)
     if (p.getRotater != null) testPoint = p.getRotater.inverse.transform(testPoint)
-    val testPoint2: Array[Double] = Vector3d.rade2Vector(ra, de).toArray
+    val testPoint2: Array[Double] = rade2Vector(ra, de).toArray
     assert(testPoint2(0) ~== testPoint(0))
     assert(testPoint2(1) ~== testPoint(1))
   }
@@ -54,7 +55,7 @@ class WCSBuilderTest extends ScalaTestCase {
     wcsBuilder.projection = "Sin"
     wcsBuilder.pixelScale = 1 / (D2R * 16 * 800)
     val wcs: WCS = wcsBuilder.build
-    val ref: Array[Double] = Vector3d.rade2Vector(wcsBuilder.refRa, wcsBuilder.refDe).toArray
+    val ref: Array[Double] = rade2Vector(wcsBuilder.refRa, wcsBuilder.refDe).toArray
     val v2: Array[Double] = wcs.transform(ref)
     assert(v2(0) === 400d)
     assert(v2(1) ===  300d)

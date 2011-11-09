@@ -2,7 +2,8 @@ package org.asterope.geometry
 
 import Jama.Matrix
 import java.lang.Math._
-import org.asterope.util.Vector3d
+import org.asterope.util._
+import org.apache.commons.math.geometry.Vector3D
 
 /**
      *  Form a rotation from the Euler angles - three successive
@@ -111,7 +112,10 @@ class Rotater(matrix2:Matrix) extends Transformer{
     }
   }
 
-  def transform(pos:Vector3d):Vector3d = new Vector3d(transform(pos.toArray))
+  def transform(pos:Vector3D):Vector3D = {
+    val v = transform(pos.toArray)
+    new Vector3D(v(0),v(1),v(2))
+  }
 
   def printOut(){
     matrix.print(20,20)

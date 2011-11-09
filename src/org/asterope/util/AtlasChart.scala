@@ -1,6 +1,6 @@
 package org.asterope.util
 
-import org.asterope.util._
+import org.apache.commons.math.geometry.Vector3D
 
 /**
  * A class to obtain the chart that best shows a given position in different
@@ -112,7 +112,7 @@ object AtlasChart{
       return uranometria(ra, dec, false)
     }
 
-    def uranometria(pos:Vector3d): Int = uranometria(pos.getRaRadian,pos.getDeRadian)
+    def uranometria(pos:Vector3D): Int = uranometria(pos.getRaRadian,pos.getDeRadian)
 
 
   /**

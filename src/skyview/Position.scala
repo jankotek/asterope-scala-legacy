@@ -1,7 +1,8 @@
 package skyview
 
-import org.asterope.util._
 import org.asterope.geometry._
+import org.asterope.util._
+import org.apache.commons.math.geometry.Vector3D
 
 /**This class represents a position in the sky.  This
  *  class is used to pass a position that may be represented in different
@@ -29,11 +30,11 @@ class Position(l: Double, b: Double, frame: String = "J2000") {
     }
     else {
       val csys: CoordinateSystem = CoordinateSystem.factory(frame)
-      val unit: Array[Double] = Vector3d.rade2Vector(math.toRadians(l), math.toRadians(b)).toArray
+      val unit: Array[Double] = rade2Vector(math.toRadians(l), math.toRadians(b)).toArray
             
       val conv = new Converter(List(csys.getSphereDistorter,csys.getRotater )).inverse
       val j2000Unit: Array[Double] = conv.transform(unit)
-      val j2000C: Array[Double] = new Vector3d(j2000Unit).toRaDeArray
+      val j2000C: Array[Double] = new Vector3D(j2000Unit(0),j2000Unit(1),j2000Unit(2)).toRaDeArray
       coords(0) = math.toDegrees(j2000C(0))
       coords(1) = math.toDegrees(j2000C(1))
     }
@@ -58,12 +59,12 @@ class Position(l: Double, b: Double, frame: String = "J2000") {
         return orig.clone
       }
       val csys: CoordinateSystem = CoordinateSystem.factory(frame)
-      val unit: Array[Double] = Vector3d.rade2Vector(math.toRadians(coords(0)), math.toRadians(coords(1))).toArray
+      val unit: Array[Double] = rade2Vector(math.toRadians(coords(0)), math.toRadians(coords(1))).toArray
       
 
       val conv: Converter = new Converter(List(csys.getSphereDistorter,csys.getRotater ))
       val xUnit: Array[Double] = conv.transform(unit)
-      val xCoords: Array[Double] = new Vector3d(xUnit).toRaDeArray
+      val xCoords: Array[Double] = new Vector3D(xUnit(0),xUnit(1),xUnit(2)).toRaDeArray
       xCoords(0) = math.toDegrees(xCoords(0))
       xCoords(1) = math.toDegrees(xCoords(1))
       if (xCoords(0) < 0) {

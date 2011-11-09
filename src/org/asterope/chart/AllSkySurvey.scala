@@ -11,6 +11,8 @@ import java.awt.geom.{Area, AffineTransform, Path2D}
 import org.asterope.geometry.CoordinateSystem.Galactic
 import edu.umd.cs.piccolo.nodes.PText
 import java.awt.{Color, Image, Graphics2D, Shape}
+import org.apache.commons.math.geometry.Vector3D
+import scala.collection.JavaConversions._
 
 object AllSkySurvey extends ChartFeature[AllSkySurveyMem] {
 
@@ -27,14 +29,14 @@ object AllSkySurvey extends ChartFeature[AllSkySurveyMem] {
     text.centerBoundsOnPoint(chart.width - text.getWidth/2 - 10, chart.height - text.getHeight/2 - 10)
     chart.addNode(Layer.skyview,text,zorder = 1);
 
-    def translate(pos:Vector3d):Vector3d = {
+    def translate(pos:Vector3D):Vector3D = {
       config.survey.coordSys match{
         case "E" => pos
         case "G" => Galactic.getRotater.transform(pos)
       }
     }
 
-    def untranslate(pos:Vector3d):Vector3d = {
+    def untranslate(pos:Vector3D):Vector3D = {
       config.survey.coordSys match{
         case "E" => pos
         case "G" => Galactic.getRotater.inverse.transform(pos)
@@ -43,14 +45,14 @@ object AllSkySurvey extends ChartFeature[AllSkySurveyMem] {
 
 
     val norder = getNorder(chart.pixelAngularSize,config)
-    val nside = PixTools.norder2nside(norder)
+    val nside = Pixelization.norder2nside(norder)
     val tools = new PixTools(nside)
 
 
     val pixelsRing = tools.query_disc(translate(chart.position),chart.fieldOfView.toRadian,false)
     val futures = for(
-      ring<-pixelsRing.longIterator;
-      nested = Nested.ring2nest(nside,ring);
+      ring<-pixelsRing.iterator(); //TODO replace with 'longIterator' to reduce instance creation
+      nested = PixToolsNested.ring2nest(nside,ring);
       bounds = tools.makePix2Vect(ring);
       north = chart.wcs.project(untranslate(bounds.north));
       south = chart.wcs.project(untranslate(bounds.south));
@@ -103,7 +105,7 @@ object AllSkySurvey extends ChartFeature[AllSkySurveyMem] {
   def getNorder(pixelSize:Angle, mem:AllSkySurveyMem):Int = {
     val ang = pixelSize.toArcSec * mem.survey.imgWidth
     val nside = PixTools.GetNSide(ang)
-    val norder = PixTools.nside2norder(nside)
+    val norder = Pixelization.nside2norder(nside)
     2.max(norder.min(mem.survey.maxNorder))
   }
 

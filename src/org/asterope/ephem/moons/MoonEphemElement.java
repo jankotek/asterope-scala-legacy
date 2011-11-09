@@ -468,7 +468,7 @@ public class MoonEphemElement implements Serializable
 		return equals;
 	}
 	
-//	public Vector3d toVector(){
-//		return Vector3d.rade2Vector(Arc.normalizeRa(rightAscension), declination);
+//	public Vector3D toVector(){
+//		return rade2Vector(Arc.normalizeRa(rightAscension), declination);
 //	}
 }

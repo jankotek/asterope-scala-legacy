@@ -4,6 +4,7 @@ import org.asterope.util._
 
 import org.asterope.healpix._
 import collection.immutable.TreeSet
+import org.apache.commons.math.geometry.{Rotation, Vector3D}
 
 /**
  * Represents line on sky. 
@@ -19,26 +20,26 @@ abstract class SkyLine {
 	 * ZeroToOne argument can have value from 0 to 1, returned vector is at corresponding 
 	 * line position from start (0) to end (1)
 	 */
-	def skyLineIteration(zeroToOne:Double):Vector3d
+	def skyLineIteration(zeroToOne:Double):Vector3D
 	
 	/** @return first point of line, corresponds to <code>skyLineIteration(0)</code> **/
-	def start:Vector3d = skyLineIteration(0d);
+	def start:Vector3D = skyLineIteration(0d);
 	/** @return last point of line, corresponds to <code>skyLineIteration(1)</code> **/
-	def end:Vector3d = skyLineIteration(1d);
+	def end:Vector3D = skyLineIteration(1d);
 	/** @return center point of line, corresponds to <code>skyLineIteration(0.5)</code> **/
-	def center:Vector3d = skyLineIteration(0.5d);
+	def center:Vector3D = skyLineIteration(0.5d);
 	
 	/**
 	 * Most friendly way to iterate over line points. 
 	 * In iterator it returns all points contained in line. Maximal distance between two points
 	 * is limited by given maximal step (accuracy). Smaller step means more points will be returned. 	 
 	 */
-	def skyLineIterator(accuracy:Angle):Iterator[Vector3d] = {				
+	def skyLineIterator(accuracy:Angle):Iterator[Vector3D] = {
 		val step:Double = accuracy.toRadian/length.toRadian;				
-		return new Iterator[Vector3d]{			
+		return new Iterator[Vector3D]{
 			var value:Double = -step;
 			def hasNext:Boolean = (value <=1d - step)
-			def next():Vector3d={
+			def next():Vector3D={
 				value+=step
 				if(value>1d)throw new NoSuchElementException();
 				return skyLineIteration(value);				
@@ -59,7 +60,7 @@ abstract class SkyLine {
 			while(pos<=1d-step){
 				pos+=step
 				val vect = skyLineIteration(pos)
-				ret+=oldvect.angle(vect);
+				ret+=Vector3D.angle(oldvect,vect);
 				oldvect = vect
 			}			
 			assert(ret>0,"line have zero length");
@@ -67,7 +68,7 @@ abstract class SkyLine {
 	}
 	
 	/** @return true if line is closed shape, ie if start == end */
-	def isClosed() = start.angle(end)<1e-10;
+	def isClosed() = Vector3D.angle(start,end)<1e-10;
 		
 	/** Calculate healpix area occupied by this line  */
 	def calculateArea():LongRangeSet = {
@@ -90,21 +91,22 @@ abstract class SkyLine {
  * RA lines (rotationAxis is cross product of start and end)
  */
 @SerialVersionUID(-1604918798770235512L)
-case class RotatingSkyLine(startPoint:Vector3d, rotationAxis: Vector3d, rotationAngle:Angle) 
+case class RotatingSkyLine(startPoint:Vector3D, rotationAxis: Vector3D, rotationAngle:Angle)
 	extends SkyLine{
 	startPoint.assertNormalized
 	rotationAxis.assertNormalized
 	assert(rotationAngle.toDegree>=0 && rotationAngle.toDegree<=360 , 
 			"angle should be between 0 and 360 degrees: "+rotationAngle)
-  assert(startPoint.angle(rotationAxis)!=0, "start point and rot axis are equal")
-  assert(startPoint.angle(rotationAxis)!=math.Pi, "start point and rot axis are 180 degrees apart")
+  assert(Vector3D.angle(startPoint,rotationAxis)!=0, "start point and rot axis are equal")
+  assert(Vector3D.angle(startPoint,rotationAxis)!=math.Pi, "start point and rot axis are 180 degrees apart")
 	
-	override def skyLineIteration(zeroToOne:Double): Vector3d ={  
-		startPoint.rotateVector(rotationAxis, rotationAngle.toRadian * zeroToOne);
+	override def skyLineIteration(zeroToOne:Double): Vector3D ={
+    val rot = new Rotation(rotationAxis, rotationAngle.toRadian * zeroToOne)
+		rot.applyTo(startPoint)
 }
 	override def start = startPoint;
 	
-	override def length = rotationAngle * math.sin(startPoint.angle(rotationAxis))
+	override def length = rotationAngle * math.sin(Vector3D.angle(startPoint,rotationAxis))
 }
 
 /**
@@ -112,22 +114,24 @@ case class RotatingSkyLine(startPoint:Vector3d, rotationAxis: Vector3d, rotation
  * It is defined by two points.
  */
 @SerialVersionUID(6841049333663254920L)
-case class TwoPointSkyLine(v1:Vector3d, v2:Vector3d) extends SkyLine{
-	private var angle = v1.angle(v2)
+case class TwoPointSkyLine(v1:Vector3D, v2:Vector3D) extends SkyLine{
+	private var angle = Vector3D.angle(v1,v2)
 	assert(angle<math.Pi, "angle can not be 180 degrees")
 	assert(angle>1e-7, "points are equal")
 	v1.assertNormalized
 	v2.assertNormalized
 	//rotation axis which have 90degree angle with both vectors
-	private val rotAxis = v1.cross(v2).normalized
+	private val rotAxis = Vector3D.crossProduct(v1,v2).normalize
 	//swap rotation direction if needed
-	if(skyLineIteration(0.1).angle(v2)>angle)
+	if(Vector3D.angle(skyLineIteration(0.1),v2)>angle)
 		angle = -angle
 
-	override def skyLineIteration(zeroToOne:Double): Vector3d = 
-		v1.rotateVector(rotAxis, angle * zeroToOne);
+	override def skyLineIteration(zeroToOne:Double): Vector3D ={
+    val rot = new Rotation(rotAxis, angle * zeroToOne);
+    rot.applyTo(v1)
+  }
 		
 	override def start = v1
 	override def end = v2
-	override def length = v1.angle(v2).radian
+	override def length = Vector3D.angle(v1,v2).radian
 }

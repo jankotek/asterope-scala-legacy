@@ -5,6 +5,7 @@ import scala.collection.JavaConversions._
 import edu.umd.cs.piccolo.nodes.PText
 import edu.umd.cs.piccolo.PNode
 import org.asterope.util._
+import org.apache.commons.math.geometry.{Rotation, Vector3D}
 
 class ChartTest extends ScalaTestCase{
 	
@@ -29,15 +30,16 @@ class ChartTest extends ScalaTestCase{
 	
 	def testProjectionInverseOverField{
 		def center = chart.position 
-		def axis1 = Vector3d.northPole
-		def axis2 = center.cross(axis1) //90 degrees to both vectors
+		def axis1 = Vector3D.PLUS_K
+		def axis2 = Vector3D.crossProduct(center,axis1) //90 degrees to both vectors
 		//iterate 10 degrees in both direction
 		for(a1 <- -10 to 10; a2 <- -10 to 10;
-			v:Vector3d = center.rotateVector(axis1,a1.degree).rotateVector(axis2,a2.degree)){
-			assert(v.angle(center).radian<20.degree)
-			val inverse:Vector3d = chart.wcs.deproject(chart.wcs.project(v).get).get
+      rot = new Rotation(axis1,a1.degree.toRadian);
+			v:Vector3D = rot.applyTo(center)){
+			assert(Vector3D.angle(v,center).radian<20.degree)
+			val inverse:Vector3D = chart.wcs.deproject(chart.wcs.project(v).get).get
 			
-			assert(v.angle(inverse).radian ?< 1.arcSec, "failed for: "+a1+" and "+a2 )
+			assert(Vector3D.angle(v,inverse).radian ?< 1.arcSec, "failed for: "+a1+" and "+a2 )
 			
 		}
 	}
@@ -72,9 +74,9 @@ class ChartTest extends ScalaTestCase{
   }
   
   def testAngleSizeOnChart{
-	  val chart = new Chart(position = Vector3d.zeroPoint,
+	  val chart = new Chart(position = Vector3D.PLUS_I,
 	 		  fieldOfView = 10.degree, width = 10, height=10)
-	  val pos1 = Vector3d.rade2Vector(3.degree, 3.degree)
+	  val pos1 = rade2Vector(3.degree, 3.degree)
 	  val size = chart.angleSizeOnChart(pos1, 1.degree).get
 	  assert(size?>1.2)
 	  assert(size?<1.6)

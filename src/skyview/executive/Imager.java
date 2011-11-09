@@ -5,6 +5,7 @@ package skyview.executive;
 import nom.tam.fits.Fits;
 import nom.tam.fits.Header;
 import nom.tam.util.ArrayFuncs;
+import org.apache.commons.math.geometry.Vector3D;
 import org.asterope.util.*;
 import org.asterope.geometry.*;
 
@@ -23,6 +24,7 @@ import java.lang.ref.SoftReference;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Vector;
 import java.util.regex.Pattern;
 
 /**
@@ -454,7 +456,8 @@ public class Imager {
 		double[] cunit = new double[3];
 		wcs.inverse().transform(cpix, cunit);
 
-		cpix = new Vector3d(cunit).toRaDeArray();
+        Vector3D vect = new Vector3D(cunit[0],cunit[1],cunit[2]);
+		cpix = new double[]{vect.getAlpha(),vect.getDelta()};
 		cpix[0] = Math.toDegrees(cpix[0]);
 		cpix[1] = Math.toDegrees(cpix[1]);
 
@@ -901,9 +904,10 @@ public class Imager {
 			Converter cvt = new Converter(new Transformer[]{
 				p.getRotater(),p.getProjecter()});
 
-			double[] uv = Vector3d$.MODULE$.rade2Vector(Math.toRadians(lon),
-					Math.toRadians(lat)).toArray();
-			double[] coords = cvt.transform(uv);
+			Vector3D uv = org.asterope.util.package$.MODULE$.rade2Vector(Math.toRadians(lon),
+					Math.toRadians(lat));
+
+			double[] coords = cvt.transform(new double[]{uv.getX(), uv.getY(),  uv.getZ()});
 			s = new Scaler(0.5 * nx + coords[0] / Math.toRadians(xscale), 0.5
 					* ny - coords[1] / Math.toRadians(yscale), -1
 					/ Math.toRadians(xscale), 0, 0, 1 / Math.toRadians(yscale));

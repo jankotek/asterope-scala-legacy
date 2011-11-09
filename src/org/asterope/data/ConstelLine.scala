@@ -3,7 +3,7 @@ package org.asterope.data
 import org.asterope.healpix._
 import scala.collection.JavaConversions._
 import java.lang.{Long => JLong}
-import org.asterope.util._
+import org.apache.commons.math.geometry.Vector3D
 
 
 /**
@@ -14,7 +14,7 @@ import org.asterope.util._
  */
 @SerialVersionUID(6274119050738877926L)
 case class ConstelLine(
-		 v1:Vector3d,  v2:Vector3d,
+		 v1:Vector3D,  v2:Vector3D,
 		hipparcos1:Int, hipparcos2:Int, constellation: String,
 		lineWidth:Int //TODO current data from stellarium do not contain line width
 		) {

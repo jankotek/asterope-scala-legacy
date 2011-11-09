@@ -6,6 +6,7 @@ import java.io._
 import java.util.zip._
 import scala.io.Source
 import jdbm.RecordManagerOptions
+import org.apache.commons.math.geometry.Vector3D
 
 /**
  * This script is called from Ant at build time. 
@@ -142,7 +143,7 @@ object CompileDb extends App with DataBeans{
 		val src = Source.fromInputStream(gzip(MILKYWAY_FILE));
 		src.getLines.filter(!_.startsWith("#")).foreach{ s=>
 			val ss = s.split(" ")
-			val pos = Vector3d.rade2Vector(
+			val pos = rade2Vector(
 					Angle.normalizeRa(ss(0).toDouble * Angle.H2R), Angle.D2R * ss(1).toDouble )
 			val gray = ss(2).toInt
 			if(gray>10)	 //if gray is too small, dont add
@@ -165,7 +166,7 @@ object CompileDb extends App with DataBeans{
 				hip1 = split(2+i*2).toInt;
 				hip2 = split(2+i*2+1).toInt
 		){		
-			def findHip(hip:String):Vector3d = {
+			def findHip(hip:String):Vector3D = {
 				List(hip,hip+"A",hip+"B").foreach{ h=>
 					val iter = liteStarDao.objectsByName(h)
 					if(iter.hasNext) 

@@ -1,6 +1,7 @@
 package skyview.process.imagefinder;
 
 import nom.tam.fits.Header;
+import org.apache.commons.math.geometry.Vector3D;
 import org.asterope.util.*;
 
 import skyview.survey.FitsImage;
@@ -57,7 +58,9 @@ public class GalexExposure extends MaxExposure {
 	    Header hdr = img.getHeader();
 	    double actRA   = Math.toRadians(hdr.getDoubleValue("AVASPRA"));
 	    double actDec  = Math.toRadians(hdr.getDoubleValue("AVASPDEC"));
-	    double[] pixelCenter = getImage(input, Vector3d$.MODULE$.rade2Vector(actRA, actDec).toArray());
+
+        Vector3D temp = org.asterope.util.package$.MODULE$.rade2Vector(actRA, actDec);
+	    double[] pixelCenter = getImage(input, new double[]{temp.getX(),  temp.getY(), temp.getZ()});
 	    center = pixelCenter.clone();
 	    centers.set(index,center);
 	}

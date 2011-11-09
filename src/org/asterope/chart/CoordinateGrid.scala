@@ -6,6 +6,7 @@ import java.awt.BasicStroke
 import math._
 import org.asterope.data.{TwoPointSkyLine, RotatingSkyLine}
 import edu.umd.cs.piccolo.nodes.PPath
+import org.apache.commons.math.geometry.Vector3D
 
 /**
  * Provides configuration for CoordinateGrid.
@@ -84,11 +85,10 @@ object CoordinateGrid extends ChartFeature[CoordinateGridConfig]{
 	/**
 	 * Converts position from one coordinate system to other using given rotater/derotater 
 	 */
-	protected def transform(pos:Vector3d, tater:Option[Rotater]):Vector3d = {
+	protected def transform(pos:Vector3D, tater:Option[Rotater]):Vector3D = {
 		if(tater == None)
 			return pos
-		val out = tater.get.transform(pos.toArray);
-		new Vector3d(out);
+		tater.get.transform(pos);
 	}
 
   /**In same cases all coordinate lines should be painted.
@@ -154,10 +154,10 @@ object CoordinateGrid extends ChartFeature[CoordinateGridConfig]{
     for(
       de <- deStart.to(deStop,deStep);
       if(config.showLines || (config.showEquator && de == 0.degree));
-      start = Vector3d.rade2Vector(0.degree,de);
+      start = rade2Vector(0.degree,de);
       line = RotatingSkyLine(
         transform(start,derotater),
-        transform(Vector3d.southPole,derotater),
+        transform(Vector3D.MINUS_K,derotater),
         raStop - raStart
       );
       projected <- chart.projectLine(line);
@@ -193,8 +193,8 @@ object CoordinateGrid extends ChartFeature[CoordinateGridConfig]{
 
     for(
       ra <-raStart.to(raStop-1.arcSec,raStep);
-      point1 = Vector3d.rade2Vector(ra,deStart);
-      point2 = Vector3d.rade2Vector(ra,deStop);
+      point1 = rade2Vector(ra,deStart);
+      point2 = rade2Vector(ra,deStop);
       line = new TwoPointSkyLine(transform(point1,derotater), transform(point2,derotater));
       projected <- chart.projectLine(line);
       path = new PPath(projected)
@@ -221,7 +221,7 @@ object CoordinateGrid extends ChartFeature[CoordinateGridConfig]{
 				n.setStrokePaint(chart.colors.gridColor)
 				n
 		}
-		val south = transform(Vector3d.southPole,derotater)
+		val south = transform(Vector3D.MINUS_K,derotater)
 		if(chart.isInsideCanvas(south)){
 			val pos = chart.wcs.project(south).get
 			val n = node
@@ -230,7 +230,7 @@ object CoordinateGrid extends ChartFeature[CoordinateGridConfig]{
 			chart.addNode(layer,n)
 		}
 			
-		val north = transform(Vector3d.northPole,derotater)
+		val north = transform(Vector3D.PLUS_K,derotater)
 		if(chart.isInsideCanvas(north)){
 			val pos = chart.wcs.project(north).get
 			val n = node

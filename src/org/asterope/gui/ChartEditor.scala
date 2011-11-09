@@ -6,13 +6,13 @@ import edu.umd.cs.piccolo.event._
 import java.awt.event._
 
 import edu.umd.cs.piccolo.util.PBounds
-import javax.swing._
 import nodes.PPath
 import org.asterope.chart._
 import java.util.concurrent._
 import collection.mutable.ArrayBuffer
 import java.awt.{Rectangle, Color}
 import java.awt.geom.{Ellipse2D, Area}
+import org.apache.commons.math.geometry.Vector3D
 ;
 
 
@@ -123,7 +123,7 @@ class ChartEditor(
         val bounds = chartBase.camera.getViewBounds;
         val center = chartBase.wcs.deproject(bounds.getCenter2D);
         if(center.isDefined){
-          val fov = chartBase.wcs.deproject(bounds.getOrigin).map(_.angle(center.get) * 2).getOrElse(120 * Angle.D2R);
+          val fov = chartBase.wcs.deproject(bounds.getOrigin).map(Vector3D.angle(_,center.get) * 2).getOrElse(120 * Angle.D2R);
           chartBase = chartBase.copy(position = center.get, fieldOfView = fov.radian)
         }
       }
@@ -203,7 +203,7 @@ class ChartEditor(
 
 
 
-  def centerOnPosition(pos:Vector3d){
+  def centerOnPosition(pos:Vector3D){
     chartBase = chartBase.copy(position = pos)
     refresh()
   }

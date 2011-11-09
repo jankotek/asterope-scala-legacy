@@ -1,11 +1,11 @@
 package org.asterope.data
 
 import org.asterope.healpix._
-import org.asterope.util._
 import scala.collection.JavaConversions._
+import org.apache.commons.math.geometry.Vector3D
 
 case class MilkyWayPixel
-	(pos:Vector3d, gray:Int){		
+	(pos:Vector3D, gray:Int){
 	
 	def ipix = Pixelization.vector2Ipix(pos)
 }
@@ -22,9 +22,9 @@ class MilkyWayDao(recman:RecordManager){
 			//save as much space as possible, so angles are writen in MAS as Integers
       out.write(obj.size)
       obj.foreach{pix=>
-			  out.writeDouble(pix.pos.x)
-			  out.writeDouble(pix.pos.y)
-			  out.writeDouble(pix.pos.z)
+			  out.writeDouble(pix.pos.getX)
+			  out.writeDouble(pix.pos.getY)
+			  out.writeDouble(pix.pos.getZ)
 			  out.writeInt(pix.gray)
       }
 		}
@@ -33,7 +33,7 @@ class MilkyWayDao(recman:RecordManager){
         val size = in.read()
         val pixels = for{
           i<-0 until size;
-          pos = Vector3d(in.readDouble, in.readDouble, in.readDouble);
+          pos = new Vector3D(in.readDouble, in.readDouble, in.readDouble);
           gray = in.readInt
         } yield new MilkyWayPixel(pos,gray)
         pixels.toList

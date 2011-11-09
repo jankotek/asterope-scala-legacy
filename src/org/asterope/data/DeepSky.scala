@@ -7,6 +7,7 @@ import xml.{XML, Node}
 import org.asterope.healpix._
 import org.asterope.util._
 import java.io.File
+import org.apache.commons.math.geometry.Vector3D
 
 /**
  * An object which stores minimal information about deep sky object.
@@ -26,7 +27,7 @@ case class DeepSky(
 	) extends HasNomenclature {
 	
 	/** normalized vector with position calculated from Ra De */
-	val vector = Vector3d.rade2Vector(ra,de)
+	val vector = rade2Vector(ra,de)
 	/** healpix ipix */
 	val ipix = Pixelization.vector2Ipix(vector);
 }
@@ -93,7 +94,7 @@ object DeepSkyType extends Enumeration{
 
 }
 
-case class DeepSkyOutline(id:String,  author:String, points:Vector[Vector3d]){
+case class DeepSkyOutline(id:String,  author:String, points:Vector[Vector3D]){
 
   points.foreach(_.assertNormalized())
 
@@ -116,12 +117,12 @@ object DeepSky{
   /** create Outline from XML */
   def outlineFromXml(n:Node):DeepSkyOutline = {
     val t = n.text.trim.replaceAll("[ \\n\\r]+"," ").split(" ").iterator
-    var points = new collection.immutable.VectorBuilder[Vector3d]()
+    var points = new collection.immutable.VectorBuilder[Vector3D]()
     while(t.hasNext){
       val ra = t.next().toDouble
       val de = t.next().toDouble
       if(ra!= -1.0 && de!=0.0) //TODO seems like -1.0 & 0.0 starts new outline
-        points += Vector3d.rade2Vector(
+        points += rade2Vector(
           ra * Angle.H2R, de * Angle.D2R)
     }
 

@@ -15,6 +15,7 @@ import org.asterope.geometry._
 import java.awt.image.BufferedImage
 
 import collection.mutable.{Map => MMap}
+import org.apache.commons.math.geometry.{Rotation, Vector3D}
 
 
 /**
@@ -23,7 +24,7 @@ import collection.mutable.{Map => MMap}
  * @author Jan Kotek
  */
 case class Chart(
-	position:Vector3d = Vector3d.asterope,
+	position:Vector3D = Vector3D_asterope,
 	fieldOfView:Angle = 10.degree,
 	projection:String = "Sin", //TODO change projection to enum
 	rotation:Angle = 0.degree,
@@ -90,7 +91,7 @@ case class Chart(
 	lazy val pixelAngularSize:Angle = {
 		val p1 = new Point2d(width/2, height/2)
 		val p2 = p1.copy(x = p1.x+1);
-		wcs.deproject(p1).get.angle(wcs.deproject(p2).get).radian
+		Vector3D.angle(wcs.deproject(p1).get,wcs.deproject(p2).get).radian
 	}
 
   def projectLine(line:SkyLine):Option[Path2D] = {
@@ -120,7 +121,7 @@ case class Chart(
   /**
    * Test if given vector can be projected into canvas
    */
-  def isInsideCanvas(p:Vector3d):Boolean = {
+  def isInsideCanvas(p:Vector3D):Boolean = {
     val pos = wcs.project(p);
     pos.isDefined &&
             pos.get.x >=0 && pos.get.x <= width &&
@@ -250,12 +251,13 @@ case class Chart(
   def getNodeForObject(obj:Any):Option[PNode] = object2Node.get(obj)
   def getObjectForNode(node:PNode):Option[Any] = object2Node.find(n=>n._2 ==node).map(_._1)
   
-  def angleSizeOnChart(pos:Vector3d, angle:Angle):Option[Double] = {
+  def angleSizeOnChart(pos:Vector3D, angle:Angle):Option[Double] = {
 	  val p1 = wcs.project(pos);
 	  if(p1.isEmpty) return None
 	  //rotate vector by angle in direction to/from centre
-	  val rotAxis = position.cross(pos);
-	  val pos2 = pos.rotateVector(rotAxis, angle)
+	  val rotAxis = Vector3D.crossProduct(position,pos);
+    val rot = new Rotation(rotAxis,angle.toRadian);
+	  val pos2 = rot.applyTo(pos);
 	  val p2 = wcs.project(pos2)
 	  if(p2.isEmpty) return None
 	  Some(p1.get.distance(p2.get))

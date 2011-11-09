@@ -11,9 +11,5 @@ class PredefTest extends ScalaTestCase{
 		assert(d1 === (d2 * 2))
 	}
 	
-	def testVector{
-		val v = Vector3d(1,1,1)
-		assert(v.normalized.length === 1d)
-	}
 
 }

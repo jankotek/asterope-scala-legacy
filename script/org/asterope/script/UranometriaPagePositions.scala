@@ -15,17 +15,18 @@ import org.asterope.util._
 import org.asterope.data._
 import org.asterope.healpix._
 import org.asterope.chart._
+import org.apache.commons.math.geometry.Vector3D
 
 
 object UranometriaPagePositions{
 
-  val allPoints:Iterable[Vector3d] = (0L to Pixelization.maxPixNumber)
+  val allPoints:Iterable[Vector3D] = (0L to Pixelization.maxPixNumber)
         .map(Pixelization.ipix2Vector(_)) //convert to unit vector
 
   val fovs:Seq[Angle] =  10.degree.until(20.degree, 20.arcMinute)
   val landscapes = List(true,false)
 
-  case class Page(sheet:Int, pos:Vector3d, fov:Angle,portrait:Boolean)
+  case class Page(sheet:Int, pos:Vector3D, fov:Angle,portrait:Boolean)
 
   def main(args:Array[String]){
     println("Time :" + stopWatch{
@@ -33,7 +34,7 @@ object UranometriaPagePositions{
 
     val pages:Seq[Page] = (1 to maxList).map{sheet=>
       //pixels which are on given uranometria page
-      val points:Iterable[Vector3d] = allPoints
+      val points:Iterable[Vector3D] = allPoints
         .filter(sheet == AtlasChart.uranometria(_)) //only those on uranometria sheet
 
       val best:Page = {
@@ -56,7 +57,7 @@ object UranometriaPagePositions{
 
     //now print all stuff
     pages.foreach{p=>
-      println("Page("+p.sheet+", Vector3d("+p.pos.x+","+p.pos.y+","+p.pos.z+"), Angle("+p.fov.uas+"L), "+p.portrait+"),");
+      println("Page("+p.sheet+", Vector3D("+p.pos.getX+","+p.pos.getY+","+p.pos.getZ+"), Angle("+p.fov.uas+"L), "+p.portrait+"),");
     }
 
 

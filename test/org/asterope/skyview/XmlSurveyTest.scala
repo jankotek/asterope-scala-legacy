@@ -1,6 +1,7 @@
 package org.asterope.skyview
 
 import org.asterope.util._
+import org.apache.commons.math.geometry.Vector3D
 
 class XmlSurveyTest extends ScalaTestCase{
 
@@ -38,7 +39,7 @@ class XmlSurveyTest extends ScalaTestCase{
   
   def testFindSurveys(){
 	val surv = XmlSurvey.loadXmlFile("surveys/xml/dss.xml")
-    val images = surv.findCandidates(Vector3d.rade2Vector(0,0),5.degree)
+    val images = surv.findCandidates(rade2Vector(0,0),5.degree)
     
     assert(images.size === 18)
 

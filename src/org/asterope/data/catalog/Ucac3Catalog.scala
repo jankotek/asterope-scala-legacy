@@ -4,6 +4,7 @@ import java.io._
 import org.asterope.data.{Nomenclature, LiteStar}
 import org.asterope.util._
 import java.net.URL
+import org.apache.commons.math.geometry.Vector3D
 
 /**
  * Catalog which reads UCAC3 catalog
@@ -72,7 +73,7 @@ class Ucac3Catalog extends Catalog[LiteStar]{
           yield star         
     }
 
-    def queryByDisc(center:Vector3d, radius:Angle):Iterator[LiteStar] = {
+    def queryByDisc(center:Vector3D, radius:Angle):Iterator[LiteStar] = {
        val startZone = math.max(0, (center.getDe - radius - 2.degree + 90.degree).toDegree * 2).toInt
        val stopZone = math.min(360, (center.getDe + radius + 2.degree + 90.degree).toDegree * 2).toInt
        for{
@@ -81,9 +82,9 @@ class Ucac3Catalog extends Catalog[LiteStar]{
           de = -90.degree + (0.5 * zone).degree
           zoneRa <- 0 until 240;
           ra = (0.1 * 15 * zoneRa).degree;
-          pos = Vector3d.rade2Vector(ra,de);
+          pos = rade2Vector(ra,de);
           //only continue if zone is near enought to center
-          if(center.angle(pos)<radius.toRadian + Angle.D2R * 2);
+          if(Vector3D.angle(center,pos)<radius.toRadian + Angle.D2R * 2);
 
           //lets dive into file
           indexOffset = (zone * 240 + zoneRa) * 2;

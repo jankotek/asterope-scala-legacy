@@ -5,6 +5,7 @@ import collection.mutable.ListBuffer
 import io.Source
 import org.asterope.util._
 import org.asterope.geometry.CoordinateSystem
+import org.apache.commons.math.geometry.Vector3D
 
 
 /** Varius utilities for CompileDb class*/
@@ -26,7 +27,7 @@ object CompileDbUtils{
     val j1875rotater = CoordinateSystem.factory("J1875").getRotater
     /** rotater to transform vector2Rade from J1875 to J2000 */
     val j1875derotater = j1875rotater.inverse
-    val northPole = Vector3d(j1875derotater.transform(Vector3d.northPole.toArray))
+    val northPole:Vector3D = j1875derotater.transform(Vector3D.PLUS_K)
 
     case class Point(ra:Angle,de:Angle, constel:String)
     val buf = ListBuffer[SkyLine]()
@@ -49,10 +50,10 @@ object CompileDbUtils{
       p2 = points2((i+1)%points2.size); //close line by moving to 0 point when modulo overflows
       if(p1.de != (-90).degree && (p2.de != (-90).degree)); //for some reasons south pole is included, skip it
       if(!(p1.de == 88.degree && p2.de== 88.degree && constel == "Cep"));  //one duplicate line near north pole, filter it
-      v1 = Vector3d.rade2Vector(p1.ra,p1.de); //start point of line
-      v2 = Vector3d.rade2Vector(p2.ra,p2.de); //end point of line
-      q1 = Vector3d(j1875derotater.transform(v1.toArray));  //line start point in J1875
-      q2 = Vector3d(j1875derotater.transform(v2.toArray))   //line end point in J1875
+      v1 = rade2Vector(p1.ra,p1.de); //start point of line
+      v2 = rade2Vector(p2.ra,p2.de); //end point of line
+      q1:Vector3D = j1875derotater.transform(v1);  //line start point in J1875
+      q2:Vector3D = j1875derotater.transform(v2)   //line end point in J1875
     ){
 
       val line = if(p1.ra == p2.ra){
@@ -80,8 +81,8 @@ object CompileDbUtils{
       }
 
       //sanity check
-      assert((line.start.angle(q1)<Angle.R2M && line.end.angle(q2)<Angle.R2M) ||
-        (line.start.angle(q2)<Angle.R2M && line.end.angle(q1)<Angle.R2M))
+      assert((Vector3D.angle(line.start,q1)<Angle.R2M && Vector3D.angle(line.end,q2)<Angle.R2M) ||
+        (Vector3D.angle(line.start,q2)<Angle.R2M && Vector3D.angle(line.end,q1)<Angle.R2M))
       buf+=line
     }
 

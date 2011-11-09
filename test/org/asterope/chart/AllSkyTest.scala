@@ -7,6 +7,7 @@ import java.awt.Color
 import javax.imageio.ImageIO
 import java.io.File
 
+
 class AllSkyTest extends ScalaTestCase{
 
   def createImg(width:Int, height:Int, color:Color):BufferedImage = {
@@ -74,8 +75,8 @@ class AllSkyTest extends ScalaTestCase{
     //I know Asterope at 'NOrder 6' has image number 474
     val nside = math.pow(2,6).toLong
     val tools = new PixTools(nside)
-    val ring = tools.vect2pix(Vector3d.asterope)
-    val nested = Nested.ring2nest(nside,ring)
+    val ring = tools.vect2pix(Vector3D_asterope)
+    val nested = PixToolsNested.ring2nest(nside,ring)
     assert(nested === 474)
 
   }

@@ -3,6 +3,7 @@ package org.asterope.healpix
 import scala.collection.mutable.Buffer
 import org.asterope.util._
 import collection.immutable.TreeSet
+import org.apache.commons.math.geometry.Vector3D
 
 /**
  * Utilities related to Healpix sky pixelization
@@ -32,7 +33,7 @@ object Pixelization {
 	/**
 	 * Maximal pix number, ie pixel number of south pole
 	 */
-	val maxPixNumber = vector2Ipix(Vector3d.southPole)
+	val maxPixNumber = vector2Ipix(Vector3D.MINUS_K)
 	
 	/**
 	 * Set of pixels which contains the entire sky. 
@@ -40,18 +41,18 @@ object Pixelization {
 	 */
 	val FULL_SKY: LongRangeSet = new LongRangeSet(Array(0,Long.MaxValue -1),2);
 	
-	def vector2Ipix(v:Vector3d):Long = {
+	def vector2Ipix(v:Vector3D):Long = {
 		v.assertNormalized
 		tools.vect2pix(v);
 	}
 	
-	def rade2Ipix(ra:Angle, de:Angle):Long = vector2Ipix(Vector3d.rade2Vector(ra,de))
+	def rade2Ipix(ra:Angle, de:Angle):Long = vector2Ipix(rade2Vector(ra,de))
 
-	def ipix2Vector(ipix:Long):Vector3d = tools.pix2vect(ipix)
+	def ipix2Vector(ipix:Long):Vector3D = tools.pix2vect(ipix)
 	
 
 	
-	def queryDisc(centralPoint:Vector3d, radius:Angle) = 
+	def queryDisc(centralPoint:Vector3D, radius:Angle) =
 		tools.query_disc(centralPoint, radius.toRadian, true)
 		
 	def rangeSetToSeq(rangeSet:LongRangeSet):Seq[(Long,Long)] = {
@@ -66,6 +67,16 @@ object Pixelization {
     val b = new LongRangeSetBuilder()
     r.foreach(i=>b.append(i))
     b.build
+  }
+
+  protected val  nsidelist: Array[Long] = Array(1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32768, 65536, 131072, 262144, 524288, 1048576, 2097152, 4194304)
+
+  def nside2norder(nside:Long):Int ={
+    nsidelist.indexWhere(_==nside)
+  }
+
+  def norder2nside(norder:Long):Long = {
+    nsidelist(norder.toInt)
   }
 
 	

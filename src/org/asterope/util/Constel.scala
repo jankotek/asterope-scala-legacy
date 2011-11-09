@@ -1,6 +1,7 @@
 package org.asterope.util
 
 import org.asterope.geometry.CoordinateSystem
+import org.apache.commons.math.geometry.Vector3D
 
 /**
  * Enumeration of constellations and some related utils.
@@ -134,8 +135,8 @@ Constel extends Enumeration{
 	 * This method comes from software by S. L. Moshier, taken from JParsec
 	 *
 	 */
-  def constelOnPosition(pos:Vector3d):Constel.Value = {
-    val pos1875 = Vector3d(j1875rotater.transform(pos.toArray))
+  def constelOnPosition(pos:Vector3D):Constel.Value = {
+    val pos1875:Vector3D = j1875rotater.transform(pos)
     val ra0 = pos1875.getRa.toArcSec.toInt
     val de0 = pos1875.getDe.toArcSec.toInt
 

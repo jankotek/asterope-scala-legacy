@@ -2,6 +2,7 @@ package org.asterope.data
 
 import org.asterope.healpix._
 import org.asterope.util._
+import org.apache.commons.math.geometry.Vector3D
 
 class DatabaseTest extends ScalaTestCase
   with DataBeans  with TestRecordManager{
@@ -58,17 +59,17 @@ class DatabaseTest extends ScalaTestCase
 //	}
 
 
-  def testBigHealpix = testHealpix(Vector3d.zeroPoint, 5.degree)
-  def testSmallHealpix = testHealpix(Vector3d.asterope, 20.arcMinute)
+  def testBigHealpix = testHealpix(Vector3D.PLUS_I, 5.degree)
+  def testSmallHealpix = testHealpix(Vector3D_asterope, 20.arcMinute)
 
 
-  def testHealpix(point:Vector3d, angle:Angle){
+  def testHealpix(point:Vector3D, angle:Angle){
     	val area = Pixelization.queryDisc(point,angle)
 			val starsInDisc = liteStarDao.starsByAreaMag(area, Magnitude(30)).toSet
 
 			//iterate over all star and compare distance from point and if they are in disc
 			for(star <-liteStarDao.all){
-				val distance = star.vector.angle(point)
+				val distance = Vector3D.angle(star.vector,point)
 				if(distance < angle.toRadian- Pixelization.resolution.toRadian*5) //FIXME there should not be multiplication in here
 					assert(starsInDisc.contains(star), "not in set \n center: "+point+"\n radius:"+angle.toRadian
 							+"\n starDistance:"+distance)
@@ -79,11 +80,11 @@ class DatabaseTest extends ScalaTestCase
   }
 	
 	def testMilkyWay{
-		val area = Pixelization.queryDisc(Vector3d.galaxyCentre,10.degree);
+		val area = Pixelization.queryDisc(Vector3D_galaxyCentre,10.degree);
 		val inArea = milkyWayDao.milkyWayPixelsByArea(area).toList
 		assert(inArea.size ?> 100)
 		inArea.foreach{ p=>
-			assert(p.pos.angle(Vector3d.galaxyCentre) ?< (11 * Angle.D2R))
+			assert(Vector3D.angle(p.pos,Vector3D_galaxyCentre) ?< (11 * Angle.D2R))
 		}
 		
 	}
@@ -91,8 +92,8 @@ class DatabaseTest extends ScalaTestCase
 	def testDeepSky{
 		assert(deepSkyDao.objectsByName("M13").hasNext)
 		assert(deepSkyDao.objectsByName("M31").hasNext)
-    assert(deepSkyDao.objectsByName("M31").next.vector.angle(Vector3d.m31).radian ?< 20.arcMinute)
-		val area = Pixelization.queryDisc(Vector3d.m31,20.arcMinute)
+    assert(Vector3D.angle(deepSkyDao.objectsByName("M31").next.vector,Vector3D_m31).radian ?< 20.arcMinute)
+		val area = Pixelization.queryDisc(Vector3D_m31,20.arcMinute)
 		val galaxy = deepSkyDao.deepSkyByArea(area).next
 		assert(galaxy.mag.get.mag ?<5)
 		assert(galaxy.sizeMax.get.toDegree?>1)
@@ -101,7 +102,7 @@ class DatabaseTest extends ScalaTestCase
 	def testConstellationLine{
 		assert(100?<constelLineDao.all.size)
     val iter = constelLineDao.constellationLineByArea(
-      Pixelization.queryDisc(Vector3d.northPole, 10.degree))
+      Pixelization.queryDisc(Vector3D.PLUS_K, 10.degree))
       .toList
 		val count = iter.filter(_.constellation  == Constel.UMi.toString ).size
 		assert(count?>=3)	
@@ -109,7 +110,7 @@ class DatabaseTest extends ScalaTestCase
 		assert(iter.size?<10)
 		
 		constelLineDao.all.foreach{l=>
-			assert(l.line.start.angle(l.line.end).radian?<30.degree, l.toString)
+			assert(Vector3D.angle(l.line.start,l.line.end).radian?<30.degree, l.toString)
 		}
 	}
 	

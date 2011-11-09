@@ -1,6 +1,7 @@
 package org.asterope.geometry
 
 import org.asterope.util._
+import org.apache.commons.math.geometry.Vector3D
 
 /**
  * Helper class to create WCS (World Coordinate System) for Skyview
@@ -15,7 +16,7 @@ class WCSBuilder {
 
     // Find where the requested center is with respect to
     // the fixed center of this projection.
-    var coords: Array[Double] = Vector3d.rade2Vector(refRa, refDe).toArray
+    var coords: Array[Double] = rade2Vector(refRa, refDe).toArray
     if (proj == null || proj.getProjecter == null) throw new IllegalArgumentException("projection was not created")
     if (proj.getProjecter.inverse == null) throw new IllegalArgumentException("projection " + projection + " does not support inverse function")
     coords = proj.getRotater.transform(coords)

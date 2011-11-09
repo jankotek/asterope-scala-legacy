@@ -1,6 +1,7 @@
 package org.asterope.geometry
 
 import org.asterope.util._
+import org.apache.commons.math.geometry.Vector3D
 
 class RotaterTest extends ScalaTestCase {
 
@@ -34,8 +35,8 @@ class RotaterTest extends ScalaTestCase {
     val r = Rotater("xyz",48 *Angle.D2R, 48 *Angle.D2R, 48 *Angle.D2R)
     a(r, 1,0,0,  0.4477357683661733, -0.4972609476841367, 0.7431448254773942)
 
-    val v = Vector3d.rade2Vector(1,-1)
-    a(r,v.x,v.y,v.z, 0.3400649326435842,-0.8575798632289657,-0.3858919794065476)
+    val v = rade2Vector(1,-1)
+    a(r,v.getX,v.getY,v.getZ, 0.3400649326435842,-0.8575798632289657,-0.3858919794065476)
 
   }
 
