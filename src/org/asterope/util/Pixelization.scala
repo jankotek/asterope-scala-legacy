@@ -1,9 +1,9 @@
-package org.asterope.healpix
+package org.asterope.util
 
 import scala.collection.mutable.Buffer
-import org.asterope.util._
 import collection.immutable.TreeSet
 import org.apache.commons.math.geometry.Vector3D
+import org.asterope.healpix._
 
 /**
  * Utilities related to Healpix sky pixelization
@@ -46,7 +46,7 @@ object Pixelization {
 		tools.vect2pix(v);
 	}
 	
-	def rade2Ipix(ra:Angle, de:Angle):Long = vector2Ipix(rade2Vector(ra,de))
+	def rade2Ipix(ra:Angle, de:Angle):Long = vector2Ipix(rade2Vector(ra.toRadian,de.toRadian))
 
 	def ipix2Vector(ipix:Long):Vector3D = tools.pix2vect(ipix)
 	

@@ -3,6 +3,7 @@ package org.asterope.data
 import org.asterope.healpix._
 import scala.collection.JavaConversions._
 import org.apache.commons.math.geometry.Vector3D
+import org.asterope.util.Pixelization
 
 case class MilkyWayPixel
 	(pos:Vector3D, gray:Int){
