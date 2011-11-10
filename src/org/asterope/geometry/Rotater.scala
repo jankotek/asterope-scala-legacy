@@ -1,9 +1,9 @@
 package org.asterope.geometry
 
-import Jama.Matrix
 import java.lang.Math._
 import org.asterope.util._
 import org.apache.commons.math.geometry.Vector3D
+import org.apache.commons.math.linear._
 
 /**
      *  Form a rotation from the Euler angles - three successive
@@ -40,7 +40,9 @@ import org.apache.commons.math.geometry.Vector3D
      *
      *  @return         The corresponding rotation matrix.
      */
-class Rotater(matrix2:Matrix) extends Transformer{
+
+//TODO commons-math has Rotation class which does not support arrays, give them patch and use it here
+class Rotater(matrix2:RealMatrix) extends Transformer{
 
   assert(matrix2.getRowDimension == 3 && matrix2.getColumnDimension == 3)
 
@@ -58,9 +60,9 @@ class Rotater(matrix2:Matrix) extends Transformer{
 
   private def isUnit: Boolean = {
       val delta =
-        abs(1 - matrix.get(0,0)) + abs(1 - matrix.get(1,1)) + abs(1 - matrix.get(2,2)) +
-          abs(matrix.get(0,1)) + abs(matrix.get(0,2)) + abs(matrix.get(1,0)) +
-          abs(matrix.get(1,2)) + abs(matrix.get(2,0)) + abs(matrix.get(2,1))
+        abs(1 - matrix.getEntry(0,0)) + abs(1 - matrix.getEntry(1,1)) + abs(1 - matrix.getEntry(2,2)) +
+          abs(matrix.getEntry(0,1)) + abs(matrix.getEntry(0,2)) + abs(matrix.getEntry(1,0)) +
+          abs(matrix.getEntry(1,2)) + abs(matrix.getEntry(2,0)) + abs(matrix.getEntry(2,1))
 
       return delta < 1.e-10
   }
@@ -90,7 +92,7 @@ class Rotater(matrix2:Matrix) extends Transformer{
      *  the old matrix by the new matrix with new matrix on the left.
      */
   def add(r:Rotater):Rotater = {
-    val m2 = r.matrix.times(this.matrix)
+    val m2 = r.matrix.multiply(this.matrix)
     return new Rotater(m2)
   }
 
@@ -105,7 +107,7 @@ class Rotater(matrix2:Matrix) extends Transformer{
       out(i) = 0
       var j: Int = 0
       while (j < matrix.getColumnDimension) {
-        out(i) += matrix.get(i,j) * in(j)
+        out(i) += matrix.getEntry(i,j) * in(j)
         j += 1
       }
       i += 1
@@ -117,20 +119,17 @@ class Rotater(matrix2:Matrix) extends Transformer{
     new Vector3D(v(0),v(1),v(2))
   }
 
-  def printOut(){
-    matrix.print(20,20)
-  }
 }
 
 object Rotater{
 
   def apply(order:String, ang1:Double,ang2:Double,ang3:Double) = {
-    var matrix = Matrix.identity(3,3)
+    var matrix = MatrixUtils.createRealIdentityMatrix(3)
     assert(order.size<=3,"too long order string")
     for(i<-0 until order.size;
       axis = order(i)){
       //initialize rotation matrix
-      val rotn = Matrix.identity(3,3)
+      val rotn = MatrixUtils.createRealIdentityMatrix(3)
 
       // take sine & cosine
       val angle = i match{
@@ -141,26 +140,26 @@ object Rotater{
 
       //Identify the axis and apply sine and cosine
       if (axis == 'x' || axis == 'X' || axis == '1') {
-        rotn.set(1,1,c)
-        rotn.set(1,2,s)
-        rotn.set(2,1,-s)
-        rotn.set(2,2,c)
+        rotn.setEntry(1,1,c)
+        rotn.setEntry(1,2,s)
+        rotn.setEntry(2,1,-s)
+        rotn.setEntry(2,2,c)
       }else if (axis == 'y' || axis == 'Y' || axis == '2') {
-        rotn.set(0,0,c)
-        rotn.set(0,2,-s)
-        rotn.set(2,0,s)
-        rotn.set(2,2,c)
+        rotn.setEntry(0,0,c)
+        rotn.setEntry(0,2,-s)
+        rotn.setEntry(2,0,s)
+        rotn.setEntry(2,2,c)
       }else if (axis == 'z' || axis == 'Z' || axis == '3') {
-        rotn.set(0,0,c)
-        rotn.set(0,1,s)
-        rotn.set(1,0,-s)
-        rotn.set(1,1,c)
+        rotn.setEntry(0,0,c)
+        rotn.setEntry(0,1,s)
+        rotn.setEntry(1,0,-s)
+        rotn.setEntry(1,1,c)
       }else{
         throw new IllegalArgumentException("Unknown axis: "+axis)
       }
 
       //  Apply the current rotation (matrix ROTN x matrix RESULT)
-      matrix = rotn.times(matrix)
+      matrix = rotn.multiply(matrix)
     }
     new Rotater(matrix)
   }
