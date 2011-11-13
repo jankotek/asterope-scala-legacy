@@ -21,8 +21,8 @@
  */					
 package org.asterope.ephem.moons;
 
+import org.apache.commons.math.complex.Complex;
 import org.asterope.ephem.EphemConstant;
-import org.asterope.util.Complex;
 
 
 /**
@@ -443,55 +443,55 @@ public class Mars07 {
     	  for (int i=0; i<nf[0]; i++)
     	  {
 	         if (ELA[i][1] == 0.) {
-	            RESULT= (((new Complex(0.0, ELA[i][2])).exponential()).multiply(ELA[i][0])).add(RESULT);
+	            RESULT= (((new Complex(0.0, ELA[i][2])).exp()).multiply(ELA[i][0])).add(RESULT);
 	         } else {
 	            RESULT = RESULT.add(((
 	            		new Complex(0.0, (2.*Math.PI/ELA[i][1])*DAT2+ELA[i][2])
-	            		).exponential()).multiply(ELA[i][0]));
+	            		).exp()).multiply(ELA[i][0]));
 	         }
     	  }
-	      ELEM[0] = RESULT.real;
+	      ELEM[0] = RESULT.getReal();
 
 	      RESULT = new Complex(0.0, 0.0);
     	  for (int i=0; i<nf[1]; i++)
     	  {
  	         if (ELL[i][1] == 0.) {
- 	            RESULT= (((new Complex(0.0, ELL[i][2])).exponential()).multiply(ELL[i][0])).add(RESULT);
+ 	            RESULT= (((new Complex(0.0, ELL[i][2])).exp()).multiply(ELL[i][0])).add(RESULT);
  	         } else {
  	            RESULT = RESULT.add(((
  	            		new Complex(0.0, (2.*Math.PI/ELL[i][1])*DAT2+ELL[i][2])
- 	            		).exponential()).multiply(ELL[i][0]));
+ 	            		).exp()).multiply(ELL[i][0]));
  	         }
     	  }
-	      ELEM[1] = RESULT.real;
+	      ELEM[1] = RESULT.getReal();
 
 	      RESULT = new Complex(0.0, 0.0);
     	  for (int i=0; i<nf[2]; i++)
     	  {
  	         if (ELZ[i][1] == 0.) {
- 	            RESULT= (((new Complex(0.0, ELZ[i][2])).exponential()).multiply(ELZ[i][0])).add(RESULT);
+ 	            RESULT= (((new Complex(0.0, ELZ[i][2])).exp()).multiply(ELZ[i][0])).add(RESULT);
  	         } else {
  	            RESULT = RESULT.add(((
  	            		new Complex(0.0, (2.*Math.PI/ELZ[i][1])*DAT2+ELZ[i][2])
- 	            		).exponential()).multiply(ELZ[i][0]));
+ 	            		).exp()).multiply(ELZ[i][0]));
  	         }
     	  }
-	      ELEM[2] = RESULT.real;
-	      ELEM[3] = RESULT.imaginary;
+	      ELEM[2] = RESULT.getReal();
+	      ELEM[3] = RESULT.getImaginary();
 
 	      RESULT = new Complex(0.0, 0.0);
     	  for (int i=0; i<nf[3]; i++)
     	  {
  	         if (ELZETA[i][1] == 0.) {
- 	            RESULT= (((new Complex(0.0, ELZETA[i][2])).exponential()).multiply(ELZETA[i][0])).add(RESULT);
+ 	            RESULT= (((new Complex(0.0, ELZETA[i][2])).exp()).multiply(ELZETA[i][0])).add(RESULT);
  	         } else {
  	            RESULT = RESULT.add(((
  	            		new Complex(0.0, (2.*Math.PI/ELZETA[i][1])*DAT2+ELZETA[i][2])
- 	            		).exponential()).multiply(ELZETA[i][0]));
+ 	            		).exp()).multiply(ELZETA[i][0]));
  	         }
     	  }
-	      ELEM[4] = RESULT.real;
-	      ELEM[5] = RESULT.imaginary;
+	      ELEM[4] = RESULT.getReal();
+	      ELEM[5] = RESULT.getImaginary();
 
 	      ELEM[1] += L[nsat]*DAT2+ACC[nsat]*DAT2*DAT2;
 	      ELEM[1] = Math.atan2(Math.sin(ELEM[1]), Math.cos(ELEM[1]));
