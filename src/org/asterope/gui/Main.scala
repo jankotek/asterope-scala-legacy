@@ -3,6 +3,7 @@ package org.asterope.gui
 import javax.swing._
 import org.asterope.chart.ChartBeans
 import org.asterope.util._
+import java.awt.Component
 
 /**
  * Main object which starts Asterope GUI
@@ -31,6 +32,18 @@ object Main
   object chartBeans extends ChartBeans
 
   lazy val messageView = new MessageView(resourceMap)
+  object overviewView extends EditorBoundView{
+    override def editorOpened(editor:Component):JComponent = {
+      if(editor.isInstanceOf[ChartEditor])
+        editor.asInstanceOf[ChartEditor].overview
+      else
+        null;
+    }
+
+    override def editorClosed(editor:Component,  subview:JComponent) {
+    }
+
+  }
 
 
 
@@ -41,6 +54,7 @@ object Main
       show()
       addEditor("welcomeEditor",welcomeEditor)
       addLeftTopView("objectsView",new JLabel())
+      addLeftBottomView("overviewView", overviewView)
       addBottomBarView("messageView",messageView)
     }
   }

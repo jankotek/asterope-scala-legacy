@@ -200,9 +200,6 @@ class ChartEditor(
   }
 
 
-
-
-
   def centerOnPosition(pos:Vector3D){
     chartBase = chartBase.copy(position = pos)
     refresh()
@@ -259,5 +256,30 @@ class ChartEditor(
 
 
   }
+
+
+  val overview = new PCanvas{
+    private var _chart:Chart = new Chart();
+    def chart = _chart;
+    setPanEventHandler(null)
+    setZoomEventHandler(null)
+    setBackground(java.awt.Color.black)
+    onChartRefreshFinish.listenInEDT{detailChart=>
+      _chart = _chart.copy(
+        position=detailChart.position,
+        fieldOfView = detailChart.fieldOfView * 4,
+        width = getWidth,
+        height =getHeight,
+        colors = detailChart.colors
+      )
+      beans.stars.updateChart(_chart)
+      beans.constelBoundary.updateChart(_chart)
+      beans.constelLine.updateChart(_chart)
+      getCamera.removeAllChildren()
+      getCamera.addChild(_chart.camera)
+
+    }
+  }
+
 
 }

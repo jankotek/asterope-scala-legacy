@@ -1,15 +1,15 @@
 package org.asterope.gui
 
 import net.infonode.docking.util._
-import net.infonode.docking._
 import net.infonode.docking.theme.ShapedGradientDockingTheme
 import net.infonode.util.Direction
 import java.beans.PropertyChangeEvent
-import javax.swing._
-import java.awt.{BorderLayout, Component, Dimension}
 import org.asterope.util._
-import org.jdesktop.swingx.action.BoundAction
 import java.awt.event.ActionEvent
+import collection.mutable.WeakHashMap
+import net.infonode.docking._
+import java.awt.{CardLayout, BorderLayout, Component, Dimension}
+import javax.swing._
 
 /**
  * Main window with frame docks
@@ -226,6 +226,62 @@ class EditorBoundAction extends AbstractAction{
 
 
 }
+
+
+  /**
+   * An view which contents depends on active editor
+   */
+  abstract class EditorBoundView extends JLayeredPane{
+
+    def editorOpened(editor:Component):JComponent
+    def editorClosed(editor:Component,  subview:JComponent)
+
+    private val cardLayout = new CardLayout()
+    setLayout(cardLayout)
+
+    private val editor2subview = new WeakHashMap[Component,  (String,JComponent)]
+
+    private def editorChanged(editor:Component){
+      if(editor == null){
+        cardLayout.show(this,null)
+        return;
+      }
+
+      if(!editor2subview.contains(editor)){
+        val key = math.random.toString
+        val subview = editorOpened(editor)
+        editor2subview.put(editor,(key,subview))
+        if(subview!=null)
+          add(subview,key)
+      }
+
+      cardLayout.show(this,editor2subview(editor)._1)
+      revalidate()
+
+    }
+
+    editorTabs.addListener(new DockingWindowAdapter{
+      override def viewFocusChanged(previouslyFocusedView: View, focusedView: View){
+        editorChanged(focusedView.getComponent)
+      }
+
+      override def windowAdded(addedToWindow: DockingWindow, addedWindow: DockingWindow){
+        editorChanged(addedWindow.asInstanceOf[View].getComponent)
+      }
+
+      override def windowClosed(window: DockingWindow){
+        val win = window.asInstanceOf[View].getComponent;
+        if(editor2subview.contains(win)){
+          remove(editor2subview(win)._2)
+          editor2subview.remove(win)
+        }
+      }
+
+
+
+    });
+  }
+
 
 
 }

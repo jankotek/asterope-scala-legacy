@@ -199,5 +199,25 @@ class ChartEditorTest extends ScalaTestCase
   }
 
 
+  def testChartOverview(){
+    open()
+    waitForRefresh()
+    sleep(2000)
+
+    assert(chartEditor.overview.chart.fieldOfView === chart.fieldOfView * 4)
+    assert(chartEditor.overview.chart.position === chart.position)
+
+
+    onEDT{
+      chartEditor.actZoomOut
+      chartEditor.centerOnPosition(Vector3D_m13)
+    }
+    waitForRefresh()
+    sleep(2000)
+    assert(chartEditor.overview.chart.fieldOfView === chart.fieldOfView * 4)
+    assert(chartEditor.overview.chart.position === chart.position)
+
+  }
+
 
 }
