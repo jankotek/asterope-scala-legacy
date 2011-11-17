@@ -159,6 +159,7 @@ class ChartEditor(
         beans.milkyWay.updateChart(chart)
       }
 
+
       futures+=future{
         CoordinateGrid.updateChart(chart,coordGridConfig)
       }
@@ -166,6 +167,11 @@ class ChartEditor(
       if(showLegend) futures+=future{
           beans.legendBorder.updateChart(chart)
       }
+
+      futures+=future{
+        overview.update(chart)
+      }
+
 
       //now wait for all futures to finish
       waitOrInterrupt(futures)
@@ -264,7 +270,8 @@ class ChartEditor(
     setPanEventHandler(null)
     setZoomEventHandler(null)
     setBackground(java.awt.Color.black)
-    onChartRefreshFinish.listenInEDT{detailChart=>
+
+    def update(detailChart:Chart){
       _chart = _chart.copy(
         position=detailChart.position,
         fieldOfView = detailChart.fieldOfView * 4,
@@ -275,9 +282,10 @@ class ChartEditor(
       beans.stars.updateChart(_chart)
       beans.constelBoundary.updateChart(_chart)
       beans.constelLine.updateChart(_chart)
-      getCamera.removeAllChildren()
-      getCamera.addChild(_chart.camera)
-
+      onEDTWait{
+        getCamera.removeAllChildren()
+        getCamera.addChild(_chart.camera)
+      }
     }
   }
 
