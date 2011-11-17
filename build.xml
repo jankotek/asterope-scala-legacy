@@ -240,47 +240,4 @@
 
     </target>
 
-    <target name="fsc" description="Starts Scala Fast Compilation server">
-
-        <!--fsc exits after half hour of inactivity, so add loop to restart it -->
-        <for param="unused" list="q,w,e,r,t,y,u,i,o,p,a,s,d,f,g,h,j,k,l,z,x,c,v,b,n,m,
-                ,Q,W,E,R,T,Y,U,I,O,P,A,S,D,F,G,H,J,K,L,Z,X,C,V,B,N,M" >
-
-         <sequential>
-
-
-        <!-- delete previous config dir, there may be mess in there -->
-        <delete dir="${java.io.tmpdir}/scala-devel"/>
-
-        <!-- define classpath -->
-        <path id="fsc-classpath">
-            <fileset dir="lib">
-                <include name="*.jar"/>
-            </fileset>
-            <fileset dir="tools/buildlib">
-                <include name="*.jar"/>
-            </fileset>
-        </path>
-
-        <java classname="scala.tools.nsc.CompileServer"  fork="true"  >
-            <arg value="-verbose"/>
-
-            <jvmarg value="-Xmn128m"/>
-            <jvmarg value="-Xmx512m"/>
-            <jvmarg value="-Xss2m"/>
-            <jvmarg value="-XX:PermSize=128m"/>
-            <jvmarg value="-XX:MaxPermSize=250m"/>
-            <jvmarg value="-XX:ReservedCodeCacheSize=64m"/>
-            <jvmarg value="-XX:+UseParallelGC"/>
-            <jvmarg value="-XX:+DoEscapeAnalysis"/>
-            <jvmarg value="-server"/>
-
-            <classpath refid="fsc-classpath"/>
-        </java>
-        </sequential>
-        </for>
-
-    </target>
-
-		
 </project>

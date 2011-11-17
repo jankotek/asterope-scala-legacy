@@ -55,11 +55,7 @@ Git repository contains basic Intellij Idea project files. To import Asterope as
 
  - Open Asterope folder as new project
  - Set SDK in Project Settings / Project / Project SDK
- - Set resource pattern under File / Settings / Compiler / Resource patterns / enter *
- - Project is configured to use Scala Fast Compiler daemon, so start it from Ant:
-```
-    ./ant fsc
-```
+ - Set resource pattern under File / Settings / Compiler / Resource patterns / enter star
  -  Hit Recompile and try to run tests
 
 Screenshots
