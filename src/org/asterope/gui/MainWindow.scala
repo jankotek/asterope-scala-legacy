@@ -237,22 +237,29 @@ class EditorBoundAction extends AbstractAction{
     def editorClosed(editor:Component,  subview:JComponent)
 
     private val cardLayout = new CardLayout()
+
     setLayout(cardLayout)
+    add(new JPanel(),"empty")
 
     private val editor2subview = new WeakHashMap[Component,  (String,JComponent)]
 
     private def editorChanged(editor:Component){
       if(editor == null){
-        cardLayout.show(this,null)
+        cardLayout.show(this,"empty")
         return;
       }
 
       if(!editor2subview.contains(editor)){
         val key = math.random.toString
         val subview = editorOpened(editor)
-        editor2subview.put(editor,(key,subview))
-        if(subview!=null)
+
+        if(subview!=null){
+          editor2subview.put(editor,(key,subview))
           add(subview,key)
+        }else{
+          cardLayout.show(this,"empty")
+          return;
+        }
       }
 
       cardLayout.show(this,editor2subview(editor)._1)
@@ -262,7 +269,8 @@ class EditorBoundAction extends AbstractAction{
 
     editorTabs.addListener(new DockingWindowAdapter{
       override def viewFocusChanged(previouslyFocusedView: View, focusedView: View){
-        editorChanged(focusedView.getComponent)
+        if(focusedView==null) editorChanged(null)
+        else editorChanged(focusedView.getComponent)
       }
 
       override def windowAdded(addedToWindow: DockingWindow, addedWindow: DockingWindow){
