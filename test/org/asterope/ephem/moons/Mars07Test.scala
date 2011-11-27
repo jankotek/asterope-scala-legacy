@@ -16,7 +16,10 @@ class Mars07Test extends ScalaTestCase{
     -6.895138014801465E-5)
 
    val pos = Mars07.getMoonPosition(jd, Mars07.SATELLITE_PHOBOS, Mars07.OUTPUT_POSITIONS);
-   assert(l1 === pos.toList)
+   l1.zipWithIndex.foreach{case(v,i)=>
+     assert(v ~== pos(i))
+   }
+
  }
 
  def testDeimos{
@@ -29,7 +32,10 @@ class Mars07Test extends ScalaTestCase{
    2.3172688954810232E-5)
 
    val pos = Mars07.getMoonPosition(jd, Mars07.SATELLITE_DEIMOS, Mars07.OUTPUT_POSITIONS);
-   assert(l2 === pos.toList)
+   l2.zipWithIndex.foreach{case (v,i)=>
+     assert(v ~== pos(i))
+   }
+
 
  }
 

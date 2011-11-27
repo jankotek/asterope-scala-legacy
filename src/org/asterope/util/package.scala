@@ -1,11 +1,11 @@
 package org.asterope
 
 
-import java.lang.{IllegalAccessError, InterruptedException}
 import javax.swing.{JComponent, SwingUtilities, AbstractAction, Action}
 import java.util.concurrent._
 import org.apache.commons.math.geometry.Vector3D
-import util.Vector3DExtra
+import java.lang.{InterruptedException, IllegalAccessError}
+import java.lang.reflect.InvocationTargetException
 
 /**
  * Various general purpose utilities. 
@@ -30,8 +30,9 @@ package object util{
       futures.foreach(_.get)
     }catch{
       //in case this thread was interrupted, forward it to other threads
-      case _:InterruptedException=>{
+      case e:InterruptedException=>{
         futures.foreach(_.cancel(true))
+        throw e
       }
     }
   }

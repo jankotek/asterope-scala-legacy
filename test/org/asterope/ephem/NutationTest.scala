@@ -24,8 +24,8 @@ class NutationTest extends ScalaTestCase{
     var dPhi = (Nutation.nutationInLongitude * EphemConstant.RAD_TO_ARCSEC)
     var dEpsilon = (Nutation.nutationInObliquity * EphemConstant.RAD_TO_ARCSEC)
     println("dPhi=" + dPhi + ", dEpsilon=" + dEpsilon);
-    assert(dPhi === -12.169178501291626)
-    assert(dEpsilon === 5.739452291994096)
+    assert(dPhi ~== -12.169178501291626)
+    assert(dEpsilon ~== 5.739452291994096)
   }
 
   def testNutation2000{

@@ -32,7 +32,7 @@ object Labels
 		val objs:List[(HasNomenclature,PNode)] = findStarsToLabel(chart,config ) ::: findDeepSkyToLabel(chart,config)
 
 
-		chart.executor.sync{ //this all must be on EDT thread, otherwise chart would repaint many times and cause poor performance
+		chart.executor{ //this all must be on EDT thread, otherwise chart would repaint many times and cause poor performance
 			var size:Float = config.labelFont.getSize;
       objs.foreach{case (starlinkObj,node) =>
         checkInterrupted()
@@ -49,7 +49,7 @@ object Labels
 				pos.foreach{p=>
 					label.setGlobalTranslation(p);
 					//add label and wait until done				
-					chart.addNode(Layer.label,label, async=false)
+					chart.addNode(Layer.label,label)
 				}
 			}
 		}

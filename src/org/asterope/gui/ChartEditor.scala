@@ -13,6 +13,7 @@ import collection.mutable.ArrayBuffer
 import java.awt.{Rectangle, Color}
 import java.awt.geom.{Ellipse2D, Area}
 import org.apache.commons.math.geometry.Vector3D
+import java.lang.IllegalAccessError
 ;
 
 
@@ -101,19 +102,31 @@ class ChartEditor(
 
   def getChartBase = chartBase
 
-  private var refreshWorker:Future[Chart] = null
+  private var refreshWorker:Future[Unit] = null
+  private object refreshLock extends Object
 
-  def refreshInProgress:Boolean = onEDTWait{
-    refreshWorker == null || !refreshWorker.isDone
+  def waitForRefresh(){
+    //wait until refresh starts
+    refreshLock.synchronized{
+      refreshLock.wait(1000)
+    }
   }
 
   def refresh(){
+
     //cancel previously running tasks
     if(refreshWorker!=null ){
       refreshWorker.cancel(true);
     }
 
-    refreshWorker = future[Chart]{
+    refreshWorker = future[Unit]{
+      refreshLock.synchronized{
+        try{
+
+      //wait until component is validated
+      while(!isValid) Thread.sleep(10)
+
+
       if (getInteracting){
         //wait a bit in case user is zooming or performing other interactive task
         //this way new tasks may cancel this future without even starting
@@ -134,6 +147,8 @@ class ChartEditor(
         legendHeight = if(showLegend) beans.legendBorder.height else 0,
         executor = new EDTChartExecutor
       )
+
+      Log.debug("Refresh starts, width:"+chart.width+", height:"+chart.height+", ipixCount:"+chart.area.size()+", hash:"+System.identityHashCode(chart))
 
       onChartRefreshStart.firePublish(chart)
 
@@ -172,7 +187,6 @@ class ChartEditor(
         overview.update(chart)
       }
 
-
       //now wait for all futures to finish
       waitOrInterrupt(futures)
 
@@ -199,8 +213,15 @@ class ChartEditor(
           AllSkySurvey.updateChart(chart,mem)
 //        }
       }
+      Log.debug("Refresh finished hash:"+System.identityHashCode(chart));
+      }catch{
+          case e:InterruptedException => { /* can be ignored */}
+          case e:Throwable => {
+            Log.error("Chart refresh failed",e)
+          }
+        }
+      }
 
-      chart
     }
 
   }
@@ -251,7 +272,7 @@ class ChartEditor(
       val node:PNode = chartBase.getNodeForObject(o).getOrElse(throw new IllegalArgumentException("Object not on map"))
       val pointer = createPointer(node);
       selectedPointer = Some(pointer)
-      chartBase.addNode(Layer.fg, pointer, async=false)
+      chartBase.addNode(Layer.fg, pointer)
       pointer.repaint()
     }
 
@@ -272,6 +293,9 @@ class ChartEditor(
     setBackground(java.awt.Color.black)
 
     def update(detailChart:Chart){
+      //only paint if is valid (ie added and visible)
+      if(!isValid) return;
+
       _chart = _chart.copy(
         position=detailChart.position,
         fieldOfView = detailChart.fieldOfView * 4,
@@ -287,6 +311,15 @@ class ChartEditor(
         getCamera.addChild(_chart.camera)
       }
     }
+
+
+    //refresh when canvas size changes
+    addComponentListener(new ComponentAdapter{
+      override def componentResized(e:ComponentEvent){
+        ChartEditor.this.refresh()
+      }
+    })
+
   }
 
 

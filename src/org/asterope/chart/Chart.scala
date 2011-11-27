@@ -191,7 +191,7 @@ case class Chart(
    * @return BufferedImage 
    */
   def toBufferedImage(x:Int, y: Int, w: Int, h: Int):BufferedImage = synchronized {
-	 executor.sync{
+	 executor{
 		 //TODO this should be possible without changing camera view bounds
 		 val oldBounds = camera.getBounds
 		 camera.setBounds(new PBounds(x,y,w,h));
@@ -208,7 +208,7 @@ case class Chart(
    * @return
    */
   def toBufferedImage: BufferedImage = {
-	  executor.sync{
+	  executor{
 		  camera.repaint();
 		  return camera.toImage.asInstanceOf[BufferedImage]
 	  }
@@ -234,15 +234,13 @@ case class Chart(
    * @param obj object represented by node, may be `None`
    * @param zorder in which node should be added to layer
    */
-  def addNode(layer: Layer.Value, node: PNode, obj: Any = None, zorder: Double = 0, async:Boolean = true) {
+  def addNode(layer: Layer.Value, node: PNode, obj: Any = None, zorder: Double = 0) {
 	  def add2{
   	 	 	if(!isInsideCanvas(node)) return
 	 	  	object2Node.put(obj,node)
 	 	  	getLayer(layer).addChildWithZorder(node, zorder);
 	  }
-	  if(async) executor.async{
-	 	  add2
-	  } else executor.sync{
+	  executor{
 	 	  add2
 	  }
 	  
@@ -292,12 +290,8 @@ object Chart{
 }
 
 class ChartExecutor{
-	def async(block: =>Unit){
-    synchronized{
-      block
-    }
-  }
-	def sync[E](block: =>E):E = {
+
+	def apply[E](block: =>E):E = {
     synchronized{
       block
     }

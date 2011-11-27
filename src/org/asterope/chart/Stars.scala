@@ -141,9 +141,11 @@ class Stars(
 	
 	def updateChart(chart: Chart, config:StarsConfig){
 		val limitStarMag = calculateLimitStarMag(chart,config)
-		Log.info("Refresh with limit star mag: "+limitStarMag)
-		val stars = dao.starsByAreaMag(chart.area, limitStarMag)
+        var counter = 0
+		val stars = dao.starsByAreaMag(chart.area, limitStarMag).map{s=>counter+=1;s};
+
 		paintAll(chart, config, stars)
+        Log.debug("Added "+counter+" stars with limit mag: "+limitStarMag)
 	}
 	
 	def clearChart(chart: Chart){

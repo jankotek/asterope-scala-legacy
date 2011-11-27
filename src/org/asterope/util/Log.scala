@@ -13,7 +13,7 @@ object Log {
   val logger: Logger = Logger.getLogger(getClass.getName)
 
   //initialize logging to 'profile/asterope.log'
-  private val fileHandler = new FileHandler("profile/asterope.log",true){
+  private val fileHandler = new FileHandler("profile/asterope.log",false){
     setLevel(Level.ALL)
 
   }

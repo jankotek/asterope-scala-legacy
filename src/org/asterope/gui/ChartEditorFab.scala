@@ -16,8 +16,9 @@ trait ChartEditorFab extends  MainWindow{
   def openChartOnObject(objName:String){
     val pos = chartBeans.nameResolver.resolve(objName).pos.get
     val comp = new ChartEditor(chartBeans)
-    comp.centerOnPosition(pos)
     addEditor(objName,comp)
+    comp.centerOnPosition(pos)
+
   }
 
 

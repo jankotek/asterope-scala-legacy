@@ -24,12 +24,8 @@ class EDTChartExecutor extends ChartExecutor{
     plugged = true
   }
 
-  override def async(block: =>Unit){
-    if(plugged) onEDT(block)
-    else synchronized{block}
-  }
 
-  override def sync[E](block: =>E):E = {
+  override def apply[E](block: =>E):E = {
     if(plugged) onEDTWait(block)
     else synchronized{block}
   }

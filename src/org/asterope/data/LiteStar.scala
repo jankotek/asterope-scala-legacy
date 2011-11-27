@@ -126,7 +126,7 @@ LiteStarDao(val recman:RecordManager)  {
 	 * @return iterator over matching stars
 	 */
 	def starsByAreaMag(area: LongRangeSet, limitMag:Magnitude):Iterator[LiteStar] = {
-      val areaSeq = Pixelization.rangeSetToSeq(area)
+    val areaSeq = Pixelization.rangeSetToSeq(area)
     val limitMag2 = mag2liteStarsByMagHealpixKey(limitMag)
     (MINMAG to limitMag2)
       .flatMap{mag=>

@@ -19,11 +19,7 @@ class ChartEditorTest extends ScalaTestCase
   def chart = chartEditor.getChartBase
   def chartEditor = getFocusedEditor.asInstanceOf[ChartEditor]
 
-  def waitForRefresh(){
-    sleep(1000)
-    waitUntil(!chartEditor.refreshInProgress)
-  }
-
+  
   def open(){
     onEDT{
       showMinimized()
@@ -45,7 +41,7 @@ class ChartEditorTest extends ScalaTestCase
 
   def testResizeWindow(){
     open()
-    waitForRefresh()
+    chartEditor.waitForRefresh()
     val width = chart.width
     val height = chart.height
 
@@ -60,7 +56,7 @@ class ChartEditorTest extends ScalaTestCase
     open()
     val oldFov = chart.fieldOfView
     chartEditor.actZoomIn.call()
-    waitForRefresh()
+    chartEditor.waitForRefresh()
     assert (chart.fieldOfView < oldFov);
   }
 
@@ -68,31 +64,31 @@ class ChartEditorTest extends ScalaTestCase
     open()
     val oldFov = chart.fieldOfView;
     chartEditor.actZoomOut.call()
-    waitForRefresh()
+    chartEditor.waitForRefresh()
     assert (chart.fieldOfView > oldFov);
   }
 
   def testChartFov15d(){
     open()
     chartEditor.actFov15d.call()
-    waitForRefresh()
+    chartEditor.waitForRefresh()
     assert(chart.fieldOfView === 15.degree)
   }
 
   def testChartFov8d(){
     open()
     chartEditor.actFov8d.call()
-    waitForRefresh()
+    chartEditor.waitForRefresh()
     assert(chart.fieldOfView === 8.degree)
   }
 
   def testMapRefresh(){
     open()
     chartEditor.actRefresh.call()
-    waitForRefresh()
+    chartEditor.waitForRefresh()
     //check if there are some stars on chart
     val stars = chart.objects.filter(_.isInstanceOf[LiteStar])
-    assert(stars.size > 10)
+    assert(stars.size ?> 10)
   }
 
 
@@ -106,25 +102,25 @@ class ChartEditorTest extends ScalaTestCase
 
   def testBiggerStars(){
     open()
-    waitForRefresh()
+    chartEditor.waitForRefresh()
     val starSize = findBiggestStarNode.getWidth
     chartEditor.actBiggerStars.call()
-    waitForRefresh()
+    chartEditor.waitForRefresh()
     assert(starSize<findBiggestStarNode.getWidth)
   }
 
   def testSmallerStars(){
     open()
-    waitForRefresh()
+    chartEditor.waitForRefresh()
     val starSize = findBiggestStarNode.getWidth
     chartEditor.actSmallerStars.call()
-    waitForRefresh()
+    chartEditor.waitForRefresh()
     assert(starSize>findBiggestStarNode.getWidth)
   }
 
   def testLegend(){
     open()
-    waitForRefresh()
+    chartEditor.waitForRefresh()
     def labelCount = chart.getLayer(Layer.label).getChildrenCount
     def legendCount = chart.getLayer(Layer.legend).getChildrenCount
 
@@ -133,13 +129,13 @@ class ChartEditorTest extends ScalaTestCase
     assert(legendCount?>0)
 
     chartEditor.actShowLegend.call()
-    waitForRefresh()
+    chartEditor.waitForRefresh()
     assert(chartEditor.actShowLegend.selected === Some(false))
     assert(labelCount?>0)
     assert(legendCount === 0)
 
     chartEditor.actShowLegend.call()
-    waitForRefresh()
+    chartEditor.waitForRefresh()
     assert(chartEditor.actShowLegend.selected === Some(true))
     assert(labelCount?>0)
     assert(legendCount?>0)
@@ -148,7 +144,7 @@ class ChartEditorTest extends ScalaTestCase
 
   def test_selection_is_shown(){
     open()
-    waitForRefresh()
+    chartEditor.waitForRefresh()
     val m45 = chart.objects.find{ it=>
       it.isInstanceOf[DeepSky] && it.asInstanceOf[DeepSky].names.find(n=> n.toString == "M 45").isDefined
     }.get
@@ -176,7 +172,7 @@ class ChartEditorTest extends ScalaTestCase
 
     //refresh should not void selection
     chartEditor.refresh()
-    waitForRefresh()
+    chartEditor.waitForRefresh()
     assert(numberOfNodes+1 === chart.getLayer(Layer.fg).getChildrenCount)
     assert(listenerCounter === 1)
 
@@ -198,26 +194,6 @@ class ChartEditorTest extends ScalaTestCase
 
   }
 
-
-  def testChartOverview(){
-    open()
-    waitForRefresh()
-    sleep(2000)
-
-    assert(chartEditor.overview.chart.fieldOfView === chart.fieldOfView * 4)
-    assert(chartEditor.overview.chart.position === chart.position)
-
-
-    onEDT{
-      chartEditor.actZoomOut
-      chartEditor.centerOnPosition(Vector3D_m13)
-    }
-    waitForRefresh()
-    sleep(2000)
-    assert(chartEditor.overview.chart.fieldOfView === chart.fieldOfView * 4)
-    assert(chartEditor.overview.chart.position === chart.position)
-
-  }
 
 
 }

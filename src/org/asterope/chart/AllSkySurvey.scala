@@ -80,8 +80,8 @@ object AllSkySurvey extends ChartFeature[AllSkySurveyMem] {
             drawTriangle(g2,img,points,3,config.survey.imgWidth)
           }
         }
-        chart.executor.async{
-          chart.addNode(layer=Layer.skyview, node=node,async=false)
+        chart.executor{
+          chart.addNode(layer=Layer.skyview, node=node)
           node.repaint()
         }
         checkInterrupted()
@@ -97,7 +97,7 @@ object AllSkySurvey extends ChartFeature[AllSkySurveyMem] {
   }
 
   def clearChart(chart: Chart){
-    chart.executor.sync{
+    chart.executor{
       chart.getLayer(Layer.skyview).removeAllChildren()
     }
   }

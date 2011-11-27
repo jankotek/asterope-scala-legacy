@@ -152,7 +152,7 @@ class LegendBorder (stars:Stars, deepSky:DeepSkyPainter)
 
 
 
-		chart.executor.async{ //can not use `addNode`, legend is outside of canvas
+		chart.executor{ //can not use `addNode`, legend is outside of canvas
       val l = chart.getLayer(Layer.legend);
       l.addChild(legendNode)
       l.addChild(line)
