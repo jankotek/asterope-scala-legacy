@@ -10,9 +10,9 @@ import nodes.PPath
 import org.asterope.chart._
 import java.util.concurrent._
 import collection.mutable.ArrayBuffer
-import java.awt.{Rectangle, Color}
 import java.awt.geom.{Ellipse2D, Area}
 import org.apache.commons.math.geometry.Vector3D
+import java.awt.{Polygon, Rectangle, Color}
 
 
 class ChartEditor(
@@ -308,6 +308,22 @@ class ChartEditor(
       beans.stars.updateChart(_chart)
       beans.constelBoundary.updateChart(_chart)
       beans.constelLine.updateChart(_chart)
+
+      //paint active area on chart
+      val polygon = new Polygon()
+      val w = detailChart.width;
+      val h = detailChart.height
+      List(Point2d(0,0), Point2d(0,h/2), Point2d(0,h),
+          Point2d(w/2,h), Point2d(w,h),Point2d(w,h/2), Point2d(w,0), Point2d(w/2,0))
+        .flatMap(detailChart.wcs.deproject(_))
+        .flatMap(_chart.wcs.project(_))
+        .foreach(p=>polygon.addPoint(p.getX.toInt,p.getY.toInt))
+
+      val polygon2 = new PPath(polygon)
+      val c = detailChart.colors.fg
+      polygon2.setPaint(new Color(c.getRed,c.getGreen,c.getBlue,64))
+      _chart.getLayer(Layer.fg).addChild(polygon2)
+
       onEDTWait{
         getCamera.removeAllChildren()
         getCamera.addChild(_chart.camera)
