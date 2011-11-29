@@ -80,7 +80,7 @@ object AllSkySurvey extends ChartFeature[AllSkySurveyMem] {
             drawTriangle(g2,img,points,3,config.survey.imgWidth)
           }
         }
-        chart.executor{
+        chart.exec{
           chart.addNode(layer=Layer.skyview, node=node)
           node.repaint()
         }
@@ -97,7 +97,7 @@ object AllSkySurvey extends ChartFeature[AllSkySurveyMem] {
   }
 
   def clearChart(chart: Chart){
-    chart.executor{
+    chart.exec{
       chart.getLayer(Layer.skyview).removeAllChildren()
     }
   }

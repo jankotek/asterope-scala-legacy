@@ -31,14 +31,7 @@ case class Chart(
 	xscale:Double = 1, yscale:Double = 1,
 	width:Int = 800, height:Int = 600,
 	legendHeight:Int = 0,
-	colors:Colors = DarkBlueColors,
-
-	/** 
-	 * Executor is responsible for executing any code which may modify chart.
-	 * If chart is printed on screen, it executes code in Swing Event Dispatch Thread.
-	 * In headless mode it just executes code in synchronized methods
-	 */
-	executor:ChartExecutor = new ChartExecutor
+	colors:Colors = DarkBlueColors
 	){
 	
 	lazy val camera:PCamera = {
@@ -191,7 +184,7 @@ case class Chart(
    * @return BufferedImage 
    */
   def toBufferedImage(x:Int, y: Int, w: Int, h: Int):BufferedImage = synchronized {
-	 executor{
+	 exec{
 		 //TODO this should be possible without changing camera view bounds
 		 val oldBounds = camera.getBounds
 		 camera.setBounds(new PBounds(x,y,w,h));
@@ -208,7 +201,7 @@ case class Chart(
    * @return
    */
   def toBufferedImage: BufferedImage = {
-	  executor{
+	  exec{
 		  camera.repaint();
 		  return camera.toImage.asInstanceOf[BufferedImage]
 	  }
@@ -240,7 +233,7 @@ case class Chart(
 	 	  	object2Node.put(obj,node)
 	 	  	getLayer(layer).addChildWithZorder(node, zorder);
 	  }
-	  executor{
+	  exec{
 	 	  add2
 	  }
 	  
@@ -279,6 +272,20 @@ case class Chart(
     ChartUtils.saveChartToImageFile(this,file)
   }
 
+  /**
+   * Executor is responsible for executing any code which may modify chart.
+   * If chart is painted on screen, it executes code in Swing Event Dispatch Thread.
+   * In headless mode it just executes code in synchronized methods
+   */
+  def exec[E](block: => E):E = {
+    if(camera.getComponent!=null && !isEDT)
+      onEDTWait(synchronized(block))
+    else
+      synchronized(block)
+  }
+
+
+
 }
 
 /**
@@ -287,13 +294,4 @@ case class Chart(
 object Chart{
   val resMap = new ResourceMap(classOf[Chart])
 
-}
-
-class ChartExecutor{
-
-	def apply[E](block: =>E):E = {
-    synchronized{
-      block
-    }
-  }
 }

@@ -60,7 +60,7 @@ object Skyview extends ChartFeature[SkyviewConfig]{
         text.setGlobalTranslation(Point2d(chart.width - text.getWidth+3,chart.height - text.getHeight+3))
 
 
-        chart.executor{
+        chart.exec{
           layer.removeAllChildren()
           layer.addChild(img);
           layer.addChild(text)
@@ -106,7 +106,7 @@ object Skyview extends ChartFeature[SkyviewConfig]{
       Settings.err.println("GET IMG: " + imgUrl)
       val imgp = java.awt.Toolkit.getDefaultToolkit.getImage(new URL(imgUrl))
       if (imgp == null) throw new RuntimeException("can not download image")
-      chart.executor{
+      chart.exec{
         //TODO code duplication
         val img = new PImage(imgp);
         val layer = chart.getLayer(Layer.skyview)

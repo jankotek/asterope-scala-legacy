@@ -13,8 +13,6 @@ import collection.mutable.ArrayBuffer
 import java.awt.{Rectangle, Color}
 import java.awt.geom.{Ellipse2D, Area}
 import org.apache.commons.math.geometry.Vector3D
-import java.lang.IllegalAccessError
-;
 
 
 class ChartEditor(
@@ -30,8 +28,10 @@ class ChartEditor(
   setBackground(java.awt.Color.black)
 
 
+  override def setCamera(camera:PCamera){
+
     //install zoom handler
-    getCamera.addInputEventListener(new PBasicInputEventHandler {
+    camera.addInputEventListener(new PBasicInputEventHandler {
       override def mouseClicked(event: PInputEvent) {
         //change selection with mid button
         if(event.isMouseEvent && event.getClickCount == 1 && event.getButton == 1){
@@ -68,6 +68,8 @@ class ChartEditor(
         }
       }
     })
+    super.setCamera(camera)
+  }
 
 
 
@@ -90,7 +92,7 @@ class ChartEditor(
   lazy val onChartRefreshFinish = new Publisher[Chart]()
 
 
-  protected var chartBase = new Chart(executor = new EDTChartExecutor);
+  protected var chartBase = new Chart();
   protected var coordGridConfig = CoordinateGrid.defaultConfig
   protected var starsConfig = beans.stars.defaultConfig
   protected var showLegend = true
@@ -144,8 +146,7 @@ class ChartEditor(
       //take current size of windows
       val chart = chartBase.copy(width = getWidth,
         height = if( !showLegend) getHeight else (getHeight - beans.legendBorder.height),
-        legendHeight = if(showLegend) beans.legendBorder.height else 0,
-        executor = new EDTChartExecutor
+        legendHeight = if(showLegend) beans.legendBorder.height else 0
       )
 
       Log.debug("Refresh starts, width:"+chart.width+", height:"+chart.height+", ipixCount:"+chart.area.size()+", hash:"+System.identityHashCode(chart))
@@ -196,15 +197,14 @@ class ChartEditor(
         // placement algorithm depends on graphic created by other features
         Labels.updateChart(chart)
         chartBase = chart;
-        chartBase.executor.asInstanceOf[EDTChartExecutor].plugIntoSwing()
         getCamera.removeAllChildren();
         if(getInteracting)
            setInteracting(false) //this will cause repaint, but chart is already empty so no performance problem
-
+        setCamera(chart.camera)
         //restore selection
         selectObject(selectedObject,selectionAfterRefresh=true)
 
-        getCamera.addChild(chartBase.camera)
+
         onChartRefreshFinish.firePublish(chartBase)
       }
 
@@ -291,6 +291,8 @@ class ChartEditor(
     setPanEventHandler(null)
     setZoomEventHandler(null)
     setBackground(java.awt.Color.black)
+
+
 
     def update(detailChart:Chart){
       //only paint if is valid (ie added and visible)
