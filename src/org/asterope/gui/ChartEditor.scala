@@ -10,9 +10,9 @@ import nodes.PPath
 import org.asterope.chart._
 import java.util.concurrent._
 import collection.mutable.ArrayBuffer
-import java.awt.geom.{Ellipse2D, Area}
 import org.apache.commons.math.geometry.Vector3D
-import java.awt.{Polygon, Rectangle, Color}
+import java.awt.{BasicStroke, Polygon, Rectangle, Color}
+import java.awt.geom.{Point2D, Ellipse2D, Area}
 
 
 class ChartEditor(
@@ -50,6 +50,7 @@ class ChartEditor(
           val height = chartBase.camera.getViewBounds.getHeight;
           val bounds = new PBounds(viewPos.getX - width / 2, viewPos.getY - height / 2, width, height);
           chartBase.camera.setViewBounds(bounds);
+          overview.updatePointer(chartBase,true);
           refresh()
        }
       }
@@ -63,6 +64,7 @@ class ChartEditor(
           val newScale = 1 + 0.1 * event.getWheelRotation;
           val viewPos = event.getPosition;
           chartBase.camera.scaleViewAboutPoint(newScale, viewPos.getX, viewPos.getY);
+          overview.updatePointer(chartBase,true);
           refresh()
 
         }
@@ -309,20 +311,7 @@ class ChartEditor(
       beans.constelBoundary.updateChart(_chart)
       beans.constelLine.updateChart(_chart)
 
-      //paint active area on chart
-      val polygon = new Polygon()
-      val w = detailChart.width;
-      val h = detailChart.height
-      List(Point2d(0,0), Point2d(0,h/2), Point2d(0,h),
-          Point2d(w/2,h), Point2d(w,h),Point2d(w,h/2), Point2d(w,0), Point2d(w/2,0))
-        .flatMap(detailChart.wcs.deproject(_))
-        .flatMap(_chart.wcs.project(_))
-        .foreach(p=>polygon.addPoint(p.getX.toInt,p.getY.toInt))
-
-      val polygon2 = new PPath(polygon)
-      val c = detailChart.colors.fg
-      polygon2.setPaint(new Color(c.getRed,c.getGreen,c.getBlue,64))
-      _chart.getLayer(Layer.fg).addChild(polygon2)
+      updatePointer(detailChart,false);
 
       onEDTWait{
         getCamera.removeAllChildren()
@@ -337,6 +326,34 @@ class ChartEditor(
         ChartEditor.this.refresh()
       }
     })
+
+
+    /**paint active area on chart*/
+    def updatePointer(detailChart:Chart, lowQuality:Boolean){
+
+      val polygon = new Polygon()
+      val w = detailChart.width
+      val h = detailChart.height
+      List(Point2d(0,0), Point2d(0,h/2), Point2d(0,h),
+          Point2d(w/2,h), Point2d(w,h),Point2d(w,h/2), Point2d(w,0), Point2d(w/2,0))
+        .map(p => detailChart.camera.localToView(new Point2D.Double(p.getX,p.getY)))
+        .flatMap(detailChart.wcs.deproject(_))
+        .flatMap(_chart.wcs.project(_))
+        .foreach(p=>polygon.addPoint(p.getX.toInt,p.getY.toInt))
+
+      val polygon2 = new PPath(polygon)
+      val c = detailChart.colors.fg
+      polygon2.setPaint(new Color(c.getRed,c.getGreen,c.getBlue,64))
+      polygon2.setStroke(new BasicStroke(1F))
+      polygon2.setStrokePaint(c)
+      onEDTWait{
+        setInteracting(!lowQuality)
+        chart.getLayer(Layer.fg).removeAllChildren()
+        chart.getLayer(Layer.fg).addChild(polygon2)
+        chart.getLayer(Layer.fg).repaint()
+      }
+    }
+
 
   }
 

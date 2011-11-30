@@ -228,13 +228,10 @@ case class Chart(
    * @param zorder in which node should be added to layer
    */
   def addNode(layer: Layer.Value, node: PNode, obj: Any = None, zorder: Double = 0) {
-	  def add2{
-  	 	 	if(!isInsideCanvas(node)) return
-	 	  	object2Node.put(obj,node)
-	 	  	getLayer(layer).addChildWithZorder(node, zorder);
-	  }
 	  exec{
-	 	  add2
+      if(!isInsideCanvas(node)) return
+      object2Node.put(obj,node)
+      getLayer(layer).addChildWithZorder(node, zorder);
 	  }
 	  
   }
