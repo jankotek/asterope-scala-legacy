@@ -52,20 +52,20 @@ case class Layer(layerName:Layer.Value)
         assertThread();
 
        zorders.put(child, zorder);
-       val children = getChildrenReference().asInstanceOf[java.util.List[PNode]];
+       val children = getChildrenReference.asInstanceOf[java.util.List[PNode]];
 
        val comparator = new Comparator[PNode](){
            override def  compare( o1:PNode, o2:PNode):Int= {
                val zorder1:Option[Double] = zorders.get(o1);
                val zorder2:Option[Double] = zorders.get(o2);
                if((zorder1.isEmpty && zorder2.isEmpty ))
-                   return 0;
+                   0;
                else if(zorder1.isEmpty || zorder1.get < zorder2.get)
-                   return -1;
+                   -1;
                else if(zorder2.isEmpty || zorder2.get < zorder1.get)
-                   return 1;
+                   1;
                else
-                   return 0;
+                   0;
            }
        }
 
