@@ -1,8 +1,6 @@
 package org.asterope.gui
 
-import org.asterope.chart.ChartBeans
-import net.infonode.docking.View
-import javax.swing._
+import org.asterope.Beans
 
 /**
  * Trait mixed in into MainView.
@@ -11,11 +9,11 @@ import javax.swing._
  */
 trait ChartEditorFab extends  MainWindow{
 
-  val chartBeans:ChartBeans
+  val beans:Beans
 
   def openChartOnObject(objName:String){
-    val pos = chartBeans.nameResolver.resolve(objName).pos.get
-    val comp = new ChartEditor(chartBeans)
+    val pos = beans.nameResolver.resolve(objName).pos.get
+    val comp = new ChartEditor(beans)
     addEditor(objName,comp)
     comp.centerOnPosition(pos)
 

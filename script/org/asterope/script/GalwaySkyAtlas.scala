@@ -7,6 +7,7 @@ import catalog.Ucac3Catalog
 import org.asterope.chart._
 import org.asterope.util._
 import org.apache.commons.math.geometry.Vector3D
+import org.asterope.Beans
 
 object GalwaySkyAtlas {
   def main(args:Array[String]){
@@ -493,7 +494,7 @@ Page(473, new Vector3D(-0.0012517145698816533,-0.06692896202416283,-0.9977569580
 
    def interestingPages = Set(1,23,35,37,57,86,91,60,114,117,141,132,120,95,190,162,254,243,239,227,226,225,220,191,192,193,194,377,376,340,339,274,440,441,444,446,460,461,472,473)
    
-   object b extends ChartBeans
+   object b extends Beans
    
    val outputDir = new java.io.File("build/galwaySkyAtlas")
    outputDir.mkdirs;

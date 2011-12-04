@@ -17,7 +17,7 @@ import java.awt.{Window, Component, Container}
  * @see org.asterope.context.Context.TestCase
  *
  */
-abstract class GuiTestCase extends ScalaTestCase{
+abstract class GuiTestCase extends BeansTestCase{
 
 
 //  val guiBeans = onEDTWait{

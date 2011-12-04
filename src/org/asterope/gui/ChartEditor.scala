@@ -13,10 +13,11 @@ import collection.mutable.ArrayBuffer
 import org.apache.commons.math.geometry.Vector3D
 import java.awt.{BasicStroke, Polygon, Rectangle, Color}
 import java.awt.geom.{Point2D, Ellipse2D, Area}
+import org.asterope.Beans
 
 
 class ChartEditor(
-    val beans:ChartBeans
+    val beans:Beans
   )
   extends PCanvas
   with ChartWindowSkyviewActions

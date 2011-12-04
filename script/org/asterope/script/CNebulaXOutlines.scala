@@ -1,7 +1,7 @@
 package org.asterope.script
 
 import org.asterope.util._
-import org.asterope.data.{DataBeans, DeepSkyDao, Nomenclature}
+import org.asterope.data.{DeepSkyDao, Nomenclature}
 
 object CNebulaXOutlines extends App{
 

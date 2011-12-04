@@ -1,8 +1,8 @@
 package org.asterope.gui
 
 import javax.swing._
-import org.asterope.chart.ChartBeans
 import org.asterope.util._
+import org.asterope._
 import java.awt.Component
 
 /**
@@ -29,7 +29,7 @@ object Main
   })
 
 
-  object chartBeans extends ChartBeans
+  object beans extends Beans
 
   lazy val messageView = new MessageView(resourceMap)
   object overviewView extends EditorBoundView{

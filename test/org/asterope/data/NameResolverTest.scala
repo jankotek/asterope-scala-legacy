@@ -3,14 +3,12 @@ package org.asterope.data
 import org.asterope.util._
 import org.apache.commons.math.geometry.Vector3D
 
-class NameResolverTest extends ScalaTestCase
-  with DataBeans with TestRecordManager{
-
+class NameResolverTest extends BeansTestCase{
 
 
 
   def resolve(name:String) = {
-    val l = nameResolver.resolve(name)
+    val l = beans.nameResolver.resolve(name)
     assert(l.pos.isDefined,"no object found for name "+name)
     l
   }

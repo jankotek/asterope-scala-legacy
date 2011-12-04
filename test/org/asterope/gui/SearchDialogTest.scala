@@ -4,11 +4,10 @@ import org.asterope.util._
 import org.asterope.data._
 import org.apache.commons.math.geometry.Vector3D
 
-class SearchDialogTest extends GuiTestCase
-  with DataBeans with TestRecordManager{
+class SearchDialogTest extends GuiTestCase{
   lazy val resmap = new ResourceMap(classOf[MainWindow])
 
-  lazy val form = new SearchDialog(nameResolver,resmap)
+  lazy val form = new SearchDialog(beans.nameResolver,resmap)
 
   def text = findJTextField(form, "idText")
   def result = findJLabel(form, "resultLabel")

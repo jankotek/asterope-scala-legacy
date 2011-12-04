@@ -2,18 +2,17 @@ package org.asterope.gui
 
 import org.asterope.data._
 import org.asterope.util._
-import org.asterope.chart.ChartBeans
-import org.jdesktop.swingx.action.BoundAction
+import org.asterope.Beans
 
 
 trait MainWindowActions extends ChartEditorFab{
 
   val resourceMap:ResourceMap
-  val chartBeans:ChartBeans
+  val beans:Beans
 
   var lastSearchText = "";
   val searchObject = act{
-    object d extends SearchDialog(chartBeans.nameResolver, resourceMap)
+    object d extends SearchDialog(beans.nameResolver, resourceMap)
     resourceMap.injectComponents(d)
     resourceMap.injectActionFields(d)
     val res = Form.showDialog(new NameResolverResult(None, None,lastSearchText),d)

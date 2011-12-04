@@ -3,16 +3,16 @@ package org.asterope.gui
 import org.asterope.util._
 import javax.swing.JMenuBar
 import edu.umd.cs.piccolo.PNode
-import org.asterope.chart.{Layer, ChartBeans}
+import org.asterope.chart.Layer
 import collection.JavaConversions._
 import org.asterope.data._
+import org.asterope._
 import org.apache.commons.math.geometry.Vector3D
 
-class ChartEditorTest extends ScalaTestCase
+class ChartEditorTest extends BeansTestCase
   with MainWindow
   with ChartEditorFab{
 
-  object chartBeans extends ChartBeans with TestRecordManager
 
   val menu = new JMenuBar
 

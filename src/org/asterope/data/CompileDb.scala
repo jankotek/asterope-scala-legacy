@@ -7,6 +7,7 @@ import java.util.zip._
 import scala.io.Source
 import jdbm.RecordManagerOptions
 import org.apache.commons.math.geometry.Vector3D
+import org.asterope.Beans
 
 /**
  * This script is called from Ant at build time. 
@@ -15,7 +16,7 @@ import org.apache.commons.math.geometry.Vector3D
  * 
  * @author Jan Kotek
  */
-object CompileDb extends App with DataBeans{
+object CompileDb extends Beans with App{
 
   System.setProperty(RecordManagerOptions.APPEND_TO_END,"true")
 
@@ -200,6 +201,6 @@ object CompileDb extends App with DataBeans{
 	println("Defrag")
 	recman.defrag()
 	println("Done");
-  shutdown()
+  onShutdown.firePublish(Unit)
 
 }
