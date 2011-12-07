@@ -8,11 +8,7 @@ import java.awt.Component
 /**
  * Main object which starts Asterope GUI
  */
-object Main
-  extends MainWindow
-  with WelcomeEditor
-  with ChartEditorFab
-  with MainWindowMenu{
+object Main{
 
 
   /** assert that all repaints are in GUI thread*/
@@ -31,8 +27,8 @@ object Main
 
   object beans extends Beans
 
-  lazy val messageView = new MessageView(resourceMap)
-  object overviewView extends EditorBoundView{
+  lazy val messageView = new MessageView(beans.resmap)
+  object overviewView extends beans.mainWin.EditorBoundView{
     override def editorOpened(editor:Component):JComponent = {
       if(editor.isInstanceOf[ChartEditor])
         editor.asInstanceOf[ChartEditor].overview
@@ -51,11 +47,12 @@ object Main
     Log.debug("Asterope GUI is starting")
     onEDTWait{
       UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName)
-      show()
-      addEditor("welcomeEditor",welcomeEditor)
-      addLeftTopView("objectsView",new JLabel())
-      addLeftBottomView("overviewView", overviewView)
-      addBottomBarView("messageView",messageView)
+      beans.mainWinMenu //make sure menu is hooked
+      beans.mainWin.show()
+      beans.mainWin.addEditor("welcomeEditor",beans.welcomeEditor.panel)
+      beans.mainWin.addLeftTopView("objectsView",new JLabel())
+      beans.mainWin.addLeftBottomView("overviewView", overviewView)
+      beans.mainWin.addBottomBarView("messageView",messageView)
     }
   }
 

@@ -5,9 +5,8 @@ import org.asterope.data._
 import org.apache.commons.math.geometry.Vector3D
 
 class SearchDialogTest extends GuiTestCase{
-  lazy val resmap = new ResourceMap(classOf[MainWindow])
 
-  lazy val form = new SearchDialog(beans.nameResolver,resmap)
+  lazy val form = new SearchDialog(beans.nameResolver,beans.resmap)
 
   def text = findJTextField(form, "idText")
   def result = findJLabel(form, "resultLabel")

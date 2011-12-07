@@ -3,15 +3,16 @@ package org.asterope.gui
 import org.asterope.util._
 import javax.swing._
 
-class MainWindowTest extends ScalaTestCase with MainWindow{
+class MainWindowTest extends GuiTestCase{
 
-  override val resourceMap = new ResourceMap(classOf[MainWindowTest])
-  val menu = new JMenuBar
+  val mainWin = beans.mainWin
+
+
 
   def testViewTitleLocalization(){
     onEDTWait{
-      showMinimized();
-      val v = addLeftBottomView("testView",new JLabel("alala"))
+      mainWin.showMinimized();
+      val v = mainWin.addLeftBottomView("testView",new JLabel("alala"))
       assert(v.getTitle ==="Localized title")
     }
   }
@@ -22,7 +23,7 @@ class MainWindowTest extends ScalaTestCase with MainWindow{
    */
   def testEditorForwardAction(){
     onEDT{
-      showMinimized();
+      mainWin.showMinimized();
     }
 
 
@@ -31,7 +32,7 @@ class MainWindowTest extends ScalaTestCase with MainWindow{
     }
 
     object mainWindowActions {
-      val action = new EditorBoundAction
+      val action = new EditorBoundAction(mainWin)
     }
 
     var counter1 = 0
@@ -53,11 +54,11 @@ class MainWindowTest extends ScalaTestCase with MainWindow{
 
 
     onEDTWait{
-      resourceMap.injectActionFields(mainWindowActions)
-      resourceMap.injectActionFields(editor1)
+      beans.resmap.injectActionFields(mainWindowActions)
+      beans.resmap.injectActionFields(editor1)
 
-      addEditor("editor1",editor1)
-      waitUntil(getFocusedEditor == editor1)
+      mainWin.addEditor("editor1",editor1)
+      waitUntil(mainWin.getFocusedEditor == editor1)
 
 
 
@@ -87,16 +88,16 @@ class MainWindowTest extends ScalaTestCase with MainWindow{
 
     //now activate new view, mainWindowActions should be disabled
 
-    addEditor("editor2",editor2)
+    mainWin.addEditor("editor2",editor2)
 
-    waitUntil(getFocusedEditor == editor2)
+    waitUntil(mainWin.getFocusedEditor == editor2)
     assert(mainWindowActions.action.selected === None)
     assert(!mainWindowActions.action.enabled)
 
 
-      addEditor("editor3",editor3)
+    mainWin.addEditor("editor3",editor3)
 
-    waitUntil(getFocusedEditor == editor3)
+    waitUntil(mainWin.getFocusedEditor == editor3)
     assert(mainWindowActions.action.enabled)
 
     //check that call is forwarded to third editor

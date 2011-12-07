@@ -5,10 +5,7 @@ import javax.swing._
 /**
  * Defines menu used in main window
  */
-trait MainWindowMenu
-  extends  MainWindowActions{
-
-
+class MainWindowMenu(a:MainWindowActions,mainWin:MainWindow){
 
   lazy val fileMenu = new JMenu{
     setName("fileMenu")
@@ -17,34 +14,34 @@ trait MainWindowMenu
 
   lazy val navigationMenu = new JMenu(){
     setName("navigationMenu")
-    add(searchObject)
-    add(actRefresh)
-    add(actZoomOut)
-    add(actZoomIn)
-    add(new JMenu {
+    add(a.searchObject)
+    add(a.actRefresh)
+    add(a.actZoomOut)
+    add(a.actZoomIn)
+    add(new  JMenu {
       setName("fovMenu")
-      add(actFov15m)
-      add(actFov30m)
-      add(actFov1d)
-      add(actFov2d)
-      add(actFov4d)
-      add(actFov8d)
-      add(actFov15d)
-      add(actFov30d)
-      add(actFov60d)
-      add(actFov120d)
+      add(a.actFov15m)
+      add(a.actFov30m)
+      add(a.actFov1d)
+      add(a.actFov2d)
+      add(a.actFov4d)
+      add(a.actFov8d)
+      add(a.actFov15d)
+      add(a.actFov30d)
+      add(a.actFov60d)
+      add(a.actFov120d)
     })
 
-    add(new JMenu() {
+    add(new  JMenu() {
       setName("moveMenu")
-      add(actMoveUpRight)
-      add(actMoveUp)
-      add(actMoveUpLeft)
-      add(actMoveLeft)
-      add(actMoveDownLeft)
-      add(actMoveDown)
-      add(actMoveDownRight)
-      add(actMoveRight)
+      add(a.actMoveUpRight)
+      add(a.actMoveUp)
+      add(a.actMoveUpLeft)
+      add(a.actMoveLeft)
+      add(a.actMoveDownLeft)
+      add(a.actMoveDown)
+      add(a.actMoveDownRight)
+      add(a.actMoveRight)
 
     })
 
@@ -52,94 +49,92 @@ trait MainWindowMenu
 
   lazy val viewMenu  = new JMenu() {
       setName("viewMenu")
-      add(new JMenu() {
+      add(new  JMenu() {
         setName("transformMenu")
-        add(new JCheckBoxMenuItem(actMirrorVert));
-        add(new JCheckBoxMenuItem(actMirrorHoriz));
-        add(new JSeparator())
-        add(actRotateLeft);
-        add(actRotateRight);
-        add(actRotateCustom);
-        add(new JSeparator())
-        add(actTransformReset);
+        add(new  JCheckBoxMenuItem(a.actMirrorVert));
+        add(new  JCheckBoxMenuItem(a.actMirrorHoriz));
+        add(new  JSeparator())
+        add(a.actRotateLeft);
+        add(a.actRotateRight);
+        add(a.actRotateCustom);
+        add(new  JSeparator())
+        add(a.actTransformReset);
       })
-      add(new JMenu() {
+      add(new  JMenu() {
         setName("coordGridMenu")
-        add(new JMenu() {
+        add(new  JMenu() {
           setName("coordGridJ2000Menu")
-          add(new JCheckBoxMenuItem(actCoordGridJ2000ShowLines));
-          add(new JCheckBoxMenuItem(actCoordGridJ2000ShowPoles));
-          add(new JCheckBoxMenuItem(actCoordGridJ2000ShowEquator));
+          add(new  JCheckBoxMenuItem(a.actCoordGridJ2000ShowLines));
+          add(new  JCheckBoxMenuItem(a.actCoordGridJ2000ShowPoles));
+          add(new  JCheckBoxMenuItem(a.actCoordGridJ2000ShowEquator));
         })
-        add(new JMenu() {
+        add(new  JMenu() {
           setName("coordGridB1950Menu")
-          add(new JCheckBoxMenuItem(actCoordGridB1950ShowLines));
-          add(new JCheckBoxMenuItem(actCoordGridB1950ShowPoles));
-          add(new JCheckBoxMenuItem(actCoordGridB1950ShowEquator));
+          add(new  JCheckBoxMenuItem(a.actCoordGridB1950ShowLines));
+          add(new  JCheckBoxMenuItem(a.actCoordGridB1950ShowPoles));
+          add(new  JCheckBoxMenuItem(a.actCoordGridB1950ShowEquator));
         })
-        add(new JMenu() {
+        add(new  JMenu() {
           setName("coordGridEclipticMenu")
-          add(new JCheckBoxMenuItem(actCoordGridEclipticShowLines));
-          add(new JCheckBoxMenuItem(actCoordGridEclipticShowPoles));
-          add(new JCheckBoxMenuItem(actCoordGridEclipticShowEquator));
+          add(new  JCheckBoxMenuItem(a.actCoordGridEclipticShowLines));
+          add(new  JCheckBoxMenuItem(a.actCoordGridEclipticShowPoles));
+          add(new  JCheckBoxMenuItem(a.actCoordGridEclipticShowEquator));
         })
-        add(new JMenu() {
+        add(new  JMenu() {
           setName("coordGridGalacticMenu")
-          add(new JCheckBoxMenuItem(actCoordGridGalacticShowLines));
-          add(new JCheckBoxMenuItem(actCoordGridGalacticShowPoles));
-          add(new JCheckBoxMenuItem(actCoordGridGalacticShowEquator));
+          add(new  JCheckBoxMenuItem(a.actCoordGridGalacticShowLines));
+          add(new  JCheckBoxMenuItem(a.actCoordGridGalacticShowPoles));
+          add(new  JCheckBoxMenuItem(a.actCoordGridGalacticShowEquator));
         })
       })
-      add(new JMenu() {
+      add(new  JMenu() {
         setName("starMenu")
-        add(actLimitMagCustom)
-        add(actMoreStars)
-        add(actLessStars)
-        add(new JSeparator)
-        add(actBiggerStars)
-        add(actSmallerStars)
-        add(new JSeparator)
-        add(actStarReset)
+        add(a.actLimitMagCustom)
+        add(a.actMoreStars)
+        add(a.actLessStars)
+        add(new  JSeparator)
+        add(a.actBiggerStars)
+        add(a.actSmallerStars)
+        add(new  JSeparator)
+        add(a.actStarReset)
       })
-      add(new JMenu() {
+      add(new  JMenu() {
         setName("deepSkyMenu")
-        add(new JCheckBoxMenuItem(actShowGlobularCluster))
-        add(new JCheckBoxMenuItem(actShowOpenCluster))
-        add(new JCheckBoxMenuItem(actShowGalaxy))
-        add(new JCheckBoxMenuItem(actShowBrightNebula))
-        add(new JCheckBoxMenuItem(actShowPlanetaryNebula))
-        add(new JCheckBoxMenuItem(actShowDarkNebula))
-        add(new JCheckBoxMenuItem(actShowSupernovaRemnant))
+        add(new  JCheckBoxMenuItem(a.actShowGlobularCluster))
+        add(new  JCheckBoxMenuItem(a.actShowOpenCluster))
+        add(new  JCheckBoxMenuItem(a.actShowGalaxy))
+        add(new  JCheckBoxMenuItem(a.actShowBrightNebula))
+        add(new  JCheckBoxMenuItem(a.actShowPlanetaryNebula))
+        add(new  JCheckBoxMenuItem(a.actShowDarkNebula))
+        add(new  JCheckBoxMenuItem(a.actShowSupernovaRemnant))
       })
-      add(new JMenu() {
+      add(new  JMenu() {
         setName("constelMenu")
-        add(new JCheckBoxMenuItem(actShowConstelBounds))
-        add(new JCheckBoxMenuItem(actShowConstelLines))
+        add(new  JCheckBoxMenuItem(a.actShowConstelBounds))
+        add(new  JCheckBoxMenuItem(a.actShowConstelLines))
       })
-      add(actInvertColors)
-      add(new JCheckBoxMenuItem(actShowLegend))
+      add(a.actInvertColors)
+      add(new  JCheckBoxMenuItem(a.actShowLegend))
     }
 
 
   lazy val imageMenu  = new JMenu() {
       setName("imageMenu")
-      add(new JRadioButtonMenuItem(actDSSAllSkySurvey))
+      add(new  JRadioButtonMenuItem(a.actDSSAllSkySurvey))
 
-      add(new JRadioButtonMenuItem(actMellingerAllSkySurvey))
-      add(new JRadioButtonMenuItem(actNoneAllSkySurvey))
+      add(new  JRadioButtonMenuItem(a.actMellingerAllSkySurvey))
+      add(new  JRadioButtonMenuItem(a.actNoneAllSkySurvey))
 
 
-      add(new JSeparator)
-      add(actChartSkyview)
+      add(new  JSeparator)
+      add(a.actChartSkyview)
   }
 
 
-  lazy val menu = new JMenuBar{
-    add(fileMenu)
-    add(navigationMenu)
-    add(viewMenu)
-    add(imageMenu)
-  }
+  mainWin.menu.add(fileMenu)
+  mainWin.menu.add(navigationMenu)
+  mainWin.menu.add(viewMenu)
+  mainWin.menu.add(imageMenu)
 
 
 }

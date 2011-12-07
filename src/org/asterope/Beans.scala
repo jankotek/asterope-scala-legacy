@@ -1,9 +1,10 @@
 package org.asterope
 
-import chart._
-import data._
-import util.{Log, Publisher}
+import org.asterope.chart._
+import org.asterope.data._
+import org.asterope.gui._
 import jdbm.{RecordManagerFactory, RecordManagerOptions, RecordManager}
+import org.asterope.util._
 
 /**
  * Provides primitive Dependency Injection framework.
@@ -54,6 +55,25 @@ class Beans{
   lazy val constelLine = new ChartConstelLine(constelLineDao)
   lazy val constelBoundary = new ChartConstelBoundary(constelBoundaryDao)
   lazy val legendBorder = new LegendBorder(stars,deepSky)
+
+
+  /****************************************************************************************
+   * GUI related beans
+   ****************************************************************************************/
+  lazy val resmap = new ResourceMap(classOf[MainWindow]);
+
+  lazy val mainWin = new MainWindow(resmap)
+  lazy val mainWinActions = new MainWindowActions(resmap, mainWin, nameResolver, chartEditorFab)
+  lazy val mainWinMenu = new MainWindowMenu(mainWinActions,mainWin)
+
+  lazy val welcomeEditor = new WelcomeEditor(mainWinActions);
+
+  lazy val chartEditorFab:()=>ChartEditor = ()=> {
+    new ChartEditor(mainWinActions,resmap,stars,deepSky, constelBoundary, constelLine, legendBorder,milkyWay)
+  }
+
+
+
 
 
 }

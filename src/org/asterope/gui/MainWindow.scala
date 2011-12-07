@@ -3,9 +3,7 @@ package org.asterope.gui
 import net.infonode.docking.util._
 import net.infonode.docking.theme.ShapedGradientDockingTheme
 import net.infonode.util.Direction
-import java.beans.PropertyChangeEvent
 import org.asterope.util._
-import java.awt.event.ActionEvent
 import collection.mutable.WeakHashMap
 import net.infonode.docking._
 import java.awt.{CardLayout, BorderLayout, Component, Dimension}
@@ -14,15 +12,12 @@ import javax.swing._
 /**
  * Main window with frame docks
  */
-trait MainWindow {
+class MainWindow (resmap:ResourceMap){
 
-  val resourceMap = new ResourceMap(classOf[MainWindow]);
-
-  val menu:JMenuBar
+  val menu:JMenuBar = new JMenuBar
 
 
-
-  protected lazy val mainFrame = new JFrame(){
+  lazy val mainFrame = new JFrame(){
     // ImageJ and other libraries are leaving windows behind
     // DISPOSE_ON_CLOSE does not really work
     setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE)
@@ -79,11 +74,11 @@ trait MainWindow {
 
   def show(){
     if(menu!=null)
-      resourceMap.injectComponents(menu)
+      resmap.injectComponents(menu)
 
-    resourceMap.injectActionFields(this)
+    resmap.injectActionFields(this)
     mainFrame.pack()
-    resourceMap.injectComponents(mainFrame)
+    resmap.injectComponents(mainFrame)
     mainFrame.setVisible(true)
   }
 
@@ -98,8 +93,8 @@ trait MainWindow {
 
 
   def addEditor(id:String, comp:JComponent):View = {
-    resourceMap.injectComponents(comp)
-    resourceMap.injectActionFields(comp)
+    resmap.injectComponents(comp)
+    resmap.injectActionFields(comp)
     val v = new View(id, null, comp)
     v.getWindowProperties.setCloseEnabled(true)
     v.getWindowProperties.setMaximizeEnabled(true)
@@ -110,10 +105,10 @@ trait MainWindow {
 
   protected def fabSideView(id:String, comp:JComponent):View = {
     assert(viewMap.getView(id) == null, "View with id '"+id+"' is already present")
-    resourceMap.injectActionFields(comp)
-    resourceMap.injectComponents(comp)
+    resmap.injectActionFields(comp)
+    resmap.injectComponents(comp)
 
-    val title = resourceMap.getString(id+".text")
+    val title = resmap.getString(id+".text")
     val v = new View(title, null, comp)
     v.getWindowProperties.setCloseEnabled(true)
     v.getWindowProperties.setMinimizeEnabled(true)
@@ -153,79 +148,6 @@ trait MainWindow {
   }
 
 
-
-class EditorBoundAction extends AbstractAction{
-  setEnabled(false)
-
-  private var oldEditorAction:Action = null;
-
-  private var listeners = Map[Component,Action]()
-
-  def addActionListener(editor:Component,action:Action){
-    listeners += editor->action
-  }
-
-  /*
-   * Code which synchronizes some action properties
-   * - when active editor changes, it enables or disables mainWinAction
-   * - keeps this 'enabled' and 'selected' properties in sync
-   */
-  private object actionListener extends java.beans.PropertyChangeListener{
-
-    def propertyChange(evt: PropertyChangeEvent){
-      if(evt.getPropertyName == Action.SELECTED_KEY || evt.getPropertyName == "enabled")
-        putValue(evt.getPropertyName,evt.getNewValue);
-    }
-  }
-
-  /** called when active editor changes */
-  private def rehookActionListeners(editor:Component){
-    val newEditorAction:Action = listeners.get(editor).getOrElse(null)
-
-    action2ScalaAction(this).enabled = (newEditorAction!=null && newEditorAction.enabled)
-    action2ScalaAction(this).selected = (if(newEditorAction==null) None else newEditorAction.selected)
-    if(oldEditorAction!=null)
-      oldEditorAction.removePropertyChangeListener(actionListener)
-    if(newEditorAction!=null)
-      newEditorAction.addPropertyChangeListener(actionListener)
-    oldEditorAction = newEditorAction;
-  }
-
-  editorTabs.addListener(new DockingWindowAdapter{
-    override def windowAdded(addedToWindow: DockingWindow, addedWindow: DockingWindow){
-      if(addedWindow.isInstanceOf[View])
-        rehookActionListeners(addedWindow.asInstanceOf[View].getComponent)
-    }
-    override def windowClosed(window: DockingWindow){
-      rehookActionListeners(getFocusedEditor)
-    }
-
-    override def viewFocusChanged(previouslyFocusedView: View, focusedView: View){
-      if(focusedView!=null)
-        rehookActionListeners(focusedView.getComponent)
-    }
-
-  })
-
-  def actionPerformed(e:ActionEvent){
-    //forward to editor
-    if(oldEditorAction!=null){
-      oldEditorAction.actionPerformed(e)
-    }else{
-      throw new Error("EditorBoundAction should not be called when no editor is active.")
-    }
-  }
-
-
-  def editorAction(editor:Component)(block: => Unit):Action = {
-    val action = act{block};
-    //add listener from main window action
-    this.addActionListener(editor,action)
-    action
-  }
-
-
-}
 
 
   /**

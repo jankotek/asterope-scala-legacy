@@ -14,15 +14,24 @@ import org.apache.commons.math.geometry.Vector3D
 import java.awt.{BasicStroke, Polygon, Rectangle, Color}
 import java.awt.geom.{Point2D, Ellipse2D, Area}
 import org.asterope.Beans
+import skyview.executive.Settings
 
 
 class ChartEditor(
-    val beans:Beans
+  protected val mainWinActions:MainWindowActions, //TODO make private
+  resmap:ResourceMap,
+  protected val stars:Stars, //TODO make private
+  deepSky:DeepSkyPainter,
+  constelBoundary:ChartConstelBoundary,
+  constelLine:ChartConstelLine,
+  legendBorder:LegendBorder,
+  milkyWay: ChartMilkyWay
   )
-  extends PCanvas
-  with ChartWindowSkyviewActions
+  extends PCanvas 
   with ChartEditorActions
   {
+  
+
 
   setPanEventHandler(null)
   setZoomEventHandler(null)
@@ -97,11 +106,11 @@ class ChartEditor(
 
   protected var chartBase = new Chart();
   protected var coordGridConfig = CoordinateGrid.defaultConfig
-  protected var starsConfig = beans.stars.defaultConfig
+  protected var starsConfig = stars.defaultConfig
   protected var showLegend = true
   protected var showConstelBounds = true
   protected var showConstelLines = true;
-  protected var deepSkyConfig = beans.deepSky.defaultConfig
+  protected var deepSkyConfig = deepSky.defaultConfig
   protected var allSkyConfig:Option[AllSkySurveyMem] = None
 
 
@@ -148,8 +157,8 @@ class ChartEditor(
 
       //take current size of windows
       val chart = chartBase.copy(width = getWidth,
-        height = if( !showLegend) getHeight else (getHeight - beans.legendBorder.height),
-        legendHeight = if(showLegend) beans.legendBorder.height else 0
+        height = if( !showLegend) getHeight else (getHeight - legendBorder.height),
+        legendHeight = if(showLegend) legendBorder.height else 0
       )
 
       Log.debug("Refresh starts, width:"+chart.width+", height:"+chart.height+", ipixCount:"+chart.area.size()+", hash:"+System.identityHashCode(chart))
@@ -159,23 +168,23 @@ class ChartEditor(
       val futures = new ArrayBuffer[Future[Unit]];
 
       futures+=future{
-        beans.stars.updateChart(chart,starsConfig)
+        stars.updateChart(chart,starsConfig)
       }
       futures+=future{
-        beans.deepSky.updateChart(chart,deepSkyConfig)
+        deepSky.updateChart(chart,deepSkyConfig)
       }
 
       if(showConstelBounds) futures+=future{
-          beans.constelBoundary.updateChart(chart)
+         constelBoundary.updateChart(chart)
       }
 
       if(showConstelLines) futures+=future{
-          beans.constelLine.updateChart(chart)
+         constelLine.updateChart(chart)
       }
 
 
       futures+=future{
-        beans.milkyWay.updateChart(chart)
+        milkyWay.updateChart(chart)
       }
 
 
@@ -184,7 +193,7 @@ class ChartEditor(
       }
 
       if(showLegend) futures+=future{
-          beans.legendBorder.updateChart(chart)
+         legendBorder.updateChart(chart)
       }
 
       futures+=future{
@@ -308,9 +317,9 @@ class ChartEditor(
         height =getHeight,
         colors = detailChart.colors
       )
-      beans.stars.updateChart(_chart)
-      beans.constelBoundary.updateChart(_chart)
-      beans.constelLine.updateChart(_chart)
+      stars.updateChart(_chart)
+      constelBoundary.updateChart(_chart)
+      constelLine.updateChart(_chart)
 
       updatePointer(detailChart,false);
 
@@ -357,6 +366,59 @@ class ChartEditor(
 
 
   }
+
+
+  /*************************************************************
+   *  skyview stuff
+   *************************************************************/
+
+  private var lastSkyviewConfig = new SkyviewConfig;
+
+  val actChartSkyview = mainWinActions.actChartSkyview.editorAction(this){
+    showSkyviewSurveyDialog(lastSkyviewConfig.survey)
+  }
+
+  def showSkyviewSurveyDialog(survey:String){
+    val m = lastSkyviewConfig.copy(survey = survey)
+    val form = new SkyviewForm
+    resmap.injectActionFields(form)
+    resmap.injectComponents(form)
+     val m2 = Form.showDialog(m, form, width= 600)
+     if(m2.isDefined){
+      lastSkyviewConfig = m2.get
+      onEDT{
+        //show modal dialog in separate EDT event, so it does not block us
+        SkyviewProgressDialog.show()
+      }
+
+      fork{
+        try{
+          Skyview.updateChart(getChartBase,lastSkyviewConfig)
+          onEDT{
+            //hide modal dialog after we are done
+            SkyviewProgressDialog.setVisible(false)
+          }
+
+        }catch{
+            case e:Throwable => {
+                e.printStackTrace(skyview.executive.Settings.err)
+                Settings.err.println("An exception happend, hit Cancel to hide this dialog!")
+                //original imager is no longer running, so start thread which would react to cancelled event
+                fork{
+                    while(true){
+                        Settings.checkCancelled()
+                        Thread.sleep(1)
+                    }
+                }
+                throw new Exception(e)
+            }
+        }
+      }
+     }
+  }
+
+
+
 
 
 }

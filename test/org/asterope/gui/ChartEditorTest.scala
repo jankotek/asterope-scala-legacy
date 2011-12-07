@@ -9,29 +9,25 @@ import org.asterope.data._
 import org.asterope._
 import org.apache.commons.math.geometry.Vector3D
 
-class ChartEditorTest extends BeansTestCase
-  with MainWindow
-  with ChartEditorFab{
+class ChartEditorTest extends GuiTestCase{
 
-
-  val menu = new JMenuBar
 
   def chart = chartEditor.getChartBase
-  def chartEditor = getFocusedEditor.asInstanceOf[ChartEditor]
+  def chartEditor = beans.mainWin.getFocusedEditor.asInstanceOf[ChartEditor]
 
-  
+
   def open(){
     onEDT{
-      showMinimized()
-      openChartOnObject("M45")
+      beans.mainWin.showMinimized()
+      beans.mainWinActions.openChartOnObject("M45")
     }
     onEDTWait{
-      waitUntil(getFocusedEditor.isInstanceOf[ChartEditor])
+      waitUntil(beans.mainWin.getFocusedEditor.isInstanceOf[ChartEditor])
     }
   }
 
   override def tearDown(){
-    onEDT{hide()}
+    onEDT{beans.mainWin.hide()}
   }
 
   def testOpenChartOnObject(){
@@ -46,7 +42,7 @@ class ChartEditorTest extends BeansTestCase
     val height = chart.height
 
     onEDT{
-      mainFrame.setSize(500,500)
+      beans.mainWin.mainFrame.setSize(500,500)
     }
     //wait until size changes
     waitUntil(width!=chart.width && height!=chart.height)

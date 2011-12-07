@@ -10,15 +10,15 @@ import org.xhtmlrenderer.swing.FSMouseListener
 /**
  * An welcome page displayed first time user starts browser.
  */
-trait WelcomeEditor extends ChartEditorFab{
+class WelcomeEditor(mainWinActions:MainWindowActions){
 
-  lazy val welcomeEditor = new JScrollPane(htmlPane)
+  lazy val panel = new JScrollPane(htmlPane)
 
   private object linkHandler extends LinkListener{
     
     override def linkClicked(panel:BasicPanel, link:String){
       if(link.startsWith("asterope:open/"))
-        openChartOnObject(link.replace("asterope:open/",""))
+        mainWinActions.openChartOnObject(link.replace("asterope:open/",""))
     }
   }
 
