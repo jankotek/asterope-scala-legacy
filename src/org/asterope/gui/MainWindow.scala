@@ -12,7 +12,7 @@ import javax.swing._
 /**
  * Main window with frame docks
  */
-class MainWindow (resmap:ResourceMap){
+class MainWindow (val resmap:ResourceMap){
 
   val menu:JMenuBar = new JMenuBar
 

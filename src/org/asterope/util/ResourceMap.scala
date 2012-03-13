@@ -299,7 +299,6 @@ class ResourceMap(bundleNames:List[String]) {
   }
 
   def injectActionFields(comp:AnyRef){
-
     //find fields with type Action or subclass
     val fields = new ArrayBuffer[java.lang.reflect.Field]
     var clazz:Class[_] = comp.getClass

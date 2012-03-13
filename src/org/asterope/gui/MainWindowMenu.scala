@@ -7,6 +7,9 @@ import javax.swing._
  */
 class MainWindowMenu(a:MainWindowActions,mainWin:MainWindow){
 
+
+  mainWin.resmap.injectActionFields(a)
+
   lazy val fileMenu = new JMenu{
     setName("fileMenu")
 
