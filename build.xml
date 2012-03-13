@@ -228,6 +228,7 @@
             <fileset dir="${build}" includes="lib/"/>
             <fileset dir="." >
             	<include name="data/dsoutline/" />
+		<include name="data/nebula_outlines" />
                 <include name="lib/" />
                 <include name="profile/"/>
                 <exclude name=".git/" />
