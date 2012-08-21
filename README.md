@@ -1,3 +1,5 @@
+**NOTE: This project is abadoned, there is new rewrite to Kotlin at http://github.com/jankotek/asterope**
+
 Asterope is an astronomical application focused on advanced amateur astronomers.
 When finished it will provide skycharting, ephemeris, observation planning,
 telescope control and image manipulation.
